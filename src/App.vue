@@ -1,11 +1,13 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import OrderPage from './views/OrderPage.vue';
 
 </script>
 
 <template>
 <div class="routerViewArea">
-    <RouterView />
+    <!-- <RouterView /> -->
+    <OrderPage />
 </div>
 </template>
 
