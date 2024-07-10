@@ -1,10 +1,10 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import OrderPage from './views/OrderPage.vue'
 </script>
 
 <template>
-
+    <OrderPage/>
 </template>
 
 <style scoped>
