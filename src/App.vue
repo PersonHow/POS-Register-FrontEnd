@@ -1,15 +1,14 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import OrderPage from './views/OrderPage.vue';
 import BillPage from './views/BillPage.vue';
+import TestTablePage from './components/ChiaoLin/TestTablePage.vue';
 
 </script>
 
 <template>
 <div class="routerViewArea">
-    <!-- <RouterView /> -->
-    <!-- <OrderPage /> -->
-     <BillPage />
+    <!-- <BillPage /> -->
+    <TestTablePage />
 </div>
 </template>
 
