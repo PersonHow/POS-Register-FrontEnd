@@ -12,7 +12,7 @@ export default {
         };
     },
     methods: {
-        ...mapActions(useBillstore, ['saveBillfromP']),
+        ...mapActions(useBillstore, ['saveBilltoDB']),
         saveBill() {
             let pCash = 0, pCard = 0, pOther = 0;
             this.Billstore.inputEvent.forEach(event => {
@@ -24,8 +24,8 @@ export default {
                     pOther += event.value;
                 }
             });
-            this.saveBillfromP("", this.Billstore.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", 2, "")
-            console.log(this.saveBillfromP);
+            this.saveBilltoDB("", this.Billstore.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", 2, "")
+            console.log(this.saveBilltoDB);
         }
     }
 }

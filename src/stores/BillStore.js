@@ -130,7 +130,7 @@ export const useBillstore = defineStore("Billstore", {
       return "0";
     },
     // Bill完成存值到DB
-    saveBillfromP(bId, oId, pCash, pCard, pOther, invNum, cTime, pId, upTime) {
+    saveBilltoDB(bId, oId, pCash, pCard, pOther, invNum, cTime, pId, upTime) {
       let saveObj = {
         bill_id: bId,
         order_id: oId,
