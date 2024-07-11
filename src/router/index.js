@@ -12,7 +12,7 @@ const router = createRouter({
       path: '/OrderPage',
       name: 'OrderPage',
       component: () => import('../views/OrderPage.vue')
-    }
+    },
   ]
 })
 

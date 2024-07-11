@@ -18,7 +18,7 @@ export const useBillstore = defineStore("Billstore", {
     focusedInput: null,
     showOrderArea: true,
     // Test
-    order_id: "#200",
+    order_id: "2407118583",
     invoiceNum: "AB12349876",
   }),
   getters: {
