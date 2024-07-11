@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import OrderPage from './views/OrderPage.vue';
 import BillPage from './views/BillPage.vue';
+import Calendar from './views/Calendar.vue';
 
 </script>
 
@@ -9,7 +10,8 @@ import BillPage from './views/BillPage.vue';
 <div class="routerViewArea">
     <!-- <RouterView /> -->
     <!-- <OrderPage /> -->
-     <BillPage />
+     <!-- <BillPage /> -->
+     <Calendar />
 </div>
 </template>
 
