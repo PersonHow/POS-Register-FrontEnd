@@ -88,7 +88,7 @@ export default {
                     </div>
                     <template v-if="bill.showDetail">
                         <div class="showDetailArea">
-                            <!-- <p>用餐人數：{{ Billstore.todayCreateBillsOrderDetail.guest_num }}</p> -->
+                            <p>其他內容：{{ Billstore.todayCreateBillsOrderDetail }}</p>
                         </div>
                     </template>
                     </li>
