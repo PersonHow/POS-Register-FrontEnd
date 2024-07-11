@@ -6,12 +6,16 @@ import { onMounted, watch } from 'vue';
 export default {
     setup() {
         const Billstore = useBillstore();
+
+        // event 對應 input, propName 對應 屬性名稱, 
+        // event.target.value 當前輸入框的值, parseFloat 將字符串轉換為浮點數，確保輸入值為數字
         const updateValue = (event, propName) => {
             Billstore[propName] = parseFloat(event.target.value) || 0;
         };
         const enterAddInputValue = (event) => {
             Billstore.newInputEvent = event.target.value;
         };
+
         // 避免切換分頁 inputEvent 刷新
         // 在 onMounted 生命週期時從 localStorage 中恢復 newInputEvent 的值
         onMounted(() => {
@@ -49,7 +53,7 @@ export default {
             <div style="width: 55%;">{{ Billstore.order_id }}</div>
             <!-- 漢堡按鈕還沒做 -->
             <input type="checkbox" id="noShowOrder" v-model="Billstore.showOrderArea">
-            <label for="noShowOrder" class="myMouse"><span>點餐明細</span></label>
+            <label for="noShowOrder" class="orderDetailLabel myMouse"><span>點餐明細</span></label>
             <label for="" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
         </div>
 
@@ -144,7 +148,8 @@ export default {
                 z-index: 1;
                 line-height: 8dvh;
             }
-            span{
+
+            span {
                 font-size: 2.25dvh;
             }
         }

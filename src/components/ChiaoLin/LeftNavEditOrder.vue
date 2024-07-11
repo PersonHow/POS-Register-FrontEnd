@@ -80,7 +80,7 @@ export default {
             margin: 0.5dvh 0.5dvw;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(90deg, #00c1ca, #01e1c5);
+            background: #00c1ca;
             padding: 0.5dvw;
             color: white;
         }
