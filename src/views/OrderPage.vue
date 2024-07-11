@@ -1,5 +1,5 @@
 <script>
-import EditMeal from '../components/Yuhan/EditMeal.vue'
+import EditMeal from '../components/Yuhan/EditOrder.vue'
 import { useOrderStore } from '@/stores/OrderStore' 
 export default {
     data() {
@@ -102,7 +102,8 @@ export default {
                 other_request:null,
                 description:meal.description,
                 working_area:meal.working_area,
-                img:meal.img ? meal.img:"https://shop.travel.org.tw/proudimage/0.jpg" //預設值
+                img:meal.img ? meal.img:"https://shop.travel.org.tw/proudimage/0.jpg", //預設值
+                status:"未出餐"
             }
             this.orderList.push(this.orderItem)
         },
@@ -246,7 +247,7 @@ export default {
 
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
-$main-color: linear-gradient(120deg,#f9b445 0%, #ff9b69 80%);
+$main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
 $secondary-color: #FFE2C3;
 .bigArea{
     width: 100dvw;
@@ -283,11 +284,12 @@ $secondary-color: #FFE2C3;
         color: #fff;
         padding: 5%;
         background: $main-color;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     .icon{
-        position: absolute;
-        right: 5%;
-        top: 3%;
+        padding-top: 25%;
     }
 }
 .order-list{
@@ -416,7 +418,7 @@ $secondary-color: #FFE2C3;
     img{
         width: 100%;
         height: 70%;
-        object-fit: fill;
+        object-fit: cover;
         padding: 0;
     }
     .mealName{
