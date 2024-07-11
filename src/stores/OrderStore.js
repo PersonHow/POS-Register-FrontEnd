@@ -3,7 +3,7 @@ import {defineStore} from 'pinia'
 export const useOrderStore = defineStore("OrderStore",{
     state: () => ({
         order_info:[]
-        
+            
     }),
     getters:{
         //代入工作臺後會自動過濾出屬於該工作臺的餐點
