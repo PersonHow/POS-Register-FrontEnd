@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router';
 import { ref, onMounted, computed } from 'vue';
+import TestHeader from './components/ChiaoLin/TestHeader.vue';
 import axios from "axios";
 const default_email="BBB@yahoo.com";
 const default_password = "123"
@@ -11,9 +12,15 @@ onMounted(async()=>{
 </script>
 
 <template>
-    <RouterView/>
+
+    <div class="routerViewArea">
+        <RouterView />
+    </div>
+    <div class="headerArea">
+        <TestHeader />
+    </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>
