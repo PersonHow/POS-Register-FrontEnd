@@ -28,10 +28,10 @@ export default {
         <RouterLink class="routerItem" to="/Login"><i class="fas fa-stream"></i>Login</RouterLink>
       </li>
       <li>
-        <a href="#"><i class="fas fa-question-circle"></i>About</a>
+        <RouterLink class="routerItem" to="/OrderPage"><i class="fas fa-question-circle"></i>About</RouterLink>
       </li>
       <li>
-        <a href="#"><i class="fas fa-envelope"></i>Contact</a>
+        <RouterLink class="routerItem" to="/BillPage"><i class="fas fa-envelope"></i>Contact</RouterLink>
       </li>
     </ul>
   </div>

@@ -10,8 +10,8 @@ import Sidebar from "./components/Sidebar.vue";
 <div class="routerViewArea">
     <!-- <RouterView /> -->
     <!-- <OrderPage /> -->
-     <BillPage />
-     <Sidebar />
+    <!-- <BillPage /> -->
+    <Sidebar />
 </div>
 </template>
 
