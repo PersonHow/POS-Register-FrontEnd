@@ -43,7 +43,7 @@ export default {
         </div>
         <div class="billdetail">
             <p>{{ orderAmountText }}&nbsp;</p>
-            <div class="inputAera"><input type="text" ></div>
+            <div class="inputAera"><input type="text"></div>
             <p>{{ discountText }}&nbsp;</p>
             <div class="inputAera"><input type="text" v-model="discount" @focus="setFocusedInput($event.target)"
                     name="discount"><span>%</span></div>

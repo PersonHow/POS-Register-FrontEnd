@@ -148,8 +148,7 @@ export default {
                 z-index: 1;
                 line-height: 8dvh;
             }
-
-            span {
+            span{
                 font-size: 2.25dvh;
             }
         }

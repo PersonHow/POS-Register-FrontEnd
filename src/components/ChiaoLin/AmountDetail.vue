@@ -5,10 +5,10 @@ export default {
     setup() {
         const Billstore = useBillstore();
         return {
-            Billstore ,
-            ...mapState(Billstore , ['order_amount','discount','serviceFee','entertain','allowance', 'inputEvent','newInputEvent','showInvoiceComponent','showNav',
-                'focusedInput','totalAmount','changeAmount','realChargeAmount','notyetChargeAmount','discountAmount','serviceAmount']),
-            ...mapActions(Billstore , ['setFocusedInput','addInputEvent','removeInputEvent','updateNewInputEventValue','updateInputEventValue','tothousendShowValue','getInvoiceNum']),
+            Billstore,
+            ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
+                'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount']),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'updateNewInputEventValue', 'updateInputEventValue', 'tothousendShowValue',]),
         };
     },
 }
@@ -17,12 +17,19 @@ export default {
 <template>
     <div class="AmountDetailArea">
         <div class="showInvoiceNum">
-            <span>發票號碼</span>&nbsp;&nbsp;&nbsp;<span>{{ Billstore.invoiceNum }}</span>
+            <p style="width: 8dvw; margin-left: 0.5dvw">發票號碼</p>
+            <p>{{ Billstore.invoiceNum }}</p>
+            <span>|</span>
+            <p style="width: 10dvw;">統一編號</p>
+            <input type="text">
         </div>
         <div class="amountDetail">
             <div class="amountDetailShow">
-                <span>總計 NT.{{ Billstore.tothousendShowValue(Billstore.order_amount) }} * 折扣{{ Billstore.discount }}%(NT.{{ Billstore.tothousendShowValue(Billstore.discountAmount) }}) * 服務費{{ Billstore.serviceFee }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </span>
-                <p>- 招待NT.{{ Billstore.tothousendShowValue(Billstore.entertain) }} - 折讓NT.{{ Billstore.tothousendShowValue(Billstore.allowance) }}</p>
+                <span>總計 NT.{{ Billstore.tothousendShowValue(Billstore.order_amount) }} * 折扣{{ Billstore.discount
+                    }}%(NT.{{ Billstore.tothousendShowValue(Billstore.discountAmount) }}) * 服務費{{ Billstore.serviceFee
+                    }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </span>
+                <p>- 招待NT.{{ Billstore.tothousendShowValue(Billstore.entertain) }} - 折讓NT.{{
+                    Billstore.tothousendShowValue(Billstore.allowance) }}</p>
             </div>
             <div class="amountShow">
                 <div class="amountShowLeft">
@@ -52,7 +59,8 @@ export default {
                         </div>
                         <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                         <div class="realChargeAreaAmount">
-                            <span id="realChargeAmount">{{ Billstore.tothousendShowValue(Billstore.realChargeAmount) }}</span>
+                            <span id="realChargeAmount">{{ Billstore.tothousendShowValue(Billstore.realChargeAmount)
+                                }}</span>
                         </div>
                         <div class="amountShowRightNotyet">
                             <div class="notyetChargeAreaText">
@@ -60,7 +68,8 @@ export default {
                             </div>
                             <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                             <div class="notyetChargeAreaAmount">
-                                <span id="notyetChargeAmount">{{ Billstore.tothousendShowValue(Billstore.notyetChargeAmount) }}</span>
+                                <span id="notyetChargeAmount">{{
+                                    Billstore.tothousendShowValue(Billstore.notyetChargeAmount) }}</span>
                             </div>
                         </div>
                     </div>
@@ -76,16 +85,25 @@ export default {
     padding: 0 1dvw;
 
     .showInvoiceNum {
-        height: 8dvh;
-        line-height: 7dvh;
-        padding-left: 1dvw;
+        height: 9dvh;
+        line-height: 8dvh;
         color: gray;
         font-weight: 600;
+        font-size: 2.25dvh;
+        margin-bottom: 0.5dvh;
+        display: flex;
+        text-align: center;
+        align-items: center;
 
-        button {
-            width: 5dvw;
-            border: none;
-            background: none;
+        p {
+            width: 12dvw;
+        }
+
+        input {
+            height: 4dvh;
+            border-radius: 5px;
+            border: 1px solid gray;
+            width: 16.5dvw;
         }
     }
 

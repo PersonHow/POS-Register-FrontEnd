@@ -29,7 +29,7 @@ export default {
         };
 
         const visibleBills = computed(() => {
-            return Billstore.todayCreateBillsOrderDetail.slice(0, visibleBillsCount.value).reverse();
+            return Billstore.chargedTodayBills.slice(0, visibleBillsCount.value).reverse();
         });
 
         // 用 order_id 取得 Order 的 amount
@@ -38,6 +38,8 @@ export default {
             const orderDetail = Billstore.todayCreateBillsOrderDetail.find(detail => detail.order_id === order_id);
             return orderDetail ? orderDetail.amount : 'loading';
         };
+
+
         return {
             Billstore,
             getAmountForOrder,
@@ -57,14 +59,14 @@ export default {
 <template>
     <nav class="navArea" :class="{ active: Billstore.showRightNav }">
         <div>
-            <label for="rightBar" class="myMouse">
+            <label for="rightBar" class="myMouse" id="closeRightBar">
                 <i class="fa-solid fa-xmark fa-2xl"></i>
             </label>
         </div>
         <ul>
             <li>發票號碼設定</li>
             <div class="invoiceHistoryFunArea">
-                <li>近5筆結帳紀錄</li>
+                <li>當天結帳紀錄</li>
                 <button @click="showMoreBills" v-if="hasMoreBills">查看更多</button>
                 <span v-if="!hasMoreBills">已到最底</span>
             </div>
@@ -88,7 +90,8 @@ export default {
                     </div>
                     <template v-if="bill.showDetail">
                         <div class="showDetailArea">
-                            <p>其他內容：{{ Billstore.todayCreateBillsOrderDetail }}</p>
+                            <!-- <p>用餐桌號：{{ Billstore.eachOrderDetail.amount }}</p> -->
+                            <p>用餐人數：{{ "待接" }}</p>
                         </div>
                     </template>
                     </li>
@@ -102,7 +105,7 @@ export default {
 <style scoped lang="scss">
 .navArea {
     position: fixed;
-    height: 84.4%;
+    height: 85.3%;
     top: 0;
     width: 40%;
     right: -42%;
