@@ -14,20 +14,20 @@ const router = createRouter({
       component: () => import("../views/BillPage.vue"),
     },
     {
-      path: "/Reserve", // 路徑為 /Reserve
-      name: "Reserve", // 名稱為 Reserve
-      component: () => import("../components/Reserve.vue"), // 使用動態 import 載入 "../components/Reserve.vue" 元件
+      path: "/Reserve",
+      name: "Reserve",
+      component: () => import("../components/Reserve.vue"),
     },
     {
-      path: "/OrderList", // 路徑為 /OrderList
-      name: "OrderList", // 名稱為 OrderList
-      component: () => import("../components/OrderList.vue"), // 使用動態 import 載入 "../components/OrderList.vue" 元件
+      path: "/OrderList",
+      name: "OrderList",
+      component: () => import("../components/OrderList.vue"),
     },
     ,
     {
-      path: "/Login", // 路徑為 /Login
-      name: "Login", // 名稱為 Login
-      component: () => import("../components/Login.vue"), // 使用動態 import 載入 "../components/Login.vue" 元件
+      path: "/Login",
+      name: "Login",
+      component: () => import("../components/Login.vue"),
     },
   ]
 })
