@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import OrderPage from './views/OrderPage.vue';
-import BillPage from './views/BillPage.vue';
+import OrderPage from "./views/OrderPage.vue";
+import BillPage from "./views/BillPage.vue";
 import Sidebar from "./components/Sidebar.vue";
 
 </script>
