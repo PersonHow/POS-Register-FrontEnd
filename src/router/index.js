@@ -24,6 +24,20 @@ const router = createRouter({
       name: "BillPage",
       component: () => import("../views/BillPage.vue"),
     },
+    {
+      path: "/calendar",
+      name: "calendar",
+      component: () => import("../views/Calendar.vue"),
+    },
+    {
+      path: "/logout",
+      name: "logout",
+      component: () => {
+        sessionStorage.setItem("token", null);
+        alert("登出成功！");
+        window.location.replace("/");
+      },
+    },
   ],
 });
 

@@ -15,7 +15,6 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
-    "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "header": "^0.1.1",
     "pinia": "^2.1.7",
