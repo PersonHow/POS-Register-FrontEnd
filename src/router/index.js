@@ -1,31 +1,30 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import WorkingAreaView from '../views/WorkingAreaView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import HomeView from "../views/HomeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+      path: "/",
+      name: "home",
+      component: HomeView,
     },
     {
-      path: '/OrderPage',
-      name: 'OrderPage',
-      component: () => import('../views/OrderPage.vue')
+      path: "/OrderPage",
+      name: "OrderPage",
+      component: () => import("../views/OrderPage.vue"),
     },
     {
-      path:'/working_area',
-      name: "working_area",
-      component:WorkingAreaView
+      path: "/workingarea",
+      name: "workingarea",
+      component: () => import("../views/WorkingAreaView.vue"),
     },
     {
-      path: '/BillPage',
-      name: 'BillPage',
-      component: () => import('../views/BillPage.vue')
-    }
-  ]
-})
+      path: "/BillPage",
+      name: "biBillPage",
+      component: () => import("../views/BillPage.vue"),
+    },
+  ],
+});
 
-export default router
+export default router;

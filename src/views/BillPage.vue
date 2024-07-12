@@ -6,7 +6,7 @@ import HandInvoiceContent from '../components/ChiaoLin/HandInvoiceContent.vue';
 import { useBillstore } from '../stores/BillStore';
 import LeftNavEditOrder from '../components/ChiaoLin/LeftNavEditOrder.vue';
 import RightNavOtherFun from '../components/ChiaoLin/RightNavOtherFun.vue';
-
+import { ref, onMounted, computed } from 'vue';
 export default {
     setup() {
         const Billstore = useBillstore();
@@ -31,6 +31,11 @@ export default {
             focusedInput: null,
         }
     },
+    onMounted(){
+        if(!JSON.parse(sessionStorage.getItem("token"))){
+        alert("你還沒有登入，將轉向登入頁面！")
+        window.location.replace("/");
+    }},
     methods: {
         // 更新 Billstore 中的多個屬性，將 event 中的所有屬性複製到 this.Billstore 中
         // event 的每個屬性都會覆蓋 this.Billstore 的對應屬性，就可以批量更新 Billstore 的屬性

@@ -1,6 +1,7 @@
 <script>
 import EditMeal from '../components/Yuhan/EditOrder.vue'
 import { useOrderStore } from '@/stores/OrderStore' 
+import { ref, onMounted, computed } from 'vue';
 export default {
     data() {
         return{
@@ -33,6 +34,12 @@ export default {
             },
             editingIndex:null, //欲修改的餐點索引
         }
+    },
+    onMounted(){
+        if(!JSON.parse(sessionStorage.getItem("token"))){
+    alert("你還沒有登入，將轉向登入頁面！")
+    window.location.replace("/");
+  }
     },
     created(){
         this.getMenu()
