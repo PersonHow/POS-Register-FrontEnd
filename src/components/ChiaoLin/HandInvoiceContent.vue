@@ -1,5 +1,5 @@
 <script>
-// import { useBillstore } from '@/stores/BillStore';
+import { useBillstore } from '@./stores/BillStore';
 
 export default {
 
@@ -16,11 +16,11 @@ export default {
 </script>
 
 <template>
-    <div class="allleftArea" @click="closeComponent">
-        <div class="handInvoiceBox" @click.stop>
+    <div class="modal-overlay" @click="closeComponent">
+        <div class="modal-content" @click.stop>
             <p>手開發票</p>
             <span>發票號碼：</span>{{ invoceTestNum }}
-            <input type="text" >
+            <input type="text">
             <button @click="">確認</button>
             <button @click="closeComponent">Close</button>
             <!-- <Calculator @add-to-display="addToDisplay" @clear-display="clearDisplay" @backspace="backspace" /> -->
@@ -29,7 +29,7 @@ export default {
 </template>
 
 <style scoped lang="scss">
-.allleftArea {
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -42,7 +42,7 @@ export default {
     z-index: 1;
 }
 
-.handInvoiceBox {
+.modal-content {
     background: white;
     padding: 20px;
     border-radius: 10px;

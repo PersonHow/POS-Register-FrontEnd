@@ -12,7 +12,7 @@ export default {
         };
     },
     methods: {
-        ...mapActions(useBillstore, ['saveBilltoDB']),
+        ...mapActions(useBillstore, ['saveBillfromP']),
         saveBill() {
             let pCash = 0, pCard = 0, pOther = 0;
             this.Billstore.inputEvent.forEach(event => {
@@ -24,9 +24,25 @@ export default {
                     pOther += event.value;
                 }
             });
-            this.saveBilltoDB("", this.Billstore.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", 2, "")
-            console.log(this.saveBilltoDB);
-        }
+            let paymentWays = this.Billstore.inputEvent.map(otherPayment => otherPayment.type);
+            let pOtherName = paymentWays.splice(2).join(',');
+            // 待連 lastmodified_staff_id: pId
+            this.saveBillfromP("", this.Billstore.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", "", "", pOtherName)
+            this.Billstore.order_amount = 0;
+            this.Billstore.discount = 0;
+            this.Billstore.serviceFee = 0;
+            this.Billstore.entertain = 0;
+            this.Billstore.allowance = 0;
+            this.Billstore.inputEvent.forEach(event => {
+                if (event.type === "現金") {
+                    event.value = 0;
+                } else if (event.type === "信用卡") {
+                    event.value = 0;
+                } else {
+                    event.value = 0;
+                }
+            })
+        },
     }
 }
 </script>
@@ -54,6 +70,9 @@ export default {
                 <div class="mathBut butRevise"><input type="button" value="更正" @click="Billstore.clearDisplay()"
                         id="butRevise"></div>
                 <div class="mathBut butComfirm"><input type="button" value="確定" @click="saveBill()" id="butComfirm">
+                    <!-- <div class="mathBut butComfirm"><input type="button" value="Test" @click="getOtherInputNameToMemo()"
+                            id="butComfirm">
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -69,15 +88,12 @@ export default {
         width: 100%;
         display: flex;
         padding-top: 3dvh;
-        justify-content: space-between;
         margin-left: 0.5dvw;
 
         .mathbutArea {
-            width: 100%;
+            width: 80%;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .mathBut {
@@ -116,6 +132,7 @@ export default {
                 }
 
                 #butComfirm {
+                    width: 100%;
                     height: 18dvh;
                     background: linear-gradient(90deg, #00c1ca, #01e1c5);
                     color: white;

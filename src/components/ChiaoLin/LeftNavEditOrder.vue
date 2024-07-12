@@ -71,7 +71,6 @@ export default {
             list-style-type: none;
             font-size: 2.5dvh;
             color: black;
-
         }
 
         button {
@@ -80,7 +79,7 @@ export default {
             margin: 0.5dvh 0.5dvw;
             border: none;
             border-radius: 10px;
-            background: #00c1ca;
+            background:#00c1ca;
             padding: 0.5dvw;
             color: white;
         }

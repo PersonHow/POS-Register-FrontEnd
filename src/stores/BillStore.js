@@ -13,13 +13,14 @@ export const useBillstore = defineStore("Billstore", {
       { type: "信用卡", value: 0 },
       { type: "現金", value: 0 },
     ],
+    memo: [],
     newInputEvent: "", // 新增其他付款方式用
     showHandInvArea: false,
     showRightNav: false,
     focusedInput: null, // 根據當下點擊的 input 給值
     showOrderArea: true,
-    order_id: "#04", // 要改
-    invoiceNum: "AB07120001", // 要改
+    order_id: "#06", // 要改
+    invoiceNum: "AB07120004", // 要改
     lastFiveBills: [], // 近5筆紀錄
     allbills: [],
     // changeAmountforshouw: 0,
@@ -28,6 +29,7 @@ export const useBillstore = defineStore("Billstore", {
     todayCreateBillsOrderDetail: [], // 今日已結的所有order內容
     chargedTodayBills: [], // 今日已結的bills
     todayCreateBillsOrderId: [], // 今日已結bills的order_id
+    newChargedTodayBills:[]
   }),
   getters: {
     // ----取值區----
@@ -138,7 +140,18 @@ export const useBillstore = defineStore("Billstore", {
       return "0";
     },
     // 建立 Bill 並存值到 DB
-    saveBillfromP(bId, oId, pCash, pCard, pOther, invNum, cTime, pId, upTime) {
+    saveBillfromP(
+      bId,
+      oId,
+      pCash,
+      pCard,
+      pOther,
+      invNum,
+      cTime,
+      pId,
+      upTime,
+      pOtherName
+    ) {
       let saveObj = {
         bill_id: bId,
         order_id: oId,
@@ -149,6 +162,7 @@ export const useBillstore = defineStore("Billstore", {
         create_time: cTime,
         lastmodified_staff_id: pId,
         lastmodified_time: upTime,
+        memo: pOtherName,
       };
       fetch("http://localhost:8080/bill/create", {
         method: "post",
@@ -174,6 +188,7 @@ export const useBillstore = defineStore("Billstore", {
     setPaymentOther(value) {
       this.payment_other = value;
     },
+
     // show HandInvoiceArea
     showHandInvoiceArea() {
       this.showHandInvArea = !this.showHandInvArea;
@@ -222,7 +237,7 @@ export const useBillstore = defineStore("Billstore", {
       try {
         this.chargedOrders = [];
         this.chargedTodayBills = [];
-        this.crateTimeByBills = [];
+        this.chargedBillsContent = []; // 已結 Bills 的 content
         this.todayCreateBillsOrderId = [];
         this.todayCreateBillsOrderDetail = [];
         const today = new Date();
@@ -236,20 +251,38 @@ export const useBillstore = defineStore("Billstore", {
           this.chargedOrders.push(bill.order_id);
           let date = new Date(bill.create_time);
           date.setHours(0, 0, 0, 0);
-          this.crateTimeByBills.push({
+          this.chargedBillsContent.push({
+            bill_id: bill.bill_id,
             order_id: bill.order_id,
+            payment_cash: bill.payment_cash,
+            payment_credit: bill.payment_credit,
+            payment_other: bill.payment_other,
+            invoice: bill.invoice,
             create_time: date.getTime(),
+            lastmodified_staff_id: bill.lastmodified_staff_id,
+            lastmodified_time: bill.lastmodified_time,
           });
         });
-
-        // console.log(this.crateTimeByBills);
+        // console.log(this.chargedBillsContent);
         // 從 crateTimeByBills 找出當日建立的 bills 且將其 order_id，放入 todayCreateBillsOrderId
-        this.crateTimeByBills.forEach((bill) => {
+        this.chargedBillsContent.forEach((bill) => {
           if (bill.create_time === todayTimestamp) {
             this.todayCreateBillsOrderId.push(bill.order_id);
+            this.chargedTodayBills.push({
+              bill_id: bill.bill_id,
+              order_id: bill.order_id,
+              payment_cash: bill.payment_cash,
+              payment_credit: bill.payment_credit,
+              payment_other: bill.payment_other,
+              invoice: bill.invoice,
+              create_time: bill.create_time,
+              lastmodified_staff_id: bill.lastmodified_staff_id,
+              lastmodified_time: bill.lastmodified_time,
+            });
           }
         });
         // console.log(this.todayCreateBillsOrderId);
+        console.log(this.chargedTodayBills);
         // console.log(this.chargedOrders);
         // 取出 todayCreateBillsOrderId 的 order_id 的 order 內容
         for (let orderId of this.todayCreateBillsOrderId) {
@@ -272,6 +305,7 @@ export const useBillstore = defineStore("Billstore", {
           }
         }
         console.log(this.todayCreateBillsOrderDetail);
+        
         return this.todayCreateBillsOrderDetail;
       } catch (error) {
         console.error("Try is error!!");

@@ -1,11 +1,11 @@
 <script>
-import BillDetail from '../components/ChiaoLin/BillDetail.vue';
-import AmountDetails from '../components/ChiaoLin/AmountDetail.vue';
-import Calculator from '../components/ChiaoLin/Calculator.vue';
-import HandInvoiceContent from '../components/ChiaoLin/HandInvoiceContent.vue';
-import { useBillstore } from '../stores/BillStore';
-import LeftNavEditOrder from '../components/ChiaoLin/LeftNavEditOrder.vue';
-import RightNavOtherFun from '../components/ChiaoLin/RightNavOtherFun.vue';
+import BillDetail from '@/components/ChiaoLin/BillDetail.vue';
+import AmountDetails from '@/components/ChiaoLin/AmountDetail.vue';
+import Calculator from '@/components/ChiaoLin/Calculator.vue';
+import HandInvoiceContent from '@/components/ChiaoLin/HandInvoiceContent.vue';
+import { useBillstore } from '@/stores/ChiaoLin/BillStore'
+import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
+import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
 
 export default {
     setup() {
