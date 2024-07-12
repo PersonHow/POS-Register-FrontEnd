@@ -21,7 +21,7 @@ const router = createRouter({
     },
     {
       path: "/BillPage",
-      name: "biBillPage",
+      name: "BillPage",
       component: () => import("../views/BillPage.vue"),
     },
   ],
