@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import OrderPage from './views/OrderPage.vue';
 import BillPage from './views/BillPage.vue';
+import Sidebar from "./components/Sidebar.vue";
 
 </script>
 
@@ -10,6 +11,7 @@ import BillPage from './views/BillPage.vue';
     <!-- <RouterView /> -->
     <!-- <OrderPage /> -->
      <BillPage />
+     <Sidebar />
 </div>
 </template>
 
