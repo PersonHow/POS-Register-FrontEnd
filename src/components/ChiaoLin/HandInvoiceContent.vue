@@ -1,5 +1,5 @@
 <script>
-import { useBillstore } from '@./stores/BillStore';
+import { useBillstore } from '../../stores/BillStore';
 
 export default {
 

@@ -5,10 +5,14 @@
       <!-- 當進入編輯模式時，啟用拖曳功能 -->
       <draggable
         v-if="isEditing"
-        v-model="tables"
+        v-model="tables" 
+        @start="drag = true"
         @end="saveTableOrder"
         style="width: 106%"
-      >
+        class="list-group"
+        tag="ul"
+        v-bind="dragOptions"
+        >
         <!-- 顯示每張桌子的內容 -->
         <template #item="{ element }" style="width: 50%">
           <div
@@ -146,6 +150,7 @@
   #app {
     padding-left: 0.3%;
     padding-top: 1%;
+    border:1px solid #2a9d8f;
   
     .tableNum{
       width: 100%;
@@ -189,66 +194,6 @@
       justify-content: end;
       color: white;
     }
-  
-    // #table-4 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
-  
-    // #table-5 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
-  
-    // #table-12 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
-  
-    // #table-13 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
-  
-    // #table-18 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
-  
-    // #table-19 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
-  
-    // #table-20 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
-  
-    // #table-21 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
-  
-    // #table-28 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
-  
-    // #table-29 {
-    //   background: rgba(255, 255, 255, 0);
-    //   border: none;
-    //   color: rgba(255, 255, 255, 0);
-    // }
   }
   
   .noEditTableArea {

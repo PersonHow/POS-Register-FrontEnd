@@ -38,6 +38,11 @@ const router = createRouter({
         window.location.replace("/");
       },
     },
+    {
+      path: "/table",
+      name: "table",
+      component: () => import("../views/TablePage.vue"),
+    },
   ],
 });
 

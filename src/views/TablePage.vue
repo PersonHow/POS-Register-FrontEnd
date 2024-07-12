@@ -1,5 +1,5 @@
 <script>
-import TablePage from "@/components/TablePage.vue";
+import TablePage from "@/components/Kou/Table.vue";
 export default {
   data() {
     return {
@@ -27,7 +27,7 @@ export default {
   <div class="body">
     <div class="header Area">
       <div class="booking">
-        <h1>訂位</h1>
+        <a href="#"><h1>訂位</h1></a>
       </div>
       <h1 class="generally" style="margin-right: 4%">一般區</h1>
       <!-- ham = header的漢堡圖區塊 -->
@@ -53,13 +53,13 @@ export default {
             </div>
             <transition name="slide">
               <div v-if="menuOpen" class="menu-content">
-                <div class="menu-item">開錢櫃</div>
-                <div class="menu-item">換桌</div>
-                <div class="menu-item">合併結帳</div>
-                <div class="menu-item">關閉桌面</div>
-                <div class="menu-item">帶位</div>
-                <div class="menu-item">清除狀態</div>
-                <div class="menu-item">點餐</div>
+                <a class="menu-item" href="#">開錢櫃</a>
+                <a class="menu-item" href="#">換桌</a>
+                <a class="menu-item" ref="#">合併結帳</a>
+                <a class="menu-item" href="#">關閉桌面</a>
+                <a class="menu-item" href="#">帶位</a>
+                <a class="menu-item" href="#">清除狀態</a>
+                <a class="menu-item" href="#">點餐</a>
               </div>
             </transition>
           </div>
@@ -119,10 +119,15 @@ export default {
       background: #fff;
     }
   }
-  h1 {
+  a{
+    display: block;
+    text-decoration: none;
+    h1 {
     color: #00c5c8;
     /* margin-right: 2%; */
   }
+  }
+ 
 }
 /* 中間的桌子區塊 */
 .second {
@@ -202,6 +207,7 @@ export default {
   .menu-item {
     color: white;
     margin: 0 10px;
+    text-decoration: none;
   }
 
   .footerHam {
