@@ -19,9 +19,9 @@ const router = createRouter({
       component: () => import("../components/Reserve.vue"),
     },
     {
-      path: "/OrderList",
-      name: "OrderList",
-      component: () => import("../components/OrderList.vue"),
+      path: "/ReserveList",
+      name: "ReserveList",
+      component: () => import("../components/ReserveList.vue"),
     },
     {
       path: "/Login",

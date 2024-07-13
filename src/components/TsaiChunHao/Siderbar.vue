@@ -22,7 +22,7 @@ export default {
         <RouterLink class="routerItem" to="/Reserve"><i class="fas fa-qrcode"></i>Booking</RouterLink>
       </li>
       <li>
-        <RouterLink class="routerItem" to="/OrderList"><i class="fas fa-link"></i>Booking List</RouterLink>
+        <RouterLink class="routerItem" to="/ReserveList"><i class="fas fa-link"></i>Booking List</RouterLink>
       </li>
       <li>
         <RouterLink class="routerItem" to="/Login"><i class="fas fa-stream"></i>Login</RouterLink>
