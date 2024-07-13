@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import BillPage from './views/BillPage.vue';
 import OrderPage from './views/OrderPage.vue';
+import Home from './views/Home.vue';
 import TestHeader from './components/ChiaoLin/TestHeader.vue';
 
 </script>
@@ -9,7 +10,8 @@ import TestHeader from './components/ChiaoLin/TestHeader.vue';
 <template>
 
     <div class="routerViewArea">
-        <RouterView />
+        <Home />
+        <!-- <RouterView /> -->
         <!-- <BillPage /> -->
         <!-- <OrderPage /> -->
     </div>
