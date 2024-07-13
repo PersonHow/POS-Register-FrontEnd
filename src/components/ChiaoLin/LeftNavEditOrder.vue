@@ -30,8 +30,8 @@ export default {
 .navArea {
     font-family: "Chocolate Classical Sans", sans-serif;
     position: fixed;
-    height: 100%;
-    top: 8dvh;
+    height: 91%;
+    top: 9dvh;
     width: 35%;
     left: -37%;
     overflow: hidden;
