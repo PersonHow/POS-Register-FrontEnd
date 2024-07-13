@@ -16,17 +16,17 @@ const router = createRouter({
     {
       path: "/Reserve",
       name: "Reserve",
-      component: () => import("../components/Reserve.vue"),
+      component: () => import("../components/TsaiChunHao/Reserve.vue"),
     },
     {
       path: "/ReserveList",
       name: "ReserveList",
-      component: () => import("../components/ReserveList.vue"),
+      component: () => import("../components/TsaiChunHao/ReserveList.vue"),
     },
     {
       path: "/Login",
       name: "Login",
-      component: () => import("../components/Login.vue"),
+      component: () => import("../components/TsaiChunHao/Login.vue"),
     },
   ]
 })
