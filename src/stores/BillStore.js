@@ -15,8 +15,10 @@ export const useBillstore = defineStore("Billstore", {
     ],
     memo: [],
     newInputEvent: "", // 新增其他付款方式用
-    showHandInvArea: false,
+    showHandInvArea: false, //show手開
     showRightNav: false,
+    showVehiArea: false, // show載具
+    showBusiNumInput: false,  //show統編
     focusedInput: null, // 根據當下點擊的 input 給值
     showOrderArea: true,
     order_id: "#06", // 要改
@@ -29,7 +31,7 @@ export const useBillstore = defineStore("Billstore", {
     todayCreateBillsOrderDetail: [], // 今日已結的所有order內容
     chargedTodayBills: [], // 今日已結的bills
     todayCreateBillsOrderId: [], // 今日已結bills的order_id
-    newChargedTodayBills:[]
+    newChargedTodayBills: [],
   }),
   getters: {
     // ----取值區----
@@ -188,10 +190,17 @@ export const useBillstore = defineStore("Billstore", {
     setPaymentOther(value) {
       this.payment_other = value;
     },
-
-    // show HandInvoiceArea
+    // show showHandInvArea
     showHandInvoiceArea() {
       this.showHandInvArea = !this.showHandInvArea;
+    },
+    // show showVehicleArea
+    showVehicleArea() {
+      this.showVehiArea = !this.showVehiArea;
+    },
+    // show showBuniNumArea
+    showBuniNumArea() {
+      this.showBusiNumInput = !this.showBusiNumInput;
     },
     // 調出所有 bills & 當日的 bills
     async getAllBillsAndTodayBills() {
@@ -305,7 +314,7 @@ export const useBillstore = defineStore("Billstore", {
           }
         }
         console.log(this.todayCreateBillsOrderDetail);
-        
+
         return this.todayCreateBillsOrderDetail;
       } catch (error) {
         console.error("Try is error!!");

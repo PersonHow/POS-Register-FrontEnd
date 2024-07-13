@@ -1,6 +1,8 @@
 <script>
 import { useBillstore } from '@/stores/BillStore'
 import { mapState, mapActions } from 'pinia';
+import VehicleArea from '@/components/ChiaoLin/VehicleArea.vue'
+import BusiNumArea from '@/components/ChiaoLin/BusiNumInput.vue'
 export default {
     setup() {
         const Billstore = useBillstore();
@@ -8,20 +10,34 @@ export default {
             Billstore,
             ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
                 'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount']),
-            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'updateNewInputEventValue', 'updateInputEventValue', 'tothousendShowValue',]),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'updateNewInputEventValue', 'updateInputEventValue', 'tothousendShowValue', 'showVehicleArea', 'showBuniNumArea']),
         };
     },
+    components: {
+        VehicleArea,
+        BusiNumArea
+    }
 }
 </script>
 
 <template>
     <div class="AmountDetailArea">
         <div class="showInvoiceNum">
-            <p style="width: 8dvw; margin-left: 0.5dvw">發票號碼</p>
-            <p>{{ Billstore.invoiceNum }}</p>
-            <span>|</span>
-            <p style="width: 10dvw;">統一編號</p>
-            <input type="text">
+            <div class="showInvoiceNumArea">
+                <p>發票號碼</p>
+                <p>{{ Billstore.invoiceNum }}</p>
+            </div>
+            <div class="inputShowArea">
+                <button type="button" class="myMouse"
+                    @click="Billstore.showVehicleArea"><span>載&nbsp;&nbsp;&nbsp;&nbsp;具</span></button>
+                <button type="button" class="myMouse" @click="Billstore.showBuniNumArea"><span>統一編號</span></button>
+            </div>
+            <div v-if="Billstore.showVehiArea">
+                <VehicleArea @close="Billstore.showVehicleArea" />
+            </div>
+            <div v-if="Billstore.showBusiNumInput">
+                <BusiNumArea @close="Billstore.showBuniNumArea" />
+            </div>
         </div>
         <div class="amountDetail">
             <div class="amountDetailShow">
@@ -86,15 +102,37 @@ export default {
 
     .showInvoiceNum {
         height: 9dvh;
-        line-height: 8dvh;
+        line-height: 9dvh;
         color: gray;
         font-weight: 600;
         font-size: 2.25dvh;
         margin-bottom: 0.5dvh;
         display: flex;
-        text-align: center;
-        align-items: center;
+        justify-content: space-between;
+        padding-left: 1dvw;
 
+        .showInvoiceNumArea,
+        .inputShowArea {
+            display: flex;
+
+            button {
+                width: 9dvw;
+                height: 7dvh;
+                margin: 0 1dvw;
+                margin-top: 1.5dvh;
+                background: none;
+                color: gray;
+                font-weight: 600;
+                font-family: "Chocolate Classical Sans", sans-serif;
+                font-size: 2dvh;
+                border: 2px solid #00c1ca;
+                border-radius: 5px;
+            }
+
+        }
+        .inputShowArea{
+            margin-left: 2dvh;
+        }
         p {
             width: 12dvw;
         }
@@ -103,7 +141,7 @@ export default {
             height: 4dvh;
             border-radius: 5px;
             border: 1px solid gray;
-            width: 16.5dvw;
+            width: 17dvw;
         }
     }
 
