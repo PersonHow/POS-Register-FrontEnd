@@ -1,7 +1,8 @@
 <script>
 import EditMeal from '../components/Yuhan/EditOrder.vue'
 import { useOrderStore } from '@/stores/OrderStore' 
-import { ref, onMounted, computed } from 'vue';
+import 'bootstrap/dist/css/bootstrap.css'
+import "bootstrap"
 export default {
     data() {
         return{
@@ -35,16 +36,16 @@ export default {
             editingIndex:null, //欲修改的餐點索引
         }
     },
-    onMounted(){
-        if(!JSON.parse(sessionStorage.getItem("token"))){
-    alert("你還沒有登入，將轉向登入頁面！")
-    window.location.replace("/");
-  }
-    },
     created(){
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱
+    },
+    onMounted(){
+        if(!JSON.parse(sessionStorage.getItem("token"))){
+            alert("你還沒有登入，將轉向登入頁面！")
+            window.location.replace("/");
+        }
     },
     methods:{
         //取得菜單內餐點
@@ -177,8 +178,9 @@ export default {
     <div class="bigArea">
         <!-- orderList點餐明細 -->
         <div class="container left-side">
-            <div class="header col">
+            <div class="header">
                 <span>單號: {{oId}} </span>
+                <span>{{ tableNum? "桌號: "+tableNum:"外帶" }}</span>
                 <span><font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></span>
             </div>
             <!-- 點餐列表 -->
@@ -217,24 +219,23 @@ export default {
 
         <!-- menu菜單 -->
         <div class="container">
-            <div class="row type">
-                <div v-for="type in types" :key="type" class="col">
+            <div class="px-3 type">
+                <div v-for="type in types" :key="type" class="colume">
                     <input type="radio" v-model="selectedType" :value="type" :id="type">
                     <label :for="type" :class="{active : selectedType === type}">{{type}}</label>
                 </div>
             </div>
-            <div class="row wrap" >
-                <div v-for="meal in menu" v-show="selectedType === meal.type" @click="addMealToList(meal)" :key="meal.type" class="col meal">
+            <div class="px-5 wrap" >
+                <div v-for="meal in menu" v-show="selectedType === meal.type" @click="addMealToList(meal)" :key="meal.type" class="meal">
                     <img :src="meal.img" alt="">
                     <div v-for="item in orderList" :key="item.meal_id">
                         <div v-if="item.meal_id === meal.meal_id" class="orderQty">
                             {{mealQuantities[meal.meal_id]}}
                         </div>
                     </div>
-                    <div class="mealName">
+                    <div class="mealName mt-2">
                         {{meal.name}}
                     </div>
-                    <!-- <p >NT. {{meal.price}}</p> -->
                 </div>
             </div>
             <form v-show="showMemoInput" class="memo">
@@ -245,7 +246,39 @@ export default {
                 <button @click.prevent="editMemo()" class="btn">完成</button>
             </form>
             <div class="bottom">
-                <button @click="placeOrder()" class="btn placeOrder"><p>送出訂單</p></button>
+                <button type="button" class="btn placeOrder" data-bs-toggle="modal" data-bs-target="#firstModal">
+                    送出訂單
+                </button>
+                <!-- 彈出提醒 -->
+                <div class="modal fade" id="firstModal" tabindex="-1" aria-labelledby="firstModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h4>送單前請務必與消費者核對<strong>餐點內容</strong>與<strong>金額</strong></h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">修改</button>
+                                <button  type="button" class="btn placeOrder" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#secondModal">
+                                    確認無誤，送出</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="secondModal" tabindex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-footer">
+                                <!-- 跳轉至桌位頁 -->
+                                <a class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
+                                <!-- 跳轉至結帳頁 -->
+                                <a class="btn btn-primary">立即結帳</a>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
                 <button @click="editMemo()" class="btn">訂單備註</button>
             </div>
         </div>
@@ -270,23 +303,19 @@ $secondary-color: #FFE2C3;
     width: 55%;
     box-shadow: 0 0 5px rgba(128, 128, 128, 0.4);
     position: relative;
+    padding: 0;
 }
-.row{
-    padding: 0 5%;
-}
-.col{
+.colume{
     width: 100%;
-    margin:5%;
+    margin:2.5% 5%;
     line-height: 2;
 }
 .left-side{
     width: 45%;
     position: relative;
-
     .header{
         height: 10vh;
         margin: 0;
-        display: flex;
         width: 100%;
         color: #fff;
         padding: 5%;
@@ -387,6 +416,7 @@ $secondary-color: #FFE2C3;
     overflow-x: auto;
     white-space: nowrap;
     display: flex;
+    align-items: center;
     background: rgb(240, 240, 240);
     font-weight: 600;
     font-size: 20px;
@@ -452,7 +482,7 @@ $secondary-color: #FFE2C3;
 .orderQty{
     clip-path: circle(30%);
     position: absolute;
-    top: -45px;
+    top: -30px;
     right: -10%;
     background: #f96c45;
     color: white;
@@ -519,6 +549,9 @@ $secondary-color: #FFE2C3;
     }
     .placeOrder{
         width: 60%;
+        background: $main-color;
+    }
+    .btn-primary{
         background: $main-color;
     }
 }
