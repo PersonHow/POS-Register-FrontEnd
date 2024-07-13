@@ -105,6 +105,7 @@ export default {
         p {
             color: gray;
             font-size: 2dvh;
+            z-index: 99;
         }
     }
 

@@ -70,9 +70,6 @@ export default {
                 <div class="mathBut butRevise"><input type="button" value="更正" @click="Billstore.clearDisplay()"
                         id="butRevise"></div>
                 <div class="mathBut butComfirm"><input type="button" value="確定" @click="saveBill()" id="butComfirm">
-                    <!-- <div class="mathBut butComfirm"><input type="button" value="Test" @click="getOtherInputNameToMemo()"
-                            id="butComfirm">
-                    </div> -->
                 </div>
             </div>
         </div>

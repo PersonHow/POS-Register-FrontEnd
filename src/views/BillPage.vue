@@ -3,7 +3,7 @@ import BillDetail from '@/components/ChiaoLin/BillDetail.vue';
 import AmountDetails from '@/components/ChiaoLin/AmountDetail.vue';
 import Calculator from '@/components/ChiaoLin/Calculator.vue';
 import HandInvoiceContent from '@/components/ChiaoLin/HandInvoiceContent.vue';
-import { useBillstore } from '@/stores/ChiaoLin/BillStore'
+import { useBillstore } from '../stores/BillStore'
 import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
 import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
 
@@ -81,13 +81,13 @@ export default {
     font-family: "Chocolate Classical Sans", sans-serif;
 
     .rightArea {
-        width: 100%;
+        width: 50%;
 
         .functionButArea {
             display: flex;
             width: 94%;
-            height: 7dvh;
-            line-height: 7dvh;
+            height: 8dvh;
+            line-height: 8dvh;
             background: linear-gradient(90deg, #00c1ca, #01e1c5);
             color: #fff;
             border-radius: 10px;
@@ -114,7 +114,7 @@ export default {
 
             label {
                 // border: 1px solid black;
-                height: 7dvh;
+                height: 8dvh;
                 width: 8dvw;
                 cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
                 transition: 0.3s ease;
@@ -124,15 +124,10 @@ export default {
 
                 i {
                     z-index: 1;
-                    line-height: 7dvh;
+                    line-height: 8dvh;
                 }
             }
         }
-    }
-
-    .showInvoiceComponent {
-        width: 50%;
-        z-index: 1;
     }
 }
 </style>

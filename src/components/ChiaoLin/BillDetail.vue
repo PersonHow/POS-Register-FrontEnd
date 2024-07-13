@@ -101,7 +101,7 @@ export default {
 
 <style scoped lang="scss">
 .billDetailArea {
-    width: 100%;
+    width: 50%;
 
     .billDetailTextArea {
         margin: 2dvh 0;
@@ -116,10 +116,10 @@ export default {
 
     .showOrderId {
         display: flex;
-        height: 8dvh;
+        height: 9dvh;
         background: linear-gradient(90deg, #00c1ca, #01e1c5);
         color: white;
-        line-height: 8dvh;
+        line-height: 9dvh;
         padding-left: 2dvw;
         font-size: 2.25dvh;
 
@@ -136,17 +136,17 @@ export default {
 
         label {
             // border: 1px solid black;
-            height: 8dvh;
+            height: 9dvh;
             width: 8dvw;
             cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
             transition: 0.3s ease;
-            z-index: 9999; // 使其圖層絕對在最上方
+            z-index: 99; // 使其圖層絕對在最上方
             display: flex;
             justify-content: center;
 
             i {
                 z-index: 1;
-                line-height: 8dvh;
+                line-height: 9dvh;
             }
             span{
                 font-size: 2.25dvh;
@@ -178,7 +178,7 @@ export default {
             width: auto;
             text-align: right;
             padding-right: 1dvw;
-            border-bottom: 1px solid rgb(213, 212, 212);
+            border-bottom: 2px solid rgb(213, 212, 212);
 
             #addDetail {
                 height: 5dvh;
