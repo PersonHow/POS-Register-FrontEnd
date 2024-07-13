@@ -330,26 +330,17 @@ a:hover {
   color: #003087; /* 滑鼠懸停時文字顏色變為深藍色 */
 }
 
-/* 媒體查詢：螢幕寬度小於等於600px的設定 */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 768px) {
   .bf-row {
     flex-direction: column; /* 表單行的排列方式改為垂直 */
-    padding: 0; /* 內間距為0 */
-  }
-
-  .bf-col-12 {
     padding: 10px 0; /* 上下內間距為10px */
-    width: 100%; /* 寬度佔滿父元素的100% */
   }
 
+  .bf-col-12,
+  .bf-col-6,
   .bf-col-3 {
-    padding: 10px 0; /* 上下內間距為10px */
-    width: 30%; /* 寬度佔滿父元素的30% */
-  }
-
-  .bf-col-6 {
-    padding: 10px 0; /* 上下內間距為10px */
     width: 100%; /* 寬度佔滿父元素的100% */
+    padding: 10px 0; /* 上下內間距為10px */
   }
 
   .bf-container {
