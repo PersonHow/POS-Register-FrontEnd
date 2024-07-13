@@ -6,11 +6,14 @@ import HandInvoiceContent from '@/components/ChiaoLin/HandInvoiceContent.vue';
 import { useBillstore } from '../stores/BillStore'
 import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
 import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
+// import { useOrderStore } from '@/stores/OrderStore'
 
 export default {
     setup() {
         const Billstore = useBillstore();
         return { Billstore };
+        // const OrderStore = useOrderStore();
+        // return { OrderStore };
     },
     components: {
         BillDetail,
@@ -61,6 +64,7 @@ export default {
             <div class="functionButArea">
                 <RouterLink to="/OrderPage"><button type="button" class="comeback myMouse">返回</button></RouterLink>
                 <button type="button" class="manualInvoice myMouse" @click="Billstore.showHandInvoiceArea">手開發票</button>
+                <RouterLink to="/InvoicePage"><button type="button" class="comeback myMouse">發票設定</button></RouterLink>
                 <input type="checkbox" id="rightBar" v-model="Billstore.showRightNav">
                 <label for="rightBar" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
             </div>
