@@ -23,7 +23,6 @@ const router = createRouter({
       name: "OrderList",
       component: () => import("../components/OrderList.vue"),
     },
-    ,
     {
       path: "/Login",
       name: "Login",
