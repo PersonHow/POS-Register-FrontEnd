@@ -15,20 +15,3 @@
 .myMouse {
     cursor: pointer;
 }
-
-/* 全域樣式 */
-body {
-    display: flex;
-    font-family: "Arial", sans-serif;
-    /* 設置全局字體為 Arial，後備為 sans-serif */
-    background-color: #f0f0f0;
-    /* 柔和的灰色背景 */
-    margin: 0;
-    /* 重設頁面的邊距 */
-    padding: 0;
-    /* 重設頁面的內距 */
-    background-color: #f0f0f0;
-    /* 柔和的灰色背景 */
-    justify-content: center;
-    align-items: center;
-}

@@ -10,8 +10,6 @@ import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-
-
 const app = createApp(App)
 const pinia = createPinia()
 
