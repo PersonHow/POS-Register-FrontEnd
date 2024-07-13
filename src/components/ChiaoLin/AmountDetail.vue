@@ -41,9 +41,10 @@ export default {
         </div>
         <div class="amountDetail">
             <div class="amountDetailShow">
-                <span>總計 NT.{{ Billstore.tothousendShowValue(Billstore.order_amount) }} * 折扣{{ Billstore.discount
+                <p>總計 NT.{{ Billstore.tothousendShowValue(Billstore.order_amount) }} </p>
+                    <p>* 折扣{{ Billstore.discount
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.discountAmount) }}) * 服務費{{ Billstore.serviceFee
-                    }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </span>
+                    }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </p>
                 <p>- 招待NT.{{ Billstore.tothousendShowValue(Billstore.entertain) }} - 折讓NT.{{
                     Billstore.tothousendShowValue(Billstore.allowance) }}</p>
             </div>
@@ -58,7 +59,7 @@ export default {
                             <span id="totalAmount">{{ Billstore.tothousendShowValue(Billstore.totalAmount) }}</span>
                         </div>
                     </div>
-                    <div class="amountShowLeftChange">
+                    <!-- <div class="amountShowLeftChange">
                         <div class="changeAreaText">
                             <span>找零</span>
                         </div>
@@ -66,7 +67,7 @@ export default {
                         <div class="changeAreaAmount">
                             <span id="changeAmount">{{ Billstore.tothousendShowValue(Billstore.changeAmount) }}</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="amountShowRight">
                     <div class="amountShowRightRealCharge">
@@ -78,7 +79,7 @@ export default {
                             <span id="realChargeAmount">{{ Billstore.tothousendShowValue(Billstore.realChargeAmount)
                                 }}</span>
                         </div>
-                        <div class="amountShowRightNotyet">
+                        <!-- <div class="amountShowRightNotyet">
                             <div class="notyetChargeAreaText">
                                 <p>未收</p>
                             </div>
@@ -87,7 +88,7 @@ export default {
                                 <span id="notyetChargeAmount">{{
                                     Billstore.tothousendShowValue(Billstore.notyetChargeAmount) }}</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -153,10 +154,13 @@ export default {
 
         .amountDetailShow {
             width: 100%;
-            font-size: 1.8dvh;
+            font-size: 2.25dvh;
             text-align: center;
             padding: 1dvh 0;
             border-bottom: 1px solid rgb(213, 212, 212);
+            p{
+                margin: 0.5dvh 0;
+            }
         }
 
         .amountShow {
@@ -168,10 +172,11 @@ export default {
                 .amountShowLeftTotal {
                     padding: 0 1dvw;
                     width: 100%;
+                    margin: 1dvh 0;
 
                     .totalAreaAmount {
                         text-align: right;
-                        font-size: 5dvh;
+                        font-size: 7dvh;
                     }
 
                     #totalAmount {
@@ -204,6 +209,7 @@ export default {
                 .amountShowRightRealCharge {
                     padding: 0 1dvw;
                     width: 100%;
+                    margin: 1dvh 0;
 
                     .realChargeAreaAmount {
                         text-align: right;
