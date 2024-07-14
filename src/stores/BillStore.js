@@ -32,6 +32,8 @@ export const useBillstore = defineStore("Billstore", {
     chargedTodayBills: [], // 今日已結的bills
     todayCreateBillsOrderId: [], // 今日已結bills的order_id
     newChargedTodayBills: [],
+    bill_id:"",
+    theLastBill:"",
   }),
   getters: {
     // ----取值區----
@@ -320,5 +322,21 @@ export const useBillstore = defineStore("Billstore", {
         console.error("Try is error!!");
       }
     },
+    getBillIdfromDB(){
+      fetch("http://localhost:8080/rooms", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(obj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                  this.allbills = data;
+                  this.theLastBill = this.allbills.slice(0).reverse
+                })
+      
+    }
   },
 });
