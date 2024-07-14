@@ -10,6 +10,11 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: "/table",
+      name: "table",
+      component: () => import("../views/TablePage.vue"),
+    },
+    {
       path: "/OrderPage",
       name: "OrderPage",
       component: () => import("../views/OrderPage.vue"),
@@ -38,15 +43,6 @@ const router = createRouter({
         window.location.replace("/");
       },
     },
-    {
-      path: "/table",
-      name: "table",
-      component: () => import("../views/TablePage.vue"),
-    },{
-      path:"/reserve",
-      name:"reserve",
-      component:()=>import("../views/ReservePage.vue")
-    }
   ],
 });
 

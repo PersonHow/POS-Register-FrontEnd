@@ -17,10 +17,9 @@
       v-if="isEditing"
       v-model="tables"
       animation="300"
-      flex-direction:row;
       @start="onStart"
       @end="onEnd"
-      style="display: flex;min-height: 200px;min-width: 200px;"
+      style="display: flex;flex-direction: row; min-height: 200px;min-width: 200px;"
       class="list-group"
       tag="ul"
       :group="group_tables"
@@ -394,13 +393,15 @@
 </template>
   
   <script>
-  import draggable from "vuedraggable"; // 導入 vuedraggable 用於實現拖曳功能
+  import draggable from "vuedraggable";
+  import { onMounted } from "vue"; // 導入 vuedraggable 用於實現拖曳功能
   export default {
     components: {
       draggable // 將 draggable 組件套用在此vue上
     },
     data() {
       return {
+        isreload:false,
         table_count:0,
         table_area_list:["一般區","貴賓區"],
         input_table:{table_id:0},
@@ -616,7 +617,7 @@
         return `${hours}:${minutes}:${seconds}`;
       },
     },
-    mounted() {
+    created() {
       this.fetchTables();
       this.fetchWorkingStaffs();
     },

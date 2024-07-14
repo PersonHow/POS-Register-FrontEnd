@@ -2,6 +2,7 @@
 import axios from 'axios';
 let email = "";
 let password ="";
+let isLogin = true;
 const loginbtnclick = async(e)=>{
     e.preventDefault();
     let response = await axios.post("http://localhost:8080/staff/login",{email,password}).catch((e)=>{
@@ -21,19 +22,25 @@ const enrollbtnClick = async(e)=>{
 
 <template>
     <div class="main">
-    <form>
+    <form v-if="isLogin">
         <p class="sign">點餐系統-員工登入</p>
         <input v-model="email" class="un" type="text" placeholder="你的email" required>
         <input v-model="password" class="pass" type="password" placeholder="你的密碼" required>
         <div>
         <button class="submit" @click="loginbtnclick">登入</button><button class="submit" style="margin-left:1rem" @click="enrollbtnClick">註冊</button></div>
-    </form>       
+    </form> 
+    <form v-else>
+        <p class="sign">點餐系統-註冊登入</p>
+        <input v-model="email" class="un" type="text" placeholder="你的email" required>
+        <input v-model="password" class="pass" type="password" placeholder="你的密碼" required>
+        <div>
+        <button class="submit" @click="loginbtnclick">登入</button><button class="submit" style="margin-left:1rem" @click="enrollbtnClick">註冊</button></div>
+    </form>      
     </div>
     
 </template>
 <style>
     body {
-        background-color: #eafffc;
         font-family: 'Ubuntu', sans-serif;
     }
     

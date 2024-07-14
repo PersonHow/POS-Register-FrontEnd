@@ -40,11 +40,11 @@ export default {
   <!-- body = 包住全部東西的最大div -->
   <div class="body">
     <div class="header">
-      <h2 style="margin-left:40%;width: 100%;color:#00c5c8;font-size: 2rem">{{this.selected_item}}</h2>
+      <h2 style="margin-left:40%;width: 100%;color:#00c5c8;font-size: 2rem;font-weight: bold;">{{this.selected_item}}</h2>
       <ChangeTableArea style="margin-left: 30%;" v-on:selected_item_list="GetSelected_item" v-on:nav_item_list="Getnav_item_list"></ChangeTableArea>
     </div>
     <!-- second Area = 中間桌子的區塊 -->
-    <div class="second Area">
+    <div class="second">
       <TablePage/>
     </div>
     <div class="footer Area">
@@ -81,7 +81,7 @@ export default {
 }
 .body {
   width: 100%;
-  height: 80vh;
+  height: 80vh; 
   display: flex;
   flex-wrap: wrap;
   /* align-items: center; */
@@ -113,7 +113,6 @@ export default {
   height: 80%;
   // border: 1px solid black;
   // padding-top: 1%;
-
   .square {
     width: 150px;
     height: 150px;
