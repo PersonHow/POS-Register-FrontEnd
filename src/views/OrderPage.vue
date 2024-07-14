@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios'
 import EditMeal from '../components/Yuhan/EditOrder.vue'
 import { useOrderStore } from '@/stores/OrderStore' 
 export default {
@@ -34,6 +35,9 @@ export default {
             editingIndex:null, //欲修改的餐點索引
         }
     },
+    components:{
+        EditMeal
+    },
     created(){
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號
@@ -54,44 +58,22 @@ export default {
                 //預設顯示的餐點為資料裡第一個種類
                 this.selectedType = data[0].type 
             })
-        
         },
-        //下單
-        placeOrder(){
-            let order={
-                order_id: this.oId,
-                table_num: null, //==========>待改
-                guest_num: null, //==========>待改
-                order_detail: this.orderList,
-                amount: this.orderAmount,
-                memo: this.memo,
-                booking_num: null, //==========>待改
-                staff_name: "Andy", //==========>待改
-                lastmodified_staff_id: 1 //======>待改
-            }
-            fetch("http://localhost:8080/order_info/create",{
-                method:'POST',
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify(order)
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                this.orderStore.createOrder(order)
-            })
-        },
-        //打開EditMeal元件進行編輯
-        editing(index) {
-            this.editingIndex = index;
-        },
-        //關閉EditMeal元件
-        closeEditing() {
-            this.editingIndex = null;
+        //生成不重複的流水號
+        generateOrderNumber() {
+            let date = new Date();
+            let year = date.getFullYear().toString().slice(-2);  // 獲取年份的最後兩位
+            let month = ('0' + (date.getMonth() + 1)).slice(-2);  // 獲取月份，並確保它總是兩位數
+            let day = ('0' + date.getDate()).slice(-2);  // 獲取日期，並確保它總是兩位數
+
+            // 確保生成的是四位數的隨機數
+            let random = Math.floor(1000 + Math.random() * 9000).toString();
+            this.oId = year + month + day + random;  // 將以上部分組合成訂單流水號
         },
         //加入點餐清單
         addMealToList(meal){
+            //檢查加入的該餐點是否有必填選項 若有則顯示選項
+            this.checkIfMustfill(meal.meal_id,this.orderList.length)
             this.orderItem = {
                 meal_id:meal.meal_id,
                 meal_name:meal.name,
@@ -107,39 +89,87 @@ export default {
             }
             this.orderList.push(this.orderItem)
         },
+        checkIfMustfill(id,index){
+            axios.post("http://localhost:8080/custom/by_meal_id",[id])
+            .then(data => {
+                console.log(data.data)
+                //取得的資料為陣列 先判斷裡面有內容再遍歷裝進optionList
+                if(data.data.length != 0){
+                    const optionList = data.data.map(item => {
+                        if(item.ismustfill){
+                            this.editing(index)
+                        }
+                    })
+                }
+            })
+        },
         //從清單移除該餐點
         removeFromList(i){
             this.orderList.splice(i,1)
             this.quantityTemp = null
-        },
-        //將EditMeal元件傳來的資料存回orderList並關閉元件
-        handleUpdate(updateMealDetail){
-            this.orderList[this.editingIndex] = updateMealDetail
-            this.closeEditing()
-        },
-        //生成不重複的流水號
-        generateOrderNumber() {
-            let date = new Date();
-            let year = date.getFullYear().toString().slice(-2);  // 獲取年份的最後兩位
-            let month = ('0' + (date.getMonth() + 1)).slice(-2);  // 獲取月份，並確保它總是兩位數
-            let day = ('0' + date.getDate()).slice(-2);  // 獲取日期，並確保它總是兩位數
-
-            // 確保生成的是四位數的隨機數
-            let random = Math.floor(1000 + Math.random() * 9000).toString();
-            this.oId = year + month + day + random;  // 將以上部分組合成訂單流水號
         },
         //取得菜單內的餐點金額傳給EditMeal元件 避免重複加總金額
         getMealPrice(meal_id) {
         const meal = this.menu.find(meal => meal.meal_id === meal_id)
         return meal.price
         },
+        //打開EditMeal元件進行編輯
+        editing(index) {
+            this.editingIndex = index;
+        },
+        //關閉EditMeal元件
+        closeEditing() {
+            this.editingIndex = null;
+        },
+        //將EditMeal元件傳來的資料存回orderList並關閉元件
+        handleUpdate(updateMealDetail){
+            this.orderList[this.editingIndex] = updateMealDetail
+            this.closeEditing()
+        },
         //開關memo欄
         editMemo(){
             this.showMemoInput = !this.showMemoInput
         },
-    },
-    components:{
-        EditMeal
+        //下單
+        placeOrder(){
+            // 將選項去除加價後以分號串接成字串
+            this.orderList.forEach(order => {
+                // 檢查該餐點有客製選項
+                if (order.custom_option) {
+                    // 判斷選項是否為複數 是則用;串接
+                    if (order.custom_option.length > 0) {
+                    order.custom_option = order.custom_option.map(option => {
+                        return option.split('+')[0]
+                    }).join(';')
+                    } else {
+                    order.custom_option = order.custom_option[0].split('+')[0]
+                    }
+                }
+            })
+            let order={
+                order_id: this.oId,
+                table_num: null,
+                guest_num: null,
+                order_detail: this.orderList,
+                amount: this.orderAmount,
+                memo: this.memo,
+                booking_num: null,
+                staff_name: "Andy",
+                lastmodified_staff_id: 1
+            }
+            fetch("http://localhost:8080/order_info/create",{
+                method:'POST',
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(order)
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                this.orderStore.createOrder(order) //將訂餐存入orderStore
+            })
+        },
     },
     computed:{
         //已點餐點個別數量
@@ -176,9 +206,9 @@ export default {
             </div>
             <!-- 點餐列表 -->
             <div class="order-list">
-                <div v-for="(item,i) in orderList" :key="item">
+                <div v-for="(item,i) in orderList" :key="i">
                     <!-- 編輯餐點份數&客製選項 -->
-                    <div v-show="editingIndex === i" class="editMeal">
+                    <div v-if="editingIndex === i" class="editMeal">
                         <EditMeal :meal_detail="item" :meal_price="getMealPrice(item.meal_id)" 
                         @update_meal_detail="handleUpdate" @cancel_edting="closeEditing()"
                         @option_needing="editing(i)"/>
@@ -187,8 +217,8 @@ export default {
                     <div class="order-item">
                         <div class="item-id">{{i+1}}</div>
                         <div class="item">
-                            <span>{{item.meal_name}}</span><br>
-                        <span v-for="option in item.options" :key="option">{{option.split('+')[0]+" , "}}</span><br>
+                            <strong>{{item.meal_name}}</strong><br>
+                        <span v-for="(option,i) in item.custom_option" :key="option">{{option.split('+')[0]}} <span v-if="i < item.custom_option.length - 1">, </span></span><br>
                         <span>{{item.quantities}} x {{item.price}}</span>
                         </div>
                         <div @click="editing(i)">
@@ -238,7 +268,41 @@ export default {
                 <button @click.prevent="editMemo()" class="btn">完成</button>
             </form>
             <div class="bottom">
-                <button @click="placeOrder()" class="btn placeOrder"><p>送出訂單</p></button>
+                <button type="button" class="btn placeOrder" data-bs-toggle="modal" data-bs-target="#FirstModal">
+                    送出訂單
+                </button>
+
+                <!-- 彈出視窗 -->
+                <div class="modal fade" id="FirstModal" tabindex="-1" aria-labelledby="FirstModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h4>送單前請務必與消費者核對<strong>餐點內容</strong>與<strong>金額</strong></h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">修改</button>
+                                <button  type="button" @click="placeOrder()" class="btn placeOrder" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#secondModal">
+                                    確認無誤，送出</button> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="secondModal" tabindex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header"><h4><strong>送單完畢，是否前往結帳</strong></h4></div>
+                            <div class="modal-body d-flex justify-content-evenly">
+                                <!-- 跳轉至桌位頁 -->
+                                <a class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
+                                <!-- 跳轉至結帳頁 -->
+                                <a class="btn btn-primary">立即結帳</a>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
                 <button @click="editMemo()" class="btn">訂單備註</button>
             </div>
         </div>
@@ -401,7 +465,7 @@ $secondary-color: #FFE2C3;
     border-radius: 10px;
 }
 .meal{
-    width: 100%;
+    width: 10vw;
     height: 15vh;
     display: inline-block;
     box-shadow: 1px 0 5px rgba(128, 128, 128, 0.4);
@@ -417,8 +481,8 @@ $secondary-color: #FFE2C3;
     }
     img{
         width: 100%;
-        height: 70%;
-        object-fit: cover;
+        height: 60%;
+        object-fit: cover;;
         padding: 0;
     }
     .mealName{
