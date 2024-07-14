@@ -1,11 +1,13 @@
 <script>
 import { useBillstore } from '@/stores/BillStore'
+import { useOrderStore } from '@/stores/OrderStore'
 import { mapState, mapActions } from 'pinia';
 import { onMounted, watch } from 'vue';
 
 export default {
     setup() {
         const Billstore = useBillstore();
+        const OrderStore = useOrderStore();
 
         // event 對應 input, propName 對應 屬性名稱, 
         // event.target.value 當前輸入框的值, parseFloat 將字符串轉換為浮點數，確保輸入值為數字
@@ -36,9 +38,11 @@ export default {
 
         return {
             Billstore,
+            OrderStore,
             updateValue,
             enterAddInputValue,
             ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent',]),
+            ...mapState(OrderStore,['order_info']),
             ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId']),
         };
     },
@@ -50,7 +54,7 @@ export default {
     <div class="billDetailArea">
         <div class="showOrderId">
             <div style="width: 15%;">單號</div>
-            <div style="width: 55%;">{{ Billstore.order_id }}</div>
+            <div style="width: 55%;">{{ OrderStore.order_info }}</div>
             <!-- 漢堡按鈕還沒做 -->
             <input type="checkbox" id="noShowOrder" v-model="Billstore.showOrderArea">
             <label for="noShowOrder" class="orderDetailLabel myMouse"><span>點餐明細</span></label>
