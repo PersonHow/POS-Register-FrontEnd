@@ -3,8 +3,14 @@
   <div id="app">
     <div style="display: flex; align-items: center;">
       <button @click="toggleEdit" class="btn_not_adjust_table">調整桌位</button>
-      <p style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;color: #00c5c8;">你選擇的桌位：{{ select_table.table_id == 0 ?"尚未選擇":select_table.table_id }}</p>
-      <button @click="()=>{ this.select_table = {table_id:0};this.input_table ={table_id:0};}" class="btn_clear_select_table">清除桌位</button>
+      <p v-if="isTargetEditing" style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;color: #00c5c8;">
+          你選擇的桌位：{{ select_table.table_id == 0 ?"尚未選擇":select_table.table_id }}<br/>
+          ->目標桌位：{{ target_table.table_id == 0 ?"尚未選擇":target_table.table_id }}</p>
+      <p v-else style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;color: #00c5c8;">
+        你選擇的桌位：{{ select_table.table_id == 0 ?"尚未選擇":select_table.table_id }}</p>
+        
+      <button @click="()=>{ this.select_table = {table_id:0};this.input_table ={table_id:0};this.target_table = {table_id:0}}" class="btn_clear_select_table">清除桌位</button>
+      <button @click="toggleTarget" class="btn_cancel_target_table">設定目標桌位</button>
     </div>
     <!-- 當進入編輯模式時，啟用拖曳功能 -->
     <draggable
@@ -340,7 +346,7 @@
                       <div>預訂: {{ element.booking_num }}</div>
                     </div>
                     <div class="childSeat">
-                      <div>兒童座: {{ element.has_priorityseat ? 'Yes' : 'No' }}</div>
+                      <div>兒童座: {{ element.has_priorityseat ? '是' : '否' }}</div>
                     </div>
                     <div class="Seat">
                       <div>用餐人數: {{ element.guest_num }}</div>
@@ -398,6 +404,8 @@
         table_count:0,
         table_area_list:["一般區","貴賓區"],
         input_table:{table_id:0},
+        target_table:{table_id:0},
+        isTargetEditing:false,
         isEditing: false, // 判斷是否為編輯模式的變數
         working_staff_list:[],//已上工的員工列表
         tables: [],
@@ -407,7 +415,7 @@
           put:true
         },
         select_table:{table_id:0},
-        tables_list2:[],
+        tables_list2: [],
         group_tables_list2:{
           name:"site",
           pull:true,
@@ -446,10 +454,33 @@
         table_json["guest_name"] =this.input_table["guest_name"];
         table_json["guest_phone"] =this.input_table["guest_phone"];
         table_json["guest_num"] = this.input_table["guest_num"];
-        table_json["table_id"] = this.input_table["table_id"];
+        
         console.log(table_json);
-          //編輯桌位時使用POST
+        if(this.input_table["table_id"] == "#"){
+          //新增時使用POST
+          table_json["table_id"] = 0;
           try {
+            const response = await fetch(`http://localhost:8080/table`,{
+              method:"POST",
+              headers: {
+              'Content-Type': 'application/json',
+              },
+              body:JSON.stringify(table_json)
+            });
+            if (response.status !=201) {
+              throw new Error("Network response was not ok");
+            }else{
+              const data = await response.json();
+              alert(`新增桌號：${data["table_id"]} 成功！`);
+              window.location.reload();
+            }
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+        }else{
+          //編輯桌位時使用PUT
+          table_json["table_id"] = this.input_table["table_id"];
+           try {
             const response = await fetch(`http://localhost:8080/table`,{
               method:"PUT",
               headers: {
@@ -466,6 +497,7 @@
           } catch (error) {
             console.error("Error fetching table data:", error);
           }
+        }
         this.input_table = {};
         this.select_table ={};
       },
@@ -488,13 +520,16 @@
         }
       },
       selectTableHandler(table){
-        this.select_table =table;
+        if(this.isTargetEditing){
+          this.target_table =table;
+        }else{
+          this.select_table =table;
+        }
         this.input_table = table;
         console.log(this.input_table);
       },
      async addTableHandler(){
         let add_table = {};
-        add_table.table_id = this.tables.length+this.tables_list2.length+this.tables_list3.length+this.add_table_list.length+1;
         add_table.staff_name = this.working_staff_list[0].staff_name;
         add_table.staff_id = this.working_staff_list[0].staff_id;
         add_table.max_guest_num =1;
@@ -508,38 +543,8 @@
         add_table.guest_phone="";
         add_table.lastmodified_staff_id=this.working_staff_list[0].staff_id;
         add_table.table_area = "一般區";
+        add_table.table_id = "#"
         this.add_table_list.push(add_table);
-        this.table_count++;
-        console.log(this.table_count);
-        let table_json = {};
-        table_json["max_guest_num"] = 1;
-        table_json["staff_id"] = this.working_staff_list[0].staff_id;
-        table_json["lastmodified_staff_id"] = this.working_staff_list[0].staff_id;
-        table_json["booking_num"] = 0;
-        table_json["has_priorityseat"] = false;
-        table_json["table_status"]=0;
-        table_json["table_area"] ="一般區";
-        table_json["guest_name"] =""
-        table_json["guest_phone"] =""
-        table_json["guest_num"] =0;
-          //新增桌位時使用POST
-          try {
-            const response = await fetch(`http://localhost:8080/table`,{
-              method:"POST",
-              headers: {
-              'Content-Type': 'application/json',
-              },
-              body:JSON.stringify(table_json)
-            });
-            if (response.status !=201) {
-              throw new Error("Network response was not ok");
-            }else{
-              alert(`新增桌號：${this.table_count} 成功！`);
-              window.location.reload();
-            }
-          } catch (error) {
-            console.error("Error fetching table data:", error);
-          }
       },
       toggleEdit(e) {
         this.isEditing = !this.isEditing;
@@ -548,7 +553,16 @@
         }else{
           e.target.className="btn_not_adjust_table";
         }
-        
+      },
+      toggleTarget(e){
+        this.isTargetEditing =!this.isTargetEditing;
+        console.log(this.isTargetEditing);
+        if(this.isTargetEditing){
+          e.target.className="btn_target_table";
+        }else{
+          e.target.className="btn_cancel_target_table";
+        }
+
       },
       saveTableOrder() {
         // 保存新的桌子排序
@@ -853,6 +867,32 @@
 }
 .btn_clear_select_table{
     background-color: #3AD2D0;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: monospace;
+    color: white;
+    padding: 10px;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+.btn_target_table{
+    background-color: #e76f51;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: monospace;
+    color: white;
+    padding: 10px;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+.btn_cancel_target_table{
+  background-color: #3AD2D0;
     border: none;
     border-radius: 5px;
     font-weight: bold;

@@ -40,9 +40,6 @@ export default {
   <!-- body = 包住全部東西的最大div -->
   <div class="body">
     <div class="header">
-      <div class="booking">
-        <a href="#">訂位</a>
-      </div>
       <h2 style="margin-left:40%;width: 100%;color:#00c5c8;font-size: 2rem">{{this.selected_item}}</h2>
       <ChangeTableArea style="margin-left: 30%;" v-on:selected_item_list="GetSelected_item" v-on:nav_item_list="Getnav_item_list"></ChangeTableArea>
     </div>
@@ -99,40 +96,7 @@ export default {
   align-items: center;
   justify-content: center;
   /* header的"訂位" */
-  .booking {
-    display: flex;  
-    border-radius: 15px;
-    margin-left: 2vw;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #00c5c8;
-    width:30vw;
-    height: 4vw;
-    a{
-      color: #00c5c8;   
-    }
-  }
   /* header的漢堡圖區塊 */
-  .ham {
-    width: 5%;
-    height: 80%;
-    // border: 1px solid #00c5c8;
-    border-radius: 50%;
-    background: linear-gradient(90deg, #00c1ca, #01e1c5);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-right: 2%;
-    /* 漢堡圖的三條線 */
-    .line {
-      width: 40%;
-      height: 5%;
-      margin: 3% 0;
-      background: #fff;
-    }
-  }
   a{
     display: block;
     text-decoration: none;
