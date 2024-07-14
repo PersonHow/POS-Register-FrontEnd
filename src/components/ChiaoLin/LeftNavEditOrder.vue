@@ -1,9 +1,17 @@
 <script>
 import { useBillstore } from '@/stores/BillStore';
+import { useOrderStore } from '@/stores/OrderStore';
+import { mapState, mapActions } from 'pinia';
 export default {
     setup() {
         const Billstore = useBillstore();
-        return { Billstore };
+        const OrderStore = useOrderStore();
+        return {
+            Billstore,
+            OrderStore,
+            ...mapState(OrderStore, ['order_info']),
+        };
+
     },
 }
 </script>
@@ -16,8 +24,8 @@ export default {
             </label>
         </div>
         <ul>
-            <li>桌號：{{ Billstore.table_num }}</li>
-            <li>點餐內容：{{ Billstore.order_detail }}</li>
+            <li>桌號：{{ OrderStore.order_info }}</li>
+            <li>點餐內容：{{ OrderStore.order_info }}</li>
             <button class="myMouse">列印</button>
             <button class="myMouse">編輯</button>
         </ul>
@@ -79,7 +87,7 @@ export default {
             margin: 0.5dvh 0.5dvw;
             border: none;
             border-radius: 10px;
-            background:#00c1ca;
+            background: #00c1ca;
             padding: 0.5dvw;
             color: white;
         }

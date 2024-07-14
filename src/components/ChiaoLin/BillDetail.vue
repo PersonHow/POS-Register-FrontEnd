@@ -43,7 +43,7 @@ export default {
             enterAddInputValue,
             ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent',]),
             ...mapState(OrderStore,['order_info']),
-            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId']),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId','getBillIdfromDB']),
         };
     },
 
@@ -53,8 +53,8 @@ export default {
 <template>
     <div class="billDetailArea">
         <div class="showOrderId">
-            <div style="width: 15%;">單號</div>
-            <div style="width: 55%;">{{ OrderStore.order_info }}</div>
+            <div style="width: 15%;">結帳單號</div>
+            <div style="width: 55%;">{{ Billstore.theLastBill }}</div>
             <!-- 漢堡按鈕還沒做 -->
             <input type="checkbox" id="noShowOrder" v-model="Billstore.showOrderArea">
             <label for="noShowOrder" class="orderDetailLabel myMouse"><span>點餐明細</span></label>
@@ -66,7 +66,7 @@ export default {
         </div>
         <div class="billdetail">
             <p>訂單金額&nbsp;</p>
-            <div class="inputAera"><input type="text" :value="Billstore.order_amount"
+            <div class="inputAera"><input type="text" :value="OrderStore.order_info.amount"
                     @input="updateValue($event, 'order_amount')">
             </div>
             <p>折扣&nbsp;</p>
