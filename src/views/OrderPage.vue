@@ -36,12 +36,12 @@ export default {
         }
     },
     onMounted(){
-        if(!JSON.parse(sessionStorage.getItem("token"))){
-    alert("你還沒有登入，將轉向登入頁面！")
-    window.location.replace("/");
-  }
-    },
+       },
     created(){
+        if(sessionStorage.getItem("token")==null){
+            alert("你還沒有登入，將轉向登入頁面！")
+            this.$router.push({name: 'home'})
+        }
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱

@@ -67,68 +67,53 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import { ref, onMounted, computed } from 'vue';
-
-const currentTime = ref('');
-const isCollapsed = ref([]);
-const lastScrollTop = ref(0);
-const touchStartY = ref(0);
-const scrollThreshold = ref(10);
-const modalVisible = ref(false);
-const modalOrderId = ref(null);
-const isMenuOpen = ref(false);
-const selectedStation = ref('所有廚台');  // 初始化為"所有廚台"
-
-const stations = ["煎台", "油炸台", "煮制台", "飲料台", "烤爐台", "冷盤台"];
-
-const updateTime = () => {
-  const now = new Date();
-  currentTime.value = now.toLocaleTimeString('zh-TW', { hour12: false });
-};
-
-onMounted(() => {
-  if(!JSON.parse(sessionStorage.getItem("token"))){
-    alert("你還沒有登入，將轉向登入頁面！")
-    window.location.replace("/");
-  }
-  console.log(JSON.parse(sessionStorage.getItem("token")));
-  updateTime();
-  setInterval(updateTime, 1000);
-  fetchOrders();
-});
-
-const columns = ref([]);
-const working_area_list = new Set();
-const rows = ref([]);
-const collapseIndex = ref(0);
-
-const getStoredIsFillState = () => {
-  const storedState = localStorage.getItem('isFillState');
-  return storedState ? JSON.parse(storedState) : {};
-};
-
-const saveIsFillState = (state) => {
-  localStorage.setItem('isFillState', JSON.stringify(state));
-};
-
-const isFillState = ref(getStoredIsFillState());
-
-const toggleDropdown = (id) => {
-  const column = columns.value.find(col => col.id === id);
-  if (column) {
-    column.showMenu = !column.showMenu;
-  }
-};
-
-const toggleCollapse = (id) => {
-  const column = columns.value.find(col => col.id === id);
-  if (column) {
-    column.collapsed = !column.collapsed;
-  }
-};
-
-const fetchOrders = async () => {
+export default {
+  data(){
+    return{
+      currentTime:ref(''),
+      isCollapsed:ref([]),
+      lastScrollTop:ref(0),
+      touchStartY:ref(0),
+      scrollThreshold:ref(10),
+      modalVisible:ref(false),
+      modalOrderId:ref(null),
+      isMenuOpen:ref(false),
+      selectStation:ref('所有廚台'),// 初始化為"所有廚台"
+      columns:ref([]),
+      working_area_list:new Set(),
+      rows:ref([]),
+      collapseIndex:ref(0),
+      stations:["煎台", "油炸台", "煮制台", "飲料台", "烤爐台", "冷盤台"],
+      isFillState:ref(getStoredIsFillState())
+    }
+  },
+  methods:{
+    updateTime: () => {
+      const now = new Date();
+      currentTime.value = now.toLocaleTimeString('zh-TW', { hour12: false });
+    },
+    getStoredIsFillState : () => {
+      const storedState = localStorage.getItem('isFillState');
+      return storedState ? JSON.parse(storedState) : {};
+    },
+    saveIsFillState : (state) => {
+      localStorage.setItem('isFillState', JSON.stringify(state));
+    },
+    toggleDropdown:(id) => {
+      const column = columns.value.find(col => col.id === id);
+      if (column) {
+        column.showMenu = !column.showMenu;
+      }
+    },
+    toggleCollapse : (id) => {
+        const column = columns.value.find(col => col.id === id);
+        if (column) {
+          column.collapsed = !column.collapsed;
+        }
+    },
+    fetchOrders : async () => {
   try {
     const response = await fetch('http://localhost:8080/order_info');
     if (!response.ok) {
@@ -165,51 +150,44 @@ const fetchOrders = async () => {
   } catch (error) {
     console.error('Error fetching orders:', error);
   }
-};
-
-const refreshOrders = () => {
-  fetchOrders();
-};
-
-const showModal = (id) => {
-  modalOrderId.value = id;
-  modalVisible.value = true;
-};
-
-const closeModal = () => {
-  modalVisible.value = false;
-};
-
-const confirmIsFill = (id) => {
-  toggleIsFill(id);
-  closeModal();
-};
-
-const toggleIsFill = (id) => {
-  const column = columns.value.find(col => col.id === id);
-  if (column) {
-    column.shrinking = true;
-    setTimeout(() => {
-      column.isfill = !column.isfill;
-      column.shrinking = false;
-      isFillState.value[id] = column.isfill;
+    },
+    refreshOrders :()=> {
+      fetchOrders();
+    },
+    showModal:(id) => {
+      modalOrderId.value = id;
+      modalVisible.value = true;
+    },
+    closeModal : () => {
+      modalVisible.value = false;
+    },
+    confirmIsFill : (id) => {
+      toggleIsFill(id);
+      closeModal();
+    },
+    toggleIsFill : (id) => {
+      const column = columns.value.find(col => col.id === id);
+      if (column) {
+        column.shrinking = true;
+        setTimeout(() => {
+          column.isfill = !column.isfill;
+          column.shrinking = false;
+          isFillState.value[id] = column.isfill;
+          saveIsFillState(isFillState.value);
+        }, 500); // 與動畫時長一致
+      }
+    },
+    resetIsFill : () => {
+      columns.value.forEach(column => {
+        column.isfill = false;
+      });
+      isFillState.value = columns.value.reduce((acc, column) => {
+        acc[column.id] = false;
+        return acc;
+      }, {});
       saveIsFillState(isFillState.value);
-    }, 500); // 與動畫時長一致
-  }
-};
-
-const resetIsFill = () => {
-  columns.value.forEach(column => {
-    column.isfill = false;
-  });
-  isFillState.value = columns.value.reduce((acc, column) => {
-    acc[column.id] = false;
-    return acc;
-  }, {});
-  saveIsFillState(isFillState.value);
-};
-
-const handleScroll = (event) => {
+    },
+    handleScroll:(event) => {
   const delta = event.deltaY;
 
   if (delta > scrollThreshold.value && collapseIndex.value < rows.value.length) {
@@ -229,55 +207,84 @@ const handleScroll = (event) => {
     });
     isCollapsed.value[collapseIndex.value] = false;
   }
-};
+    },
+    handleTouchStart: (event) => {
+      touchStartY.value = event.touches[0].clientY;
+    },
+    handleTouchMove: (event) => {
+      const touchEndY = event.touches[0].clientY;
+      const delta = touchStartY.value - touchEndY;
 
-const handleTouchStart = (event) => {
-  touchStartY.value = event.touches[0].clientY;
-};
-
-const handleTouchMove = (event) => {
-  const touchEndY = event.touches[0].clientY;
-  const delta = touchStartY.value - touchEndY;
-
-  if (delta > scrollThreshold.value && collapseIndex.value < rows.value.length) {
-    rows.value[collapseIndex.value].forEach((column) => {
-      if (!column.collapsed) {
-        toggleCollapse(column.id);
+      if (delta > scrollThreshold.value && collapseIndex.value < rows.value.length) {
+        rows.value[collapseIndex.value].forEach((column) => {
+          if (!column.collapsed) {
+            toggleCollapse(column.id);
+          }
+        });
+        isCollapsed.value[collapseIndex.value] = true;
+        collapseIndex.value += 1;
+      } else if (delta < -scrollThreshold.value && collapseIndex.value > 0) {
+        collapseIndex.value -= 1;
+        rows.value[collapseIndex.value].forEach((column) => {
+          if (column.collapsed) {
+            toggleCollapse(column.id);
+          }
+        });
+        isCollapsed.value[collapseIndex.value] = false;
       }
-    });
-    isCollapsed.value[collapseIndex.value] = true;
-    collapseIndex.value += 1;
-  } else if (delta < -scrollThreshold.value && collapseIndex.value > 0) {
-    collapseIndex.value -= 1;
-    rows.value[collapseIndex.value].forEach((column) => {
-      if (column.collapsed) {
-        toggleCollapse(column.id);
+    },
+    handleTouchMove: (event) => {
+      const touchEndY = event.touches[0].clientY;
+      const delta = touchStartY.value - touchEndY;
+
+      if (delta > scrollThreshold.value && collapseIndex.value < rows.value.length) {
+        rows.value[collapseIndex.value].forEach((column) => {
+          if (!column.collapsed) {
+            toggleCollapse(column.id);
+          }
+        });
+        isCollapsed.value[collapseIndex.value] = true;
+        collapseIndex.value += 1;
+      } else if (delta < -scrollThreshold.value && collapseIndex.value > 0) {
+        collapseIndex.value -= 1;
+        rows.value[collapseIndex.value].forEach((column) => {
+          if (column.collapsed) {
+            toggleCollapse(column.id);
+          }
+        });
+        isCollapsed.value[collapseIndex.value] = false;
       }
-    });
-    isCollapsed.value[collapseIndex.value] = false;
-  }
-};
-
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value;
-};
-
-const selectStation = (station) => {
-  selectedStation.value = station;
-  isMenuOpen.value = false;
-};
-
-const selectAllStations = () => {
-  selectedStation.value = '所有廚台';
-  isMenuOpen.value = false;
-};
-
-const filteredRows = computed(() => {
-  if (selectedStation.value === '所有廚台') {
-    return rows.value;
-  }
-  return rows.value.map(row => row.filter(column => column.working_area.includes(selectedStation.value)));
-});
+    },
+    toggleMenu: () => {
+      isMenuOpen.value = !isMenuOpen.value;
+    },
+    selectStation: (station) => {
+      selectedStation.value = station;
+      isMenuOpen.value = false;
+    },
+    selectAllStations: () => {
+      selectedStation.value = '所有廚台';
+      isMenuOpen.value = false;
+    },
+  }, 
+  computed:{
+      filteredRows:()=>{
+        if (selectedStation.value === '所有廚台') {
+          return rows.value;
+        }
+        return rows.value.map(row => row.filter(column => column.working_area.includes(selectedStation.value)));
+      }
+  },
+  created(){
+    if(sessionStorage.getItem("token")==null){
+    alert("你還沒有登入，將轉向登入頁面！")
+    this.$router.push({name: 'home'})
+    } 
+    updateTime();
+    setInterval(updateTime, 1000);
+    fetchOrders();
+    }
+} 
 </script>
 
 

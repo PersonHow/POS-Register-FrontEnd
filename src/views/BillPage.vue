@@ -31,10 +31,10 @@ export default {
             focusedInput: null,
         }
     },
-    onMounted(){
-        if(!JSON.parse(sessionStorage.getItem("token"))){
+    created(){
+        if(sessionStorage.getItem("token") == null){
         alert("你還沒有登入，將轉向登入頁面！")
-        window.location.replace("/");
+        this.$router.push({name: 'home'})
     }},
     methods: {
         // 更新 Billstore 中的多個屬性，將 event 中的所有屬性複製到 this.Billstore 中

@@ -8,10 +8,10 @@
 import Calendar from '../components/WenQi/Calendar.vue'
 
 export default{
-    onMounted(){
-        if(!JSON.parse(sessionStorage.getItem("token"))){
+    created(){
+        if(sessionStorage.getItem("token") == null){
         alert("你還沒有登入，將轉向登入頁面！")
-        window.location.replace("/");
+        this.$router.push({name: 'home'})
     }},
     components:{
         Calendar,

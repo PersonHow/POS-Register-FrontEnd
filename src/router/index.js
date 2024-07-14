@@ -33,7 +33,7 @@ const router = createRouter({
       path: "/logout",
       name: "logout",
       component: () => {
-        sessionStorage.setItem("token", null);
+        sessionStorage.removeItem("token");
         alert("登出成功！");
         window.location.replace("/");
       },
@@ -42,7 +42,11 @@ const router = createRouter({
       path: "/table",
       name: "table",
       component: () => import("../views/TablePage.vue"),
-    },
+    },{
+      path:"/reserve",
+      name:"reserve",
+      component:()=>import("../views/ReservePage.vue")
+    }
   ],
 });
 
