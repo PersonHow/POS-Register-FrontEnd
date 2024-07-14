@@ -2,14 +2,18 @@
 import { useBillstore } from '@/stores/BillStore';
 import { useOrderStore } from '@/stores/OrderStore';
 import { mapState, mapActions } from 'pinia';
+import { computed } from 'vue';
 export default {
     setup() {
         const Billstore = useBillstore();
         const OrderStore = useOrderStore();
+        // 取得 order_info 內容
+        const orderInfo = computed(() => OrderStore.order_info);
+
         return {
             Billstore,
             OrderStore,
-            ...mapState(OrderStore, ['order_info']),
+            orderInfo,
         };
 
     },
@@ -24,8 +28,15 @@ export default {
             </label>
         </div>
         <ul>
-            <li>桌號：{{ OrderStore.order_info }}</li>
-            <li>點餐內容：{{ OrderStore.order_info }}</li>
+            <li v-for="(order, index) in orderInfo" :key="index">
+                <div>桌號：{{ order.table_num }}</div>
+                <div>用餐人數：{{ order.guest_num }}</div>
+                <div>點餐內容：</div>
+                <ul>
+                    <li v-for="(detail, detailIndex) in order.order_detail" :key="detailIndex">
+                        {{ detail }}</li>
+                </ul>
+            </li>
             <button class="myMouse">列印</button>
             <button class="myMouse">編輯</button>
         </ul>
@@ -56,7 +67,7 @@ export default {
 
     div {
         display: flex;
-        justify-content: right;
+        justify-content: left;
 
         label {
             width: 30px;

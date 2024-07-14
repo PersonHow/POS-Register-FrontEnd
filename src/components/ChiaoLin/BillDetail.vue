@@ -18,6 +18,7 @@ export default {
             Billstore.newInputEvent = event.target.value;
         };
 
+
         // 避免切換分頁 inputEvent 刷新
         // 在 onMounted 生命週期時從 localStorage 中恢復 newInputEvent 的值
         onMounted(() => {
@@ -53,8 +54,8 @@ export default {
 <template>
     <div class="billDetailArea">
         <div class="showOrderId">
-            <div style="width: 15%;">結帳單號</div>
-            <div style="width: 55%;">{{ Billstore.theLastBill }}</div>
+            <div style="width: 20%;">結帳單號</div>
+            <div style="width: 50%;" >{{ Billstore.theLastBill.bill_id+1 }}</div>
             <!-- 漢堡按鈕還沒做 -->
             <input type="checkbox" id="noShowOrder" v-model="Billstore.showOrderArea">
             <label for="noShowOrder" class="orderDetailLabel myMouse"><span>點餐明細</span></label>

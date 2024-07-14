@@ -216,11 +216,13 @@ export const useBillstore = defineStore("Billstore", {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
+            // console.log(data);
             this.allbills = data;
             // 未用 只取近5筆記錄
             // this.lastFiveBills = data.slice(-5).reverse();
             // console.log(this.lastFiveBills);
+            this.theLastBill = this.allbills[this.allbills.length - 1];
+            // console.log(this.theLastBill);
 
             const now = new Date();
             const today = new Date(
@@ -293,7 +295,7 @@ export const useBillstore = defineStore("Billstore", {
           }
         });
         // console.log(this.todayCreateBillsOrderId);
-        console.log(this.chargedTodayBills);
+        // console.log(this.chargedTodayBills);
         // console.log(this.chargedOrders);
         // 取出 todayCreateBillsOrderId 的 order_id 的 order 內容
         for (let orderId of this.todayCreateBillsOrderId) {
@@ -315,28 +317,12 @@ export const useBillstore = defineStore("Billstore", {
             console.error("Fetching order detail is error!!");
           }
         }
-        console.log(this.todayCreateBillsOrderDetail);
+        // console.log(this.todayCreateBillsOrderDetail);
 
         return this.todayCreateBillsOrderDetail;
       } catch (error) {
         console.error("Try is error!!");
       }
     },
-    getBillIdfromDB(){
-      fetch("http://localhost:8080/rooms", {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(obj)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data)
-                  this.allbills = data;
-                  this.theLastBill = this.allbills.slice(0).reverse
-                })
-      
-    }
   },
 });
