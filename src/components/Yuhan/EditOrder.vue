@@ -16,8 +16,8 @@ export default {
     created(){
         this.getCustomOption()
         this.quantity = this.meal_detail.quantities
-        if(this.meal_detail.options != null){
-            this.selectOptions = this.meal_detail.options
+        if(this.meal_detail.custom_option != null){
+            this.selectOptions = this.meal_detail.custom_option
         }
         this.price = this.meal_price
     },
@@ -45,10 +45,9 @@ export default {
         editedItems(){
             this.meal_detail.price = this.addition
             this.meal_detail.quantities = this.quantity
-            this.meal_detail.options = this.selectOptions
+            this.meal_detail.custom_option = this.selectOptions
             this.meal_detail.otherReq = this.otherReq
             this.$emit('update_meal_detail', this.meal_detail)
-
         },
         //加數量
         addQuantiy(){
@@ -76,6 +75,17 @@ export default {
             return isSelected;
         },
     },
+    watch:{
+        meal_detail: {
+            immediate: true,
+            handler(newValue) {
+                if (newValue.custom_option != null) {
+                this.selectOptions = newValue.custom_option;
+                }
+            },
+            deep:true
+        },
+    },
     computed:{
         //把加購的選項金額加總
         addition(){
@@ -89,27 +99,23 @@ export default {
 
 <template>
     <div class="card">
-            <div class="x">
-                <button @click="$emit('cancel_edting')">
-                    <font-awesome-icon icon="fa-regular fa-circle-xmark" class="fa-2x"/>
-                </button>
-            </div>
+        <div class="x">
+            <button @click="$emit('cancel_edting')">
+                <font-awesome-icon icon="fa-regular fa-circle-xmark" class="fa-2x"/>
+            </button>
+        </div>
         <div class="row">
-            <div class="col">
-                
+            <div class="colume">
                 <h3>{{meal_detail.meal_name}}</h3>
                 {{meal_detail.description}}
                 <p class="price">NT. {{addition}}</p>
             </div>
-            <div class="img">
-                <img :src="meal_detail.img" alt="">
-            </div>
         </div>
         <div v-for="(item, index) in optionList" :key="item" 
-        :class="{ 'warn': item.ismustfill && !isOptionSelected(item.options) }" class="col">
+        :class="{ 'warn': item.ismustfill && !isOptionSelected(item.options) }" class="colume">
             餐點選項{{index+1}} : <span v-if="item.ismustfill">(必填)</span>
-            <div class="row">
-                <div v-for="option in item.options" :key="option" class="col wrap">
+        <div class="d-flex">
+                <div v-for="option in item.options" :key="option" class="wrap mx-2">
                     <input type="checkbox" v-model="selectOptions" :id="option" :value="option"
                     :required="item.ismustfill">
                     <label :for="option" >{{option}}</label>
@@ -117,8 +123,11 @@ export default {
             </div>
             <div class="other">*{{item.other}}</div>
         </div>
-        <label for="otherReq"><p>其他需求:</p></label>
-        <textarea v-model="otherReq" rows="3" name="otherReq" class="textarea"></textarea>
+        <p class="mt-3">其他需求:</p>
+        <div class="form-floating">
+        <textarea class="form-control" placeholder="其他需求" id="floatingTextarea"></textarea>
+        <label for="floatingTextarea">請填寫</label>
+        </div>
         <div class="quantity">
             <button @click="reducedQuantity()" >
                 <font-awesome-icon icon="fa-solid fa-circle-minus" :class="{disable : quantity < 2}" class="fa-3x" />
@@ -137,6 +146,7 @@ export default {
 </template>
 
 <style scoped lang="scss">
+
 .card{
     max-height: 75vh;
     width: 35vw;
@@ -179,7 +189,7 @@ export default {
     }
     cursor: pointer;
 }
-.col{
+.colume{
     margin: 2%;
     line-height: 2;
     transition: 0.3s;
@@ -200,7 +210,7 @@ export default {
         display: inline-block;
         padding: 5px 10px;
         border: 1px solid gray;
-        background: #ffffffa8;
+        background: #fff;
         border-radius: 10px;
         cursor: pointer;
     }
