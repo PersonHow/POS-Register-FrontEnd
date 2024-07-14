@@ -5,6 +5,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: "/OrderPage",
+      name: "OrderPage",
+      component: () => import("../views/OrderPage.vue"),
+    },
+    {
       path: '/',
       name: 'home',
       component: Home
@@ -27,4 +32,4 @@ const router = createRouter({
   ]
 })
 
-export default router
+export default router; // 導出路由器
