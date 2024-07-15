@@ -329,7 +329,7 @@ export default {
                         </div>
                     </div>
                     </div>
-                <button @click="editMemo()" class="btn">訂單備註</button>
+                <button @click="editMemo()" class="btn nowrap">訂單備註</button>
             </div>
         </div>
     </div>
@@ -595,7 +595,6 @@ $secondary-color: #FFE2C3;
         align-items: center;
         width: 20%;     
         border-radius: 10px;
-        white-space: nowrap;
         box-shadow: 0 1px 2px rgba(128, 128, 128, 0.4);
         background: #c5c5c5;
         color: #fff;
@@ -611,6 +610,9 @@ $secondary-color: #FFE2C3;
     .btn-primary{
         background: $main-color;
     }
+}
+.nowrap{
+    white-space: nowrap;
 }
 
 </style>
