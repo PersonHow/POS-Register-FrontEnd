@@ -8,7 +8,7 @@ export default {
         const Billstore = useBillstore();
         return {
             Billstore,
-            ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
+            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
                 'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount']),
             ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'updateNewInputEventValue', 'updateInputEventValue', 'tothousendShowValue', 'showVehicleArea', 'showBuniNumArea']),
         };
@@ -23,8 +23,8 @@ export default {
             let orderObj = {
                 order_id: orderId,
             }
-                console.log(orderId);
-                console.log(orderObj);
+                // console.log(orderId);
+                // console.log(orderObj);
             fetch("http://localhost:8080/order_info/ById", {
                 method: "post",
                 headers: {
@@ -35,10 +35,17 @@ export default {
                 .then(res => res.json())
                 .then(data => {
                     this.OrderDB = data;
-                    console.log(this.OrderDB)
+                    // console.log(this.OrderDB)
+                    this.Billstore.orderAmountfromPage = this.OrderDB.amount;
+                    // console.log(this.orderAmountfromPage);
                 })
         } else {
             console.error("Wrong oId!")
+        };
+    },
+    data(){
+        return {
+            OrderDB:[],
         }
     }
 }
@@ -65,7 +72,7 @@ export default {
         </div>
         <div class="amountDetail">
             <div class="amountDetailShow">
-                <p>總計 NT.{{ Billstore.tothousendShowValue(Billstore.order_amount) }} </p>
+                <p>總計 NT.{{ Billstore.tothousendShowValue(Billstore.orderAmountfromPage) }} </p>
                     <p>* 折扣{{ Billstore.discount
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.discountAmount) }}) * 服務費{{ Billstore.serviceFee
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </p>
@@ -80,7 +87,7 @@ export default {
                         </div>
                         <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                         <div class="totalAreaAmount">
-                            <span id="totalAmount">{{ Billstore.tothousendShowValue(this.OrderDB.amount) }}</span>
+                            <span id="totalAmount">{{ Billstore.tothousendShowValue(Billstore.totalAmount) }}</span>
                         </div>
                     </div>
                     <!-- <div class="amountShowLeftChange">

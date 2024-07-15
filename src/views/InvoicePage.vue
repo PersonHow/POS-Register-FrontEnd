@@ -1,5 +1,5 @@
 <script>
-import AddInvoice from '@/components/ChiaoLin/InvoiceCompnents/AddInvoice.vue';
+// import AddInvoice from '@/components/ChiaoLin/InvoiceCompnents/AddInvoice.vue';
 import DeleteInvoice from '@/components/ChiaoLin/InvoiceCompnents/DeleteInvoice.vue';
 import SearchInvoice from '@/components/ChiaoLin/InvoiceCompnents/SearchInvoice.vue'
 import { useBillstore } from '@/stores/BillStore'
@@ -11,7 +11,7 @@ export default {
         }
     },
     components: {
-        AddInvoice,
+        // AddInvoice,
         DeleteInvoice,
         SearchInvoice,
 
@@ -48,14 +48,14 @@ export default {
                     </div>
                     <ul>
                         <li class="myMouse" @click="updateChangeShow('A')">搜 尋</li>
-                        <li class="myMouse" @click="updateChangeShow('B')">新增發票</li>
+                        <!-- <li class="myMouse" @click="updateChangeShow('B')">新增發票</li> -->
                         <li class="myMouse" @click="updateChangeShow('C')">作廢發票</li>
                     </ul>
                 </nav>
             </div>
             <div class="showChangeArea">
                 <SearchInvoice v-if="Billstore.changeShow === 'A'"></SearchInvoice>
-                <AddInvoice v-else-if="Billstore.changeShow === 'B'"></AddInvoice>
+                <!-- <AddInvoice v-else-if="Billstore.changeShow === 'B'"></AddInvoice> -->
                 <DeleteInvoice v-else-if="Billstore.changeShow === 'C'"></DeleteInvoice>
             </div>
         </div>

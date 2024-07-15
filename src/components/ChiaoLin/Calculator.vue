@@ -7,8 +7,8 @@ export default {
         return {
             Billstore,
             ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
-                'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount']),
-            ...mapActions(Billstore, ['addToDisplay', 'clearDisplay', 'backspace', 'getOderId', 'getInvoiceNum','tothousendShowValue',]),
+                'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount', 'OrderDB']),
+            ...mapActions(Billstore, ['addToDisplay', 'clearDisplay', 'backspace', 'getOderId', 'getInvoiceNum', 'tothousendShowValue',]),
         };
     },
     methods: {
@@ -27,8 +27,8 @@ export default {
             let paymentWays = this.Billstore.inputEvent.map(otherPayment => otherPayment.type);
             let pOtherName = paymentWays.splice(2).join(',');
             // 待連 lastmodified_staff_id: pId
-            this.saveBillfromP("", this.Billstore.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", "", "", pOtherName)
-            this.Billstore.order_amount = 0;
+            this.saveBillfromP(this.Billstore.bId, this.OrderDB.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", "", "", pOtherName)
+            this.Billstore.orderAmountfromPage = 0;
             this.Billstore.discount = 0;
             this.Billstore.serviceFee = 0;
             this.Billstore.entertain = 0;
@@ -42,11 +42,12 @@ export default {
                     event.value = 0;
                 }
             })
+            this.OrderDB.amount = 0;
         },
         closeShow() {
             this.$emit('close');
         },
-        showChangeArea(){
+        showChangeArea() {
             this.changeArea = !this.changeArea;
         }
     },
@@ -54,7 +55,38 @@ export default {
         return {
             changeArea: false,
         }
-    }
+    },
+    created() {
+        if (this.$route.params.orderId !== "") {
+            let orderId = this.$route.params.orderId
+            let orderObj = {
+                order_id: orderId,
+            }
+            // console.log(orderId);
+            // console.log(orderObj);
+            fetch("http://localhost:8080/order_info/ById", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(orderObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    this.OrderDB = data;
+                    // console.log(this.OrderDB)
+                })
+        } else {
+            console.error("Wrong oId!")
+        }
+        // 產生Invoice字軌
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const firstChar = chars.charAt(Math.floor(Math.random() * chars.length));
+        const secondChar = chars.charAt(Math.floor(Math.random() * chars.length));
+        // 10000000 ~ 99999999 的8位數
+        const randomNum = String(Math.floor(10000000 + Math.random() * 99999999));
+        this.Billstore.invoiceNum = `${firstChar}${secondChar}${randomNum}`;
+    },
 }
 </script>
 
@@ -80,7 +112,7 @@ export default {
                         id="butbackspace"></div>
                 <div class="mathBut butRevise"><input type="button" value="更正" @click="Billstore.clearDisplay()"
                         id="butRevise"></div>
-                <div class="mathBut butComfirm"><input type="button" value="確定" @click="showChangeArea()" id="butComfirm">
+                <div class="mathBut butComfirm"><input type="button" value="確定" @click="saveBill()" id="butComfirm">
                 </div>
             </div>
             <div v-if="changeArea == true">
@@ -166,63 +198,64 @@ export default {
     }
 
     .showBack {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    font-weight: 500;
-}
-
-.showBox {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    font-size: 3dvh;
-    line-height: 5dvh;
-
-    .titleArea {
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-        height: 5dvh;
-        color: black;
-        margin: 0 1dvw;
-    }
-
-    .butArea {
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
         display: flex;
-        line-height: 8dvh;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        font-weight: 500;
+    }
 
-        button {
-            width: 9dvw;
-            height: 7dvh;
+    .showBox {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        font-size: 3dvh;
+        line-height: 5dvh;
+
+        .titleArea {
+            width: 100%;
+            height: 5dvh;
+            color: black;
             margin: 0 1dvw;
-            margin-top: 1dvh;
-            background: none;
-            color: gray;
-            font-weight: 600;
-            font-family: "Chocolate Classical Sans", sans-serif;
-            font-size: 2dvh;
-            border: 2px solid #00c1ca;
-            border-radius: 5px;
         }
-    }
 
-    .showInfoArea {
-        width: 100%;
-        margin: 1dvh 0;
-        padding-left: 1dvw;
-        span{
-            font-size: 3dvh;
+        .butArea {
+            display: flex;
+            line-height: 8dvh;
+
+            button {
+                width: 9dvw;
+                height: 7dvh;
+                margin: 0 1dvw;
+                margin-top: 1dvh;
+                background: none;
+                color: gray;
+                font-weight: 600;
+                font-family: "Chocolate Classical Sans", sans-serif;
+                font-size: 2dvh;
+                border: 2px solid #00c1ca;
+                border-radius: 5px;
+            }
         }
-    }
 
-}
+        .showInfoArea {
+            width: 100%;
+            margin: 1dvh 0;
+            padding-left: 1dvw;
+
+            span {
+                font-size: 3dvh;
+            }
+        }
+
+    }
 }
 </style>

@@ -47,13 +47,13 @@ export default {
 <template>
     <div class="midArea">
         <!-- 用 v-bind -->
-        <BillDetail :orderAmount="Billstore.order_amount" :discount="Billstore.discount"
+        <BillDetail :orderAmount="Billstore.OrderDB.amount" :discount="Billstore.discount"
             :serviceFee="Billstore.serviceFee" :entertain="Billstore.entertain" :allowance="Billstore.allowance"
             :inputEvent="Billstore.inputEvent" :newInputEvent="Billstore.newInputEvent"
             @set-focused-input="Billstore.setFocusedInput" @add-input-event="Billstore.addInputEvent"
             @remove-input-event="Billstore.removeInputEvent" @update="updateBillstore" />
         <div class="rightArea">
-            <AmountDetails :orderAmount="Billstore.order_amount" :totalAmount="Billstore.totalAmount"
+            <AmountDetails :orderAmount="Billstore.OrderDB.amount" :totalAmount="Billstore.totalAmount"
                 :changeAmount="Billstore.changeAmount" :realChargeAmount="Billstore.realChargeAmount"
                 :notyetChargeAmount="Billstore.notyetChargeAmount" :discount="Billstore.discount"
                 :discountAmount="Billstore.discountAmount" :serviceFee="Billstore.serviceFee"

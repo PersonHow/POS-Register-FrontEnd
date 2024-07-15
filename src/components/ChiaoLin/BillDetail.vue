@@ -41,14 +41,41 @@ export default {
             OrderStore,
             updateValue,
             enterAddInputValue,
-            ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent',]),
+            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent',]),
             ...mapState(OrderStore, ['order_info']),
             ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB']),
         };
     },
     methods: {
-        // 結帳單號
-        createBillNum() {
+        
+    },
+    data() {
+        return {
+            OrderDB: [],
+        }
+    },
+    created() {
+        // 判斷orderId是不是空
+        if (this.$route.params.orderId !== "") {
+            let orderId = this.$route.params.orderId
+            let orderObj = {
+                order_id: orderId,
+            }
+            console.log(orderId);
+            console.log(orderObj);
+            fetch("http://localhost:8080/order_info/ById", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(orderObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    this.OrderDB = data;
+                    console.log(this.OrderDB)
+                })
+            // 結帳單號
             const now = new Date();
             const year = now.getFullYear().toString().slice(-2);  // 只取年份後2碼
             const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -66,34 +93,7 @@ export default {
             }
             // 100 ~ 999 的三位數
             const randomNum = String(Math.floor(100 + Math.random() * 900));
-            this.bId = `${year}${month}${day}-${AorB}${randomNum}`;
-        },
-    },
-    data() {
-        return {
-            OrderDB: [],
-        }
-    },
-    created() {
-        if (this.$route.params.orderId !== "") {
-            let orderId = this.$route.params.orderId
-            let orderObj = {
-                order_id: orderId,
-            }
-                console.log(orderId);
-                console.log(orderObj);
-            fetch("http://localhost:8080/order_info/ById", {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(orderObj)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    this.OrderDB = data;
-                    console.log(this.OrderDB)
-                })
+            this.Billstore.bId = `${year}${month}${day}-${AorB}${randomNum}`;
         } else {
             console.error("Wrong oId!")
         }
@@ -106,7 +106,7 @@ export default {
     <div class="allArea">
         <div class="showOrderId">
             <div style="width: 20%;">結帳單號</div>
-            <div style="width: 50%;">{{ Billstore.bId }}</div>
+            <div style="width: 50%;">{{ this.Billstore.bId }}</div>
             <!-- 漢堡按鈕還沒做 -->
             <input type="checkbox" id="noShowOrder" v-model="Billstore.showOrderArea">
             <label for="noShowOrder" class="orderDetailLabel myMouse"><span>點餐明細</span></label>
