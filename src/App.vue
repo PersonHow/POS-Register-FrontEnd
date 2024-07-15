@@ -4,9 +4,9 @@ import TestHeader from './components/ChiaoLin/TestHeader.vue';
 </script>
 
 <template>
-      <RouterView />
-<div >
+<div>
     <TestHeader />
+    <RouterView />
 </div>
 </template>
 
@@ -41,7 +41,6 @@ div.container {
             width: 100%;
           }
           &::before{
-            content: '';
             display: block;
             vertical-align:middle;
             height: 5px;

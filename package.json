@@ -24,6 +24,7 @@
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
     "vuedraggable": "^4.1.0",
+    "vuetify": "^3.6.12",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

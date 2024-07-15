@@ -1,18 +1,16 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-
+import { createRouter, createWebHistory } from "vue-router";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      // path: "/",
-      // name: "home",
-      // component: HomeView,
+      path: "/",
+      name: "home",
+      component: import("../views/HomeView.vue"),
     },
     {
-      // path: "/table",
-      // name: "table",
-      // component: () => import("../views/TablePage.vue"),
+      path: "/table",
+      name: "table",
+      component: () => import("../views/TablePage.vue"),
     },
     {
       path: "/OrderPage",
@@ -20,9 +18,9 @@ const router = createRouter({
       component: () => import("../views/OrderPage.vue"),
     },
     {
-      // path: "/workingarea",
-      // name: "workingarea",
-      // component: () => import("../views/WorkingAreaView.vue"),
+      path: "/workingarea",
+      name: "workingarea",
+      component: () => import("../views/KitchenPage.vue"),
     },
     {
       path: "/BillPage/:orderId",
@@ -35,18 +33,18 @@ const router = createRouter({
       component: () => import("../views/InvoicePage.vue"),
     },
     {
-      // path: "/calendar",
-      // name: "calendar",
-      // component: () => import("../views/Calendar.vue"),
+      path: "/calendar",
+      name: "calendar",
+      component: () => import("../views/Calendar.vue"),
     },
     {
-      // path: "/logout",
-      // name: "logout",
-      // component: () => {
-      //   sessionStorage.removeItem("token");
-      //   alert("登出成功！");
-      //   window.location.replace("/");
-      // },
+      path: "/logout",
+      name: "logout",
+      component: () => {
+        sessionStorage.removeItem("token");
+        alert("登出成功！");
+        window.location.replace("/");
+      },
     },
   ],
 });

@@ -4,6 +4,11 @@ import { mapState, mapActions } from 'pinia';
 import VehicleArea from '@/components/ChiaoLin/VehicleArea.vue'
 import BusiNumArea from '@/components/ChiaoLin/BusiNumInput.vue'
 export default {
+    data(){
+        return{
+            OrderDB:{}
+        }
+    },
     setup() {
         const Billstore = useBillstore();
         return {
@@ -87,7 +92,7 @@ export default {
                         </div>
                         <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                         <div class="totalAreaAmount">
-                            <span id="totalAmount">{{ Billstore.tothousendShowValue(Billstore.totalAmount) }}</span>
+                            <span id="totalAmount">{{ Billstore.tothousendShowValue(this.OrderDB.amount) }}</span>
                         </div>
                     </div>
                     <!-- <div class="amountShowLeftChange">
