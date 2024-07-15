@@ -2,8 +2,6 @@
 import axios from 'axios'
 import EditMeal from '../components/Yuhan/EditOrder.vue'
 import { useOrderStore } from '@/stores/OrderStore' 
-import 'bootstrap/dist/css/bootstrap.css'
-import "bootstrap"
 export default {
     data() {
         return{
@@ -41,19 +39,9 @@ export default {
         EditMeal
     },
     created(){
-        if(sessionStorage.getItem("token")==null){
-            alert("你還沒有登入，將轉向登入頁面！")
-            this.$router.push({name: 'home'})
-        }
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱
-    },
-    onMounted(){
-        if(!JSON.parse(sessionStorage.getItem("token"))){
-            alert("你還沒有登入，將轉向登入頁面！")
-            window.location.replace("/");
-        }
     },
     methods:{
         //取得菜單內餐點
@@ -212,9 +200,8 @@ export default {
     <div class="bigArea">
         <!-- orderList點餐明細 -->
         <div class="container left-side">
-            <div class="header">
+            <div class="header col">
                 <span>單號: {{oId}} </span>
-                <span>{{ tableNum? "桌號: "+tableNum:"外帶" }}</span>
                 <span><font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></span>
             </div>
             <!-- 點餐列表 -->
@@ -253,23 +240,24 @@ export default {
 
         <!-- menu菜單 -->
         <div class="container">
-            <div class="px-3 type">
-                <div v-for="type in types" :key="type" class="colume">
+            <div class="row type">
+                <div v-for="type in types" :key="type" class="col">
                     <input type="radio" v-model="selectedType" :value="type" :id="type">
                     <label :for="type" :class="{active : selectedType === type}">{{type}}</label>
                 </div>
             </div>
-            <div class="px-5 wrap" >
-                <div v-for="meal in menu" v-show="selectedType === meal.type" @click="addMealToList(meal)" :key="meal.type" class="meal">
+            <div class="row wrap" >
+                <div v-for="meal in menu" v-show="selectedType === meal.type" @click="addMealToList(meal)" :key="meal.type" class="col meal">
                     <img :src="meal.img" alt="">
                     <div v-for="item in orderList" :key="item.meal_id">
                         <div v-if="item.meal_id === meal.meal_id" class="orderQty">
                             {{mealQuantities[meal.meal_id]}}
                         </div>
                     </div>
-                    <div class="mealName mt-2">
+                    <div class="mealName">
                         {{meal.name}}
                     </div>
+                    <!-- <p >NT. {{meal.price}}</p> -->
                 </div>
             </div>
             <form v-show="showMemoInput" class="memo">
@@ -339,19 +327,23 @@ $secondary-color: #FFE2C3;
     width: 55%;
     box-shadow: 0 0 5px rgba(128, 128, 128, 0.4);
     position: relative;
-    padding: 0;
 }
-.colume{
+.row{
+    padding: 0 5%;
+}
+.col{
     width: 100%;
-    margin:2.5% 5%;
+    margin:5%;
     line-height: 2;
 }
 .left-side{
     width: 45%;
     position: relative;
+
     .header{
         height: 10vh;
         margin: 0;
+        display: flex;
         width: 100%;
         color: #fff;
         padding: 5%;
@@ -452,7 +444,6 @@ $secondary-color: #FFE2C3;
     overflow-x: auto;
     white-space: nowrap;
     display: flex;
-    align-items: center;
     background: rgb(240, 240, 240);
     font-weight: 600;
     font-size: 20px;
@@ -518,7 +509,7 @@ $secondary-color: #FFE2C3;
 .orderQty{
     clip-path: circle(30%);
     position: absolute;
-    top: -30px;
+    top: -45px;
     right: -10%;
     background: #f96c45;
     color: white;
@@ -585,9 +576,6 @@ $secondary-color: #FFE2C3;
     }
     .placeOrder{
         width: 60%;
-        background: $main-color;
-    }
-    .btn-primary{
         background: $main-color;
     }
 }

@@ -456,7 +456,7 @@
             <div>員工: {{ table.staff_name }}</div>
           </div>
           <div class="status">
-                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": table.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
           <div class="booking">
             <div>預訂: {{ table.booking_num }}</div>
@@ -764,6 +764,7 @@
       margin-bottom: 0.5rem;
     }
     .staffId,.booking,.time,.childSeat,.Seat{
+      font-size: 1rem;
       width: 100%;
       display: flex;
       justify-content: start;
