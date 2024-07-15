@@ -61,7 +61,7 @@
     </v-dialog>
   </div>
 </template>
-  <style lang="scss">
+  <style lang="scss" scoped>
   div.dialog{
     display: flex;
     flex-direction: column;

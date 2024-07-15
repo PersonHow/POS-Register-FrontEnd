@@ -29,7 +29,16 @@
     </v-menu>
   </div>
 </template>
-<style>
+<style lang="scss" scoped>
+*{
+  box-sizing: border-box;
+  background-color: unset;
+  color:unset;
+  border:unset;
+  &:hover{
+    background-color: unset;
+  }
+}
 .nav_item{
   color: #00c5c8;
   border-bottom: 1px solid #00c5c8;

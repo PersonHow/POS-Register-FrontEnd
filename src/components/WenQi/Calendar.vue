@@ -560,7 +560,7 @@
       }
       </script>
       
-      <style>
+      <style lang="scss" scoped>
       *{
         font-family: "Chocolate Classical Sans", sans-serif;
       }

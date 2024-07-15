@@ -45,7 +45,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-              color="#00c5c8"
+              color="blue"
               variant="flat"
               @click="btnHandler"
               style="font-size: 1rem;color: white;"
@@ -61,7 +61,8 @@
     </v-dialog>
   </div>
 </template>
-  <style lang="scss">
+  <style lang="scss" scoped>
+  
   div.dialog{
     display: flex;
     flex-direction: column;
@@ -96,7 +97,7 @@
   }
  
 </style>
-<script>
+<script >
 export default{
   data(){
     return {

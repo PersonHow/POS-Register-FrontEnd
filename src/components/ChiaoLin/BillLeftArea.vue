@@ -74,7 +74,7 @@ export default {
 
 
 
-<style scoped>
+<style lang="scss"scoped>
 .leftArea {
     width: 50%;
 

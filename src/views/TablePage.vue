@@ -128,6 +128,14 @@ export default {
 /* body = 包住全部內容的最大div */
 *{
   box-sizing: border-box;
+  background-color: unset;
+  color:unset;
+  border:unset;
+}
+:active{
+  background-color: unset;
+  color:unset;
+  border:unset
 }
 .body {
   width: 100%;
@@ -231,20 +239,18 @@ export default {
     border-radius: 20px;
     padding: 10px 20px;
     z-index: 10;
-  }
-
-  .menu-item {
-    cursor: pointer;
-    color: white;
-    margin: 0 10px;
-    text-decoration: none;
-    padding: 0.1rem 0.15rem;
-    font-size: 1.4rem;
-    &:active{
-      background-color: #92929266;
+    *.menu-item {
+      cursor: pointer;
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      padding: 0.1rem 0.15rem;
+      font-size: 1.4rem;
+      &:hover{
+        background-color: #6ebab281;
+      }
     }
-  }
-
+}
   .footerHam {
     margin-right: 2%;
   }
