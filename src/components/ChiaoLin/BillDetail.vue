@@ -123,7 +123,7 @@ export default {
         </div>
         <div class="billdetail">
             <p>訂單金額&nbsp;</p>
-            <div class="inputAera"><input type="text" :value="OrderDB.amount" disabled>
+            <div class="inputAera"><input type="text" :value="this.OrderDB.amount" disabled>
             </div>
             <p>折扣&nbsp;</p>
             <div class="inputAera"><input type="text" :value="Billstore.discount"

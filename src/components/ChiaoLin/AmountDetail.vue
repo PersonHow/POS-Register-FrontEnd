@@ -16,6 +16,30 @@ export default {
     components: {
         VehicleArea,
         BusiNumArea
+    },
+    created() {
+        if (this.$route.params.orderId !== "") {
+            let orderId = this.$route.params.orderId
+            let orderObj = {
+                order_id: orderId,
+            }
+                console.log(orderId);
+                console.log(orderObj);
+            fetch("http://localhost:8080/order_info/ById", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(orderObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    this.OrderDB = data;
+                    console.log(this.OrderDB)
+                })
+        } else {
+            console.error("Wrong oId!")
+        }
     }
 }
 </script>
@@ -56,7 +80,7 @@ export default {
                         </div>
                         <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                         <div class="totalAreaAmount">
-                            <span id="totalAmount">{{ Billstore.tothousendShowValue(Billstore.totalAmount) }}</span>
+                            <span id="totalAmount">{{ Billstore.tothousendShowValue(this.OrderDB.amount) }}</span>
                         </div>
                     </div>
                     <!-- <div class="amountShowLeftChange">
