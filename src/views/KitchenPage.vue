@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="tcontainer">
     <div class="order-list">
       <div class="order-row" v-for="(row, rowIndex) in filteredRows" :key="rowIndex">
         <div class="order-column" v-for="(column, columnIndex) in row" :key="column.id"
@@ -310,15 +310,16 @@ const decreaseQuantity = (columnId, itemId) => {
 </script>
 
 <style scoped lang="scss">
-.container {
+.tcontainer {
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: 77vh;
   overflow: hidden;
 }
 
 .order-list {
-  min-width: 80%;
+  min-width: 100%;
+  margin-top:-26px;
   display: flex;
   flex-direction: column;
   overflow-x: auto;
