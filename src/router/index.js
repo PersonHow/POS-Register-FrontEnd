@@ -20,7 +20,7 @@ const router = createRouter({
       component: () => import('../views/OrderPage.vue')
     },
     {
-      path: '/BillPage',
+      path: '/BillPage/:orderId',
       name: 'BillPage',
       component: () => import('../views/BillPage.vue')
     },

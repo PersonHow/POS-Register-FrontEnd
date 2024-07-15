@@ -1,8 +1,14 @@
 <script>
 import { useBillstore } from '@/stores/BillStore';
-
+import { mapState, mapActions } from 'pinia';
 export default {
-
+    setup() {
+        const Billstore = useBillstore();
+        return {
+            Billstore,
+            ...mapState(Billstore, ['handInvoiceInput',]),
+        }
+    },
     data() {
         return {
         };
@@ -23,7 +29,7 @@ export default {
             </div>
             <div class="inputArea">
                 <p>發票號碼：</p>
-                <input type="text" placeholder="請輸入手開發票號碼">
+                <input type="text" placeholder="請輸入手開發票號碼" v-model="Billstore.handInvoiceInput">
                 <p>統一編號：</p>
                 <input type="text" placeholder="請輸入統編">
             </div>
@@ -88,7 +94,8 @@ export default {
     .inputArea {
         width: 100%;
         margin: 1dvh 0;
-        p{
+
+        p {
             margin: 1dvh 1dvw;
         }
 

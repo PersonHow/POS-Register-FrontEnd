@@ -8,7 +8,6 @@ export default {
     setup() {
         const Billstore = useBillstore();
         const OrderStore = useOrderStore();
-
         // event 對應 input, propName 對應 屬性名稱, 
         // event.target.value 當前輸入框的值, parseFloat 將字符串轉換為浮點數，確保輸入值為數字
         const updateValue = (event, propName) => {
@@ -43,32 +42,88 @@ export default {
             updateValue,
             enterAddInputValue,
             ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent',]),
-            ...mapState(OrderStore,['order_info']),
-            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId','getBillIdfromDB']),
+            ...mapState(OrderStore, ['order_info']),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB']),
         };
     },
+    methods: {
+        // 結帳單號
+        createBillNum() {
+            const now = new Date();
+            const year = now.getFullYear().toString().slice(-2);  // 只取年份後2碼
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = now.getHours();
+
+            // 餐期 A, B, 非以上為 Other
+            let AorB;
+            if (hours >= 11 && hours < 15) {
+                AorB = 'A';
+            } else if (hours >= 17 && hours < 21) {
+                AorB = 'B';
+            } else {
+                AorB = 'Other';
+            }
+            // 100 ~ 999 的三位數
+            const randomNum = String(Math.floor(100 + Math.random() * 900));
+            this.bId = `${year}${month}${day}-${AorB}${randomNum}`;
+        },
+    },
+    data() {
+        return {
+            OrderDB: [],
+        }
+    },
+    created() {
+        if (this.$route.params.orderId !== "") {
+            let orderId = this.$route.params.orderId
+            let orderObj = {
+                order_id: orderId,
+            }
+                console.log(orderId);
+                console.log(orderObj);
+            fetch("http://localhost:8080/order_info/ById", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(orderObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    this.OrderDB = data;
+                    console.log(this.OrderDB)
+                })
+        } else {
+            console.error("Wrong oId!")
+        }
+    }
 
 }
 </script>
 
 <template>
-    <div class="billDetailArea">
+    <div class="allArea">
         <div class="showOrderId">
             <div style="width: 20%;">結帳單號</div>
-            <div style="width: 50%;" >{{ Billstore.theLastBill.bill_id+1 }}</div>
+            <div style="width: 50%;">{{ Billstore.bId }}</div>
             <!-- 漢堡按鈕還沒做 -->
             <input type="checkbox" id="noShowOrder" v-model="Billstore.showOrderArea">
             <label for="noShowOrder" class="orderDetailLabel myMouse"><span>點餐明細</span></label>
             <label for="" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
         </div>
+        <div class="billDetailArea"></div>
+        <div class="billDetailLeftArea">
 
-        <div class="billDetailTextArea">
-            <p>結帳明細</p>
+        </div>
+        <div class="billDetailRightArea">
+            <div class="titleArea">
+                <p>結帳明細</p>
+            </div>
         </div>
         <div class="billdetail">
             <p>訂單金額&nbsp;</p>
-            <div class="inputAera"><input type="text" :value="OrderStore.order_info.amount"
-                    @input="updateValue($event, 'order_amount')">
+            <div class="inputAera"><input type="text" :value="OrderDB.amount" disabled>
             </div>
             <p>折扣&nbsp;</p>
             <div class="inputAera"><input type="text" :value="Billstore.discount"
@@ -105,10 +160,10 @@ export default {
 </template>
 
 <style scoped lang="scss">
-.billDetailArea {
+.allArea {
     width: 50%;
 
-    .billDetailTextArea {
+    .titleArea {
         margin: 2dvh 0;
         margin-top: 3dvh;
         padding-left: 3dvw;
@@ -153,7 +208,8 @@ export default {
                 z-index: 1;
                 line-height: 9dvh;
             }
-            span{
+
+            span {
                 font-size: 2.25dvh;
             }
         }

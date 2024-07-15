@@ -115,15 +115,15 @@ export default {
         margin-left: 0.5dvw;
 
         .mathbutArea {
-            width: 80%;
-            display: flex;
-            flex-wrap: wrap;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 33% 33% 33%;
         }
 
         .mathBut {
-            width: 28%;
+            width: 100%;
             height: 10dvh;
-            margin-right: 2dvw;
+            padding-right: 1.5dvw;
 
             input {
                 width: 100%;
@@ -136,11 +136,11 @@ export default {
         }
 
         .otherButArea {
-            width: 20%;
+            width: 30%;
             margin-right: 1dvw;
 
             .mathBut {
-                width: 100%;
+                width: 110%;
 
                 input {
                     width: 100%;

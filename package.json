@@ -19,11 +19,12 @@
     "header": "^0.1.1",
     "pinia": "^2.1.7",
     "sass": "^1.77.6",
-    "sweetalert2": "^11.12.2",
     "sortablejs": "^1.15.2",
+    "sweetalert2": "^11.12.2",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

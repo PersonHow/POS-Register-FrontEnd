@@ -39,8 +39,8 @@ export default {
         // event 的每個屬性都會覆蓋 this.Billstore 的對應屬性，就可以批量更新 Billstore 的屬性
         updateBillstore(event) {
             Object.assign(this.Billstore, event);
-        }
-    }
+        },
+    },
 }
 </script>
 

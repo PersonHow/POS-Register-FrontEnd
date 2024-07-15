@@ -2,19 +2,44 @@
 import { useBillstore } from '@/stores/BillStore';
 import { useOrderStore } from '@/stores/OrderStore';
 import { mapState, mapActions } from 'pinia';
-import { computed } from 'vue';
 export default {
     setup() {
         const Billstore = useBillstore();
         const OrderStore = useOrderStore();
-        // 取得 order_info 內容
-        const orderInfo = computed(() => OrderStore.order_info);
 
         return {
             Billstore,
             OrderStore,
-            orderInfo,
+            ...mapState(Billstore, ['OrderDB']),
         };
+    },
+    data() {
+        return {
+        }
+    },
+    amount() {
+        if (this.$route.params.orderId !== "") {
+            let orderId = this.$route.params.orderId
+            let orderObj = {
+                order_id: orderId,
+            }
+            // console.log(orderId);
+            // console.log(orderObj);
+            fetch("http://localhost:8080/order_info/ById", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(orderObj)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    this.OrderDB = data;
+                    console.log(this.OrderDB)
+                })
+        } else {
+            console.error("Wrong oId!")
+        }
 
     },
 }
@@ -22,23 +47,32 @@ export default {
 
 <template>
     <nav class="navArea" :class="{ active: Billstore.showOrderArea }">
-        <div>
+        <div class="noShowIcon">
             <label for="noShowOrder" class="myMouse">
                 <i class="fa-solid fa-xmark fa-2xl"></i>
             </label>
         </div>
         <ul>
-            <li v-for="(order, index) in orderInfo" :key="index">
-                <div>桌號：{{ order.table_num }}</div>
-                <div>用餐人數：{{ order.guest_num }}</div>
+            <li>
+                <div class="tableAndGuestNum">
+                    <p>桌號：{{ this.OrderDB.table_num }}</p>
+                    <p>人數：{{ this.OrderDB.guest_num }}</p>
+                </div>
+                <div>用餐金額：{{ this.OrderDB.amount }}</div>
+
                 <div>點餐內容：</div>
-                <ul>
-                    <li v-for="(detail, detailIndex) in order.order_detail" :key="detailIndex">
-                        {{ detail }}</li>
+                <ul v-for="(mealList, index) in this.OrderDB.order_detail" :key="index">
+                    <li>{{ index + 1 }}.</li>
+                    <li>
+                        <p> {{ mealList.meal_name }}</p>
+                        <p>數量：{{ mealList.quantities }}</p>
+                    </li>
+                    <li> {{ mealList.custom_option }}</li>
+                    <li> </li>
                 </ul>
             </li>
-            <button class="myMouse">列印</button>
-            <button class="myMouse">編輯</button>
+            <button class="myMouse">列印明細</button>
+            <button class="myMouse">編&nbsp;&nbsp;&nbsp;輯</button>
         </ul>
     </nav>
 </template>
@@ -53,7 +87,7 @@ export default {
     top: 9dvh;
     width: 35%;
     left: -37%;
-    overflow: hidden;
+    overflow: scroll;
     background: white;
     border-right: 5px solid #00c1ca;
     transition: 0.3s ease;
@@ -85,11 +119,25 @@ export default {
         }
     }
 
+    .noShowIcon {
+        justify-content: right;
+    }
+
     ul {
+        margin-top: 2dvh;
+
         li {
             list-style-type: none;
             font-size: 2.5dvh;
             color: black;
+            padding: 0 1dvw;
+
+
+            .tableAndGuestNum {
+                padding-right: 5dvw;
+                display: flex;
+                justify-content: space-between;
+            }
         }
 
         button {

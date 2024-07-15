@@ -18,11 +18,11 @@ export const useBillstore = defineStore("Billstore", {
     showHandInvArea: false, //show手開
     showRightNav: false,
     showVehiArea: false, // show載具
-    showBusiNumInput: false,  //show統編
+    showBusiNumInput: false, //show統編
     focusedInput: null, // 根據當下點擊的 input 給值
     showOrderArea: true,
-    order_id: "#06", // 要改
-    invoiceNum: "AB07120004", // 要改
+    showLeftNavArea: true, // show發票左導覽列
+    invoiceNum: "AB07150001", // 要改
     lastFiveBills: [], // 近5筆紀錄
     allbills: [],
     // changeAmountforshouw: 0,
@@ -32,8 +32,11 @@ export const useBillstore = defineStore("Billstore", {
     chargedTodayBills: [], // 今日已結的bills
     todayCreateBillsOrderId: [], // 今日已結bills的order_id
     newChargedTodayBills: [],
-    bill_id:"",
-    theLastBill:"",
+    bill_id: "",
+    theLastBill: "",
+    handInvoiceInput: "",
+    changeShow: "A",
+    OrderDB: [], // 從DB抓的
   }),
   getters: {
     // ----取值區----
@@ -204,6 +207,10 @@ export const useBillstore = defineStore("Billstore", {
     showBuniNumArea() {
       this.showBusiNumInput = !this.showBusiNumInput;
     },
+    // show showInvoiceLeftNavArea
+    showInvoiceLeftNavArea() {
+      this.showLeftNavArea = !this.showLeftNavArea;
+    },
     // 調出所有 bills & 當日的 bills
     async getAllBillsAndTodayBills() {
       try {
@@ -323,6 +330,11 @@ export const useBillstore = defineStore("Billstore", {
       } catch (error) {
         console.error("Try is error!!");
       }
+    },
+    // 切換發票設定頁的components
+    changeStep(step) {
+      console.log("前往Compnent:", step);
+      this.changeShow = step;
     },
   },
 });
