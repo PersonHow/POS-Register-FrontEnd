@@ -49,12 +49,6 @@ export default {
         this.generateOrderNumber() //建立新訂單流水號
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱
     },
-    onMounted(){
-        if(!JSON.parse(sessionStorage.getItem("token"))){
-            alert("你還沒有登入，將轉向登入頁面！")
-            window.location.replace("/");
-        }
-    },
     methods:{
         //取得菜單內餐點
         getMenu(){
@@ -182,6 +176,14 @@ export default {
                 this.orderStore.createOrder(order) //將訂餐存入orderStore
             })
         },
+        // 將訂單編號作為參數傳給帳單頁
+        navigateToBillPage(){
+            this.$router.push({name:'BillPage',params:{orderId: this.oId}})
+        },
+        // 跳轉到桌位頁
+        navigateToTablePage(){
+            this.$router.push('/table')
+        }
     },
     computed:{
         //已點餐點個別數量
@@ -215,7 +217,18 @@ export default {
             <div class="header">
                 <span>單號: {{oId}} </span>
                 <span>{{ tableNum? "桌號: "+tableNum:"外帶" }}</span>
-                <span><font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></span>
+                <div class="dropdown">
+                    <a class="btn btn-lg dropdown-toggle" href="#" 
+                    role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#guestNumModal">修改用餐人數</button></li>
+                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#tableNumModal">修改桌號</button></li>
+                        <!-- 返回桌位 -->
+                        <li><router-link to="/table" class="dropdown-item">取消此筆訂單</router-link></li> 
+                        <li><a class="dropdown-item" href="#">查看訂單紀錄</a></li>
+                    </ul>
+                </div>
             </div>
             <!-- 點餐列表 -->
             <div class="order-list">
@@ -296,8 +309,9 @@ export default {
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">修改</button>
-                                <button  type="button" @click="placeOrder()" class="btn placeOrder" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#secondModal">
+                                <button  type="button"  class="btn placeOrder" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#secondModal">
                                     確認無誤，送出</button> 
+                                    <!-- @click="placeOrder()" -->
                             </div>
                         </div>
                     </div>
@@ -308,9 +322,9 @@ export default {
                             <div class="modal-header"><h4><strong>送單完畢，是否前往結帳</strong></h4></div>
                             <div class="modal-body d-flex justify-content-evenly">
                                 <!-- 跳轉至桌位頁 -->
-                                <a class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
+                                <button @click="navigateToTablePage()" class="btn btn-secondary" data-bs-dismiss="modal" >稍後再結</button> 
                                 <!-- 跳轉至結帳頁 -->
-                                <a class="btn btn-primary">立即結帳</a>
+                                <button @click="navigateToBillPage" class="btn btn-primary" data-bs-dismiss="modal">立即結帳</button>
                             </div>
                         </div>
                     </div>
@@ -322,7 +336,6 @@ export default {
 </template>
 
 <style scoped lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
 $main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
 $secondary-color: #FFE2C3;
 .bigArea{
@@ -331,7 +344,6 @@ $secondary-color: #FFE2C3;
     display: flex;
     justify-content: end;
     font-size: 18px;
-    font-family: 'Chocolate Classical Sans', sans-serif;
     border:1px solid #F9BF45;
 }
 .container{
@@ -362,6 +374,7 @@ $secondary-color: #FFE2C3;
     }
     .icon{
         padding-top: 25%;
+        color: #fff;
     }
 }
 .order-list{
@@ -378,6 +391,13 @@ $secondary-color: #FFE2C3;
     &::-webkit-scrollbar-thumb:hover {
         background: #888;
     }
+}
+.dropdown-toggle::after{
+    display: none;
+}
+.dropdown-item{
+    padding:2.5vh 3vw;
+    text-align: center;
 }
 .editMeal{
     width: 100%;
@@ -575,6 +595,7 @@ $secondary-color: #FFE2C3;
         align-items: center;
         width: 20%;     
         border-radius: 10px;
+        white-space: nowrap;
         box-shadow: 0 1px 2px rgba(128, 128, 128, 0.4);
         background: #c5c5c5;
         color: #fff;
