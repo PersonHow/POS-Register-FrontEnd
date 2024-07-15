@@ -4,9 +4,9 @@ import TestHeader from './components/ChiaoLin/TestHeader.vue';
 </script>
 
 <template>
-<div>
+      <RouterView />
+<div >
     <TestHeader />
-    <RouterView />
 </div>
 </template>
 

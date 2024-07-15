@@ -17,7 +17,7 @@ export default {
         return {
         }
     },
-    amount() {
+    created() {
         if (this.$route.params.orderId !== "") {
             let orderId = this.$route.params.orderId
             let orderObj = {
@@ -55,7 +55,8 @@ export default {
         <ul>
             <li>
                 <div class="tableAndGuestNum">
-                    <p>桌號：{{ this.OrderDB.table_num }}</p>
+                    <p v-if="this.OrderDB.table_num !== null">桌號：{{ this.OrderDB.table_num }}</p>
+                    <p v-else><span><</span>外帶單></p>
                     <p>人數：{{ this.OrderDB.guest_num }}</p>
                 </div>
                 <div>用餐金額：{{ this.OrderDB.amount }}</div>
