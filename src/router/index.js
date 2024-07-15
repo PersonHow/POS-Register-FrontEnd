@@ -22,7 +22,7 @@ const router = createRouter({
     {
       path: "/workingarea",
       name: "workingarea",
-      component: () => import("../views/WorkingAreaView.vue"),
+      component: () => import("../views/KitchenPage.vue"),
     },
     {
       path: "/BillPage",

@@ -1,10 +1,14 @@
 <script>
 import TablePage from "@/components/Kou/Table.vue";
 import ChangeTableArea from "@/components/Kou/ChangeTableArea.vue";
+import Footer_bar_ChangeTable from "@/components/Kou/Footer_bar_ChangeTable.vue";
+import Footer_bar_Checkout from "@/components/Kou/Footer_bar_Checkout .vue";
 export default {
   data() {
     return {
+      selected_table:{table_id:"#"},
       selected_item:"",
+      selected_target_table:{table_id:"#"},
       menuOpen: false,
       tables: [],
       selectedtable_id:0,
@@ -14,12 +18,57 @@ export default {
     GetSelected_item(item){
       this.selected_item = item;
     },
+    GetSelected_target_table(table){
+      this.selected_target_table = table;
+    },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
     },
     orderHandler(){
       window.location.replace("/OrderPage");
-    }  
+    },
+    GetSelected_table(table){
+      this.selected_table =table;
+    },
+    async TakeTableHandler(){
+      if(this.selected_table.table_id == "#"){
+        alert("你還沒有選取桌位，請重新選擇！");
+      }else if(this.selected_table.table_status==0){
+        let table_json = {};
+        table_json["max_guest_num"] = this.selected_table["max_guest_num"];
+        table_json["staff_id"] = this.selected_table["staff_id"];
+        table_json["table_id"] = this.selected_table["table_id"];
+        table_json["lastmodified_staff_id"] = this.selected_table["lastmodified_staff_id"];
+        table_json["booking_num"] = this.selected_table["booking_num"];
+        table_json["has_priorityseat"] = this.selected_table["has_priorityseat"];
+        table_json["table_status"]=3;
+        table_json["table_area"] = this.selected_table["table_area"];
+        table_json["guest_name"] =this.selected_table["guest_name"];
+        table_json["guest_phone"] =this.selected_table["guest_phone"];
+        table_json["guest_num"] = this.selected_table["guest_num"];
+        try {
+            const response = await fetch(`http://localhost:8080/table`,{
+              method:"PUT",
+              headers: {
+              'Content-Type': 'application/json',
+              },
+              body:JSON.stringify(table_json)
+            });
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }else{
+              alert(`桌號：${table_json["table_id"]} 已帶位`);
+              this.selected_table ={table_id:"#"};
+              window.location.reload();  
+            }
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+        }     
+      }
+      else{
+        alert("該桌位在使用中，須為空位才能選擇，請重新選擇！");
+      }
+    }
   },
   created() {
     if(sessionStorage.getItem("token") == null){
@@ -32,7 +81,9 @@ export default {
   },
   components: {
     TablePage,
-    ChangeTableArea
+    ChangeTableArea,
+    Footer_bar_ChangeTable,
+    Footer_bar_Checkout
   },
 };
 </script>
@@ -45,7 +96,7 @@ export default {
     </div>
     <!-- second Area = 中間桌子的區塊 -->
     <div class="second">
-      <TablePage/>
+      <TablePage v-on:selected_table="GetSelected_table" v-on:selected_target_table="GetSelected_target_table"/>
     </div>
     <div class="footer Area">
       <!-- footerHam = footer裡面的漢堡圖區塊 -->
@@ -59,11 +110,10 @@ export default {
             </div>
             <transition name="slide">
               <div v-if="menuOpen" class="menu-content">
-                <a class="menu-item" href="#">開錢櫃</a>
-                <a class="menu-item" href="#">換桌</a>
-                <a class="menu-item" ref="#">合併結帳</a>
-                <a class="menu-item" href="#">關閉桌面</a>
-                <a class="menu-item" href="#">帶位</a>
+                <button class="menu-item" href="#">開錢櫃</button>
+                <Footer_bar_ChangeTable :selected_table="selected_table" :selected_target_table="selected_target_table"/>
+                <Footer_bar_Checkout :selected_table="selected_table" :selected_target_table="selected_target_table"/>
+                <button class="menu-item" @click="TakeTableHandler">帶位</button>
                 <a class="menu-item" href="#">清除狀態</a>
                 <a class="menu-item" @click="orderHandler">點餐</a>
               </div>
@@ -74,7 +124,7 @@ export default {
     </div>
   </div>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 /* body = 包住全部內容的最大div */
 *{
   box-sizing: border-box;
@@ -181,7 +231,6 @@ export default {
     border-radius: 20px;
     padding: 10px 20px;
     z-index: 10;
-    font-size: 1.5rem;
   }
 
   .menu-item {
@@ -189,6 +238,11 @@ export default {
     color: white;
     margin: 0 10px;
     text-decoration: none;
+    padding: 0.1rem 0.15rem;
+    font-size: 1.4rem;
+    &:active{
+      background-color: #92929266;
+    }
   }
 
   .footerHam {

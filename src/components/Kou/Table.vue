@@ -4,12 +4,17 @@
     <div style="display: flex; align-items: center;">
       <button @click="toggleEdit" class="btn_not_adjust_table">調整桌位</button>
       <p v-if="isTargetEditing" style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;color: #00c5c8;">
-          你選擇的桌位：{{ select_table.table_id == 0 ?"尚未選擇":select_table.table_id }}<br/>
-          ->目標桌位：{{ target_table.table_id == 0 ?"尚未選擇":target_table.table_id }}</p>
+          你選擇的桌位：{{ select_table.table_id == "#" ?"尚未選擇":select_table.table_id }}<br/>
+          ->目標桌位：{{ target_table.table_id == "#" ?"尚未選擇":target_table.table_id }}</p>
       <p v-else style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;color: #00c5c8;">
-        你選擇的桌位：{{ select_table.table_id == 0 ?"尚未選擇":select_table.table_id }}</p>
+        你選擇的桌位：{{ select_table.table_id == "#" ?"尚未選擇":select_table.table_id }}</p>
         
-      <button @click="()=>{ this.select_table = {table_id:0};this.input_table ={table_id:0};this.target_table = {table_id:0}}" class="btn_clear_select_table">清除桌位</button>
+      <button @click='()=>{ this.select_table = {table_id:"#"};
+                            this.input_table ={table_id:"#"};
+                            this.target_table = {table_id:"#"};
+                            this.$emit("selected_table",this.select_table);
+                            this.$emit("selected_target_table",this.target_table);
+                          }' class="btn_clear_select_table">清除桌位</button>
       <button @click="toggleTarget" class="btn_cancel_target_table">設定目標桌位</button>
     </div>
     <!-- 當進入編輯模式時，啟用拖曳功能 -->
@@ -19,7 +24,7 @@
       animation="300"
       @start="onStart"
       @end="onEnd"
-      style="display: flex;flex-direction: row; min-height: 200px;min-width: 200px;"
+      style="display: flex;flex-direction: row; min-height: 200px;min-width: 100%;"
       class="list-group"
       tag="ul"
       :group="group_tables"
@@ -42,7 +47,7 @@
                       <div>員工: {{ element.staff_name }}</div>
                     </div>
                     <div class="status">
-                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
                     <div class="booking">
                       <div>預訂: {{ element.booking_num }}</div>
@@ -57,6 +62,7 @@
             </div>
         </template>
     </draggable>
+    <div style="display: flex; justify-content: space-between;">
     <draggable
       v-if="isEditing"
       v-model="tables_list2"
@@ -64,7 +70,7 @@
       animation="300"
       @start="onStart"
       @end="onEnd"
-      style="display:flex;flex-direction:column;width:100%;position: relative;min-height: 200px;"
+      style="display:flex;flex-direction:column;width:100%;position: relative;min-height: 200px;min-width: 70%;"
       class="list-group"
       tag="ul"
       v-bind="dragOptions">
@@ -85,7 +91,7 @@
                       <div>員工: {{ element.staff_name }}</div>
                     </div>
                     <div class="status">
-                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
                     <div class="booking">
                       <div>預訂: {{ element.booking_num }}</div>
@@ -108,7 +114,7 @@
       animation="300"
       @start="onStart"
       @end="onEnd"
-      style="display:flex;flex-direction:row;width:100%;position: relative;min-height: 200px;"
+      style="display:flex;flex-direction:column;width:100%;position: relative;min-height: 200px;min-width: 70%;"
       class="list-group"
       tag="ul"
       v-bind="dragOptions">
@@ -129,7 +135,52 @@
                       <div>員工: {{ element.staff_name }}</div>
                     </div>
                     <div class="status">
-                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                    </div>
+                    <div class="booking">
+                      <div>預訂: {{ element.booking_num }}</div>
+                    </div>
+                    <div class="childSeat">
+                      <div>兒童座: {{ element.has_priorityseat ? '有' : '無' }}</div>
+                    </div>
+                    <div class="Seat">
+                      <div>用餐人數: {{ element.guest_num }}</div>
+                    </div>
+              </div>
+            </div>
+        </template>
+      <!-- 顯示每張桌子的內容 -->
+    </draggable>
+  </div>
+    <draggable
+      v-if="isEditing"
+      v-model="tables_list4"
+      :group="group_tables_list4"
+      animation="300"
+      @start="onStart"
+      @end="onEnd"
+      style="display:flex;flex-direction:row;width:100%;position: relative;min-height: 200px;min-width: 100%;"
+      class="list-group"
+      tag="ul"
+      v-bind="dragOptions">
+      <template #item="{element}">
+            <div>
+              <div
+                    :class="['table', element.status]"
+                    :id="'table-' + element.table_id"
+                    style="margin: 0.5rem;"
+                    @click="()=>{
+                      selectTableHandler(element);
+                    }">
+                    <!-- 根據桌子的狀態設置樣式 -->
+                    <div class="tableNum">
+                      <div class="Num">桌號: {{ element.table_id }}</div>
+                    </div>
+                    <div class="staffId">
+                      <div>員工: {{ element.staff_name }}</div>
+                    </div>
+                    <div class="status">
+                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
                     <div class="booking">
                       <div>預訂: {{ element.booking_num }}</div>
@@ -147,7 +198,7 @@
     </draggable>
     <div v-else class="noEditTableArea">
       <!-- 當不處於編輯模式時，僅顯示桌子 -->
-      <div style="display: flex;">
+      <div style="display: flex;flex-direction: row; min-height: 200px;min-width: 100%;">
         <div
           v-for="table in tables"
           :key="table.table_id"
@@ -164,7 +215,7 @@
             <div>員工: {{ table.staff_name }}</div>
           </div>
           <div class="status">
-                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": table.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
           <div class="booking">
             <div>預訂: {{ table.booking_num }}</div>
@@ -177,38 +228,71 @@
           </div>
         </div>
       </div>
-      <div style="display: flex;flex-direction: column;">
-        <div
-          v-for="table in tables_list2"
-          :key="table.table_id"
-          :class="['table', table.status]"
-          :id="'table-' + table.table_id"
-          @click="()=>{
-                      selectTableHandler(table);
-                    }"
-          >
-          <div class="tableNum">
-            <div class="Num">桌號: {{ table.table_id }}</div>
-          </div>
-          <div class="staffId">
-            <div>員工: {{ table.staff_name }}</div>
-          </div>
-          <div class="status">
-                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": "已預約"}}</div>
-                    </div>
-          <div class="booking">
-            <div>預訂: {{ table.booking_num }}</div>
-          </div>
-          <div class="childSeat">
-            <div>兒童座: {{ table.has_priorityseat ? '有' : '無' }}</div>
-          </div>
-          <div class="Seat">
-            <div>用餐人數: {{ table.guest_num }}</div>
-          </div>
+      <div style="display: flex;justify-content: space-between;">
+        <div style="display: flex;flex-direction: column; min-height: 200px;min-width: 70%;">
+            <div
+              v-for="table in tables_list2"
+              :key="table.table_id"
+              :class="['table', table.status]"
+              :id="'table-' + table.table_id"
+              @click="()=>{
+                          selectTableHandler(table);
+                        }"
+              >
+              <div class="tableNum">
+                <div class="Num">桌號: {{ table.table_id }}</div>
+              </div>
+              <div class="staffId">
+                <div>員工: {{ table.staff_name }}</div>
+              </div>
+              <div class="status">
+                          <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                        </div>
+              <div class="booking">
+                <div>預訂: {{ table.booking_num }}</div>
+              </div>
+              <div class="childSeat">
+                <div>兒童座: {{ table.has_priorityseat ? '有' : '無' }}</div>
+              </div>
+              <div class="Seat">
+                <div>用餐人數: {{ table.guest_num }}</div>
+              </div>
+            </div>
         </div>
-    </div><div style="display: flex;">
+        <div style="display: flex;flex-direction: column; min-height: 200px;min-width: 70%;">
+            <div
+              v-for="table in tables_list3"
+              :key="table.table_id"
+              :class="['table', table.status]"
+              :id="'table-' + table.table_id"
+              @click="()=>{
+                          selectTableHandler(table);
+                        }"
+              >
+              <div class="tableNum">
+                <div class="Num">桌號: {{ table.table_id }}</div>
+              </div>
+              <div class="staffId">
+                <div>員工: {{ table.staff_name }}</div>
+              </div>
+              <div class="status">
+                          <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                        </div>
+              <div class="booking">
+                <div>預訂: {{ table.booking_num }}</div>
+              </div>
+              <div class="childSeat">
+                <div>兒童座: {{ table.has_priorityseat ? '有' : '無' }}</div>
+              </div>
+              <div class="Seat">
+                <div>用餐人數: {{ table.guest_num }}</div>
+              </div>
+            </div>
+        </div>
+      </div>
+    <div style="display: flex;flex-direction: row; min-height: 200px;min-width: 100%;">
         <div
-          v-for="table in tables_list3"
+          v-for="table in tables_list4"
           :key="table.table_id"
           :class="['table', table.status]"
           :id="'table-' + table.table_id"
@@ -223,7 +307,7 @@
             <div>員工: {{ table.staff_name }}</div>
           </div>
           <div class="status">
-                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
           <div class="booking">
             <div>預訂: {{ table.booking_num }}</div>
@@ -242,7 +326,7 @@
   <div style="width: 50%;">
       <form class="input_add_table" >
         <h2>你編輯的桌位如下：</h2>
-        <h2>桌號：{{ input_table.table_id == 0? "未選擇": input_table.table_id }}</h2>
+        <h2>桌號：{{ input_table.table_id == "#"? "未選擇": input_table.table_id }}</h2>
         <div style="display: flex; justify-content: space-between;align-items: center">
           <h5>員工：</h5>
           <select v-model="input_table.staff_id">
@@ -274,6 +358,7 @@
             <option :value="0">空位</option>
             <option :value="1">使用中</option>
             <option :value="2">已預約</option>
+            <option :value="3">帶位中</option>
           </select>
         </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
@@ -339,7 +424,7 @@
                       <div>員工: {{ element.staff_name }}</div>
                     </div>
                     <div class="status">
-                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
                     <div class="booking">
                       <div>預訂: {{ element.booking_num }}</div>
@@ -373,7 +458,7 @@
             <div>員工: {{ table.staff_name }}</div>
           </div>
           <div class="status">
-                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
           <div class="booking">
             <div>預訂: {{ table.booking_num }}</div>
@@ -404,8 +489,8 @@
         isreload:false,
         table_count:0,
         table_area_list:["一般區","貴賓區"],
-        input_table:{table_id:0},
-        target_table:{table_id:0},
+        input_table:{table_id:"#"},
+        target_table:{table_id:"#"},
         isTargetEditing:false,
         isEditing: false, // 判斷是否為編輯模式的變數
         working_staff_list:[],//已上工的員工列表
@@ -415,7 +500,7 @@
           pull:true,
           put:true
         },
-        select_table:{table_id:0},
+        select_table:{table_id:"#"},
         tables_list2: [],
         group_tables_list2:{
           name:"site",
@@ -430,6 +515,12 @@
         },
         tables_list3:[],
         group_tables_list3:{
+          name:"site",
+          pull:true,
+          put:true
+        },
+        tables_list4:[],
+        group_tables_list4:{
           name:"site",
           pull:true,
           put:true
@@ -528,6 +619,8 @@
         }
         this.input_table = table;
         console.log(this.input_table);
+        this.$emit("selected_table",this.select_table);
+        this.$emit("selected_target_table",this.target_table);
       },
      async addTableHandler(){
         let add_table = {};
@@ -578,9 +671,9 @@
           const data = await response.json();
           this.tables = data.map((table, i) => ({
             ...table,
-            //0:空位、1:使用中、2:已預約
+            //0:空位、1:使用中、2:已預約、3:帶位中
             status:
-              table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" : "reserved",
+              table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" :table.table_status === 2 ?"reserved":"take"
           }));
           this.table_count =this.tables.length;
         } catch (error) {
@@ -642,6 +735,9 @@
   }
   .reserved {
     background-color: #f4a261;
+  }
+  .take{
+    background-color: #ddce4a;
   }
 
   #app {
