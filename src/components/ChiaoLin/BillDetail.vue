@@ -106,9 +106,9 @@ export default {
     <div class="allArea">
         <div class="showOrderId">
             <div style="width: 20%;">結帳單號</div>
-            <div style="width: 50%;">{{ Billstore.bId }}</div>
+            <div style="width: 50%;">{{ this.Billstore.bId }}</div>
             <!-- 漢堡按鈕還沒做 -->
-            <input type="checkbox" id="noShowOrder" v-model="Billstore.showOrderArea">
+            <input type="checkbox" id="noShowOrder" v-model="this.Billstore.showOrderArea">
             <label for="noShowOrder" class="orderDetailLabel myMouse"><span>點餐明細</span></label>
             <label for="" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
         </div>
@@ -123,7 +123,7 @@ export default {
         </div>
         <div class="billdetail">
             <p>訂單金額&nbsp;</p>
-            <div class="inputAera"><input type="text" :value="OrderDB.amount" disabled>
+            <div class="inputAera"><input type="text" :value="this.OrderDB.amount" disabled>
             </div>
             <p>折扣&nbsp;</p>
             <div class="inputAera"><input type="text" :value="Billstore.discount"
@@ -131,7 +131,7 @@ export default {
                     name="discount"><span>%</span></div>
             <p>服務費&nbsp;</p>
             <div class="inputAera"><input type="text" :value="Billstore.serviceFee"
-                    @input="updateValue($event, 'serviceFee')" @focus="Billstore.setFocusedInput($event.target)"
+                    @input="updateValue($event, 'serviceFee')" @focus="tBillstore.setFocusedInput($event.target)"
                     name="serviceFee"><span>%</span></div>
             <p>招待&nbsp;</p>
             <div class="inputAera"><input type="text" :value="Billstore.entertain"
