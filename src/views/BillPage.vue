@@ -6,7 +6,7 @@ import HandInvoiceContent from '../components/ChiaoLin/HandInvoiceContent.vue';
 import { useBillstore } from '../stores/BillStore';
 import LeftNavEditOrder from '../components/ChiaoLin/LeftNavEditOrder.vue';
 import RightNavOtherFun from '../components/ChiaoLin/RightNavOtherFun.vue';
-
+import { ref, onMounted, computed } from 'vue';
 export default {
     setup() {
         const Billstore = useBillstore();
@@ -31,20 +31,29 @@ export default {
             focusedInput: null,
         }
     },
+    created(){
+        if(sessionStorage.getItem("token") == null){
+        alert("你還沒有登入，將轉向登入頁面！")
+        this.$router.push({name: 'home'})
+    }},
+    methods: {
+        // 更新 Billstore 中的多個屬性，將 event 中的所有屬性複製到 this.Billstore 中
+        // event 的每個屬性都會覆蓋 this.Billstore 的對應屬性，就可以批量更新 Billstore 的屬性
+        updateBillstore(event) {
+            Object.assign(this.Billstore, event);
+        }
+    }
 }
 </script>
 
 <template>
     <div class="midArea">
+        <!-- 用 v-bind -->
         <BillDetail :orderAmount="Billstore.order_amount" :discount="Billstore.discount"
             :serviceFee="Billstore.serviceFee" :entertain="Billstore.entertain" :allowance="Billstore.allowance"
             :inputEvent="Billstore.inputEvent" :newInputEvent="Billstore.newInputEvent"
             @set-focused-input="Billstore.setFocusedInput" @add-input-event="Billstore.addInputEvent"
-            @remove-input-event="Billstore.removeInputEvent" @update:orderAmount="Billstore.order_amount = $event"
-            @update:discount="Billstore.discount = $event" @update:serviceFee="Billstore.serviceFee = $event"
-            @update:entertain="Billstore.entertain = $event" @update:allowance="Billstore.allowance = $event"
-            @update:inputEvent="Billstore.inputEvent = $event"
-            @update:newInputEvent="Billstore.newInputEvent = $event" />
+            @remove-input-event="Billstore.removeInputEvent" @update="updateBillstore" />
         <div class="rightArea">
             <AmountDetails :orderAmount="Billstore.order_amount" :totalAmount="Billstore.totalAmount"
                 :changeAmount="Billstore.changeAmount" :realChargeAmount="Billstore.realChargeAmount"
@@ -55,19 +64,14 @@ export default {
             <Calculator @add-to-display="Billstore.addToDisplay" @clear-display="Billstore.clearDisplay"
                 @backspace="Billstore.backspace" />
             <div class="functionButArea">
-                <!-- <RouterLink to="/testPage"> -->
-                <button type="button" class="comeback myMouse">返回</button>
-                <!-- </RouterLink> -->
-                <!-- 先放著，確定位置後可刪 -->
-                <!-- <input type="checkbox" id="noShowOrder" v-model="Billstore.showHandInvoiceArea">
-                <label for="noShowOrder" class="myMouse"><span>點餐明細</span></label> -->
+                <RouterLink to="/OrderPage"><button type="button" class="comeback myMouse">返回</button></RouterLink>
                 <button type="button" class="manualInvoice myMouse" @click="Billstore.showHandInvoiceArea">手開發票</button>
-                <input type="checkbox" id="leftBar" v-model="Billstore.showRightNav">
-                <label for="leftBar" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
+                <input type="checkbox" id="rightBar" v-model="Billstore.showRightNav">
+                <label for="rightBar" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
             </div>
         </div>
         <div v-if="Billstore.showHandInvArea">
-            <HandInvoiceContent @close="Billstore.showHandInvoiceArea"  />
+            <HandInvoiceContent @close="Billstore.showHandInvoiceArea" />
         </div>
         <LeftNavEditOrder />
         <RightNavOtherFun />

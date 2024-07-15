@@ -1,15 +1,23 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router';
-import TestHeader from './components/ChiaoLin/TestHeader.vue';
+<script>
+import { RouterLink, RouterView } from 'vue-router'
 </script>
-
 <template>
-<div>
-    <TestHeader />
-    <RouterView />
-</div>
+    <div class="container">
+      <h1 class="logo"></h1>
+      <nav>
+        <ul>
+          <li><a><RouterLink to="/calendar">行事曆</RouterLink></a></li>
+          <li><a><RouterLink to="/table">桌位</RouterLink></a></li>
+          <li><a><RouterLink to="/OrderPage">點餐</RouterLink></a></li>
+          <li><a><RouterLink to="/BillPage">結帳</RouterLink></a></li>
+          <li><a><RouterLink to="/workingarea">工作台</RouterLink></a></li>
+          <li><a><RouterLink to="/reserve">訂位</RouterLink></a></li>
+          <li><a><RouterLink to="/logout">登出</RouterLink></a></li>
+        </ul>
+      </nav>
+    </div>
+    <!-- <RouterLink to="/BillPage">BillPage</RouterLink> -->
 </template>
-
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
 div.container {
@@ -64,4 +72,6 @@ div.container {
         
   }
 }
+
+
 </style>

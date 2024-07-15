@@ -18,8 +18,8 @@ export default {
         <ul>
             <li>桌號：{{ Billstore.table_num }}</li>
             <li>點餐內容：{{ Billstore.order_detail }}</li>
-            <button>列印</button>
-            <button>編輯</button>
+            <button class="myMouse">列印</button>
+            <button class="myMouse">編輯</button>
         </ul>
     </nav>
 </template>
@@ -71,13 +71,17 @@ export default {
             list-style-type: none;
             font-size: 2.5dvh;
             color: black;
-
         }
 
         button {
             font-family: "Chocolate Classical Sans", sans-serif;
-            font-size: 2.5dvh;
+            font-size: 2.25dvh;
             margin: 0.5dvh 0.5dvw;
+            border: none;
+            border-radius: 10px;
+            background:#00c1ca;
+            padding: 0.5dvw;
+            color: white;
         }
     }
 }
