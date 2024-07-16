@@ -8,7 +8,7 @@ export default {
             selectOptions:[], //裝選取的選項
             otherReq:"", //其他備註
             quantity:null, //數量
-            price:null
+            price:null 
         }
     },
     props:['meal_detail','meal_price'],
@@ -146,7 +146,6 @@ export default {
 </template>
 
 <style scoped lang="scss">
-
 .card{
     max-height: 75vh;
     width: 35vw;

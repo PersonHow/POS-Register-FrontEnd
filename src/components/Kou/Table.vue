@@ -429,6 +429,7 @@
                     </div>
                     <div class="childSeat">
                       <div>兒童座: {{ element.has_priorityseat ? '是' : '否' }}</div>
+                      <div>兒童座: {{ element.has_priorityseat ? '是' : '否' }}</div>
                     </div>
                     <div class="Seat">
                       <div>用餐人數: {{ element.guest_num }}</div>
@@ -478,12 +479,15 @@
   <script>
   import draggable from "vuedraggable";
   import { onMounted } from "vue"; // 導入 vuedraggable 用於實現拖曳功能
+  import draggable from "vuedraggable";
+  import { onMounted } from "vue"; // 導入 vuedraggable 用於實現拖曳功能
   export default {
     components: {
       draggable // 將 draggable 組件套用在此vue上
     },
     data() {
       return {
+        isreload:false,
         isreload:false,
         table_count:0,
         table_area_list:["一般區","貴賓區"],
@@ -545,7 +549,33 @@
         table_json["guest_phone"] =this.input_table["guest_phone"];
         table_json["guest_num"] = this.input_table["guest_num"];
         
+        
         console.log(table_json);
+        if(this.input_table["table_id"] == "#"){
+          //新增時使用POST
+          table_json["table_id"] = 0;
+          try {
+            const response = await fetch(`http://localhost:8080/table`,{
+              method:"POST",
+              headers: {
+              'Content-Type': 'application/json',
+              },
+              body:JSON.stringify(table_json)
+            });
+            if (response.status !=201) {
+              throw new Error("Network response was not ok");
+            }else{
+              const data = await response.json();
+              alert(`新增桌號：${data["table_id"]} 成功！`);
+              window.location.reload();
+            }
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+        }else{
+          //編輯桌位時使用PUT
+          table_json["table_id"] = this.input_table["table_id"];
+           try {
         if(this.input_table["table_id"] == "#"){
           //新增時使用POST
           table_json["table_id"] = 0;
@@ -588,6 +618,8 @@
             console.error("Error fetching table data:", error);
           }
         }
+          }
+        }
         this.input_table = {};
         this.select_table ={};
       },
@@ -615,6 +647,11 @@
         }else{
           this.select_table =table;
         }
+        if(this.isTargetEditing){
+          this.target_table =table;
+        }else{
+          this.select_table =table;
+        }
         this.input_table = table;
         console.log(this.input_table);
         this.$emit("selected_table",this.select_table);
@@ -636,6 +673,7 @@
         add_table.lastmodified_staff_id=this.working_staff_list[0].staff_id;
         add_table.table_area = "一般區";
         add_table.table_id = "#"
+        add_table.table_id = "#"
         this.add_table_list.push(add_table);
       },
       toggleEdit(e) {
@@ -646,6 +684,16 @@
         }else{
           e.target.className="btn_not_adjust_table";
         }
+      },
+      toggleTarget(e){
+        this.isTargetEditing =!this.isTargetEditing;
+        console.log(this.isTargetEditing);
+        if(this.isTargetEditing){
+          e.target.className="btn_target_table";
+        }else{
+          e.target.className="btn_cancel_target_table";
+        }
+
       },
       toggleTarget(e){
         this.isTargetEditing =!this.isTargetEditing;
@@ -709,6 +757,7 @@
         return `${hours}:${minutes}:${seconds}`;
       },
     },
+    created() {
     created() {
       this.fetchTables();
       this.fetchWorkingStaffs();
@@ -963,6 +1012,33 @@
     cursor: pointer;
 }
 .btn_clear_select_table{
+    background-color: #3AD2D0;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: monospace;
+    color: white;
+    padding: 10px;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+.btn_target_table{
+    background-color: #e76f51;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: monospace;
+    color: white;
+    padding: 10px;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+.btn_cancel_target_table{
+  background-color: #3AD2D0;
     background-color: #3AD2D0;
     border: none;
     border-radius: 5px;

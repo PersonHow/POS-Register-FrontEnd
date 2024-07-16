@@ -24,3 +24,17 @@ library.add(fas, far, fab);
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.component("draggable", draggable);
 app.mount("#app");
+=========
+const app = createApp(App)
+const pinia = createPinia()
+
+library.add(fas, far, fab)
+
+app.component('font-awesome-icon', FontAwesomeIcon)
+app.component('draggable', draggable);
+
+app.use(router)
+app.use(pinia)
+
+app.mount('#app')
+>>>>>>>>> Temporary merge branch 2

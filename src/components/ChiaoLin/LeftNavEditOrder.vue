@@ -1,7 +1,5 @@
 <script>
 import { useBillstore } from '@/stores/BillStore';
-import { useOrderStore } from '@/stores/OrderStore';
-import { mapState, mapActions } from 'pinia';
 export default {
     setup() {
         const Billstore = useBillstore();
@@ -91,7 +89,7 @@ export default {
 
     div {
         display: flex;
-        justify-content: left;
+        justify-content: right;
 
         label {
             width: 30px;
@@ -107,10 +105,6 @@ export default {
                 font-size: 2.5em;
             }
         }
-    }
-
-    .noShowIcon {
-        justify-content: right;
     }
 
     ul {
@@ -141,7 +135,7 @@ export default {
             border: none;
             cursor: pointer;
             border-radius: 10px;
-            background: #00c1ca;
+            background:#00c1ca;
             padding: 0.5dvw;
             color: white;
             transition: transform 0.3s;

@@ -92,6 +92,7 @@ export default {
   <div class="body">
     <div class="header">
       <h2 style="margin-left:40%;width: 100%;color:#00c5c8;font-size: 2rem;font-weight: bold;">{{this.selected_item}}</h2>
+      <h2 style="margin-left:40%;width: 100%;color:#00c5c8;font-size: 2rem;font-weight: bold;">{{this.selected_item}}</h2>
       <ChangeTableArea style="margin-left: 30%;" v-on:selected_item_list="GetSelected_item" v-on:nav_item_list="Getnav_item_list"></ChangeTableArea>
     </div>
     <!-- second Area = 中間桌子的區塊 -->
@@ -139,6 +140,7 @@ export default {
 }
 .body {
   width: 100%;
+  height: 80vh; 
   height: 80vh; 
   display: flex;
   flex-wrap: wrap;
