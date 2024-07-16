@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog max-width="50%">
+    <v-dialog max-width="50%" style="z-index: 2;">
       <template v-slot:activator="{ props: activatorProps }">
         <button v-bind="activatorProps"class="template_dialog_btn">換桌</button>
       </template>
@@ -108,7 +108,7 @@
     align-items: center;
       .tables_body{
         min-width: 40%;
-        min-height: 40vh;
+        min-height: 50vh;
         border: 2px solid #00c5c8;
         padding: 1rem;
         border-radius: 1rem;
@@ -142,7 +142,9 @@ export default{
   methods:{
     async btnHandler(){
       if(this.selected_table.table_id =="#" || this.selected_target_table.table_id=="#"){
-            alert("你尚未選擇桌位！請重新選擇桌位或是提交桌位再換桌");
+            Swal.fire({title:"你尚未選擇桌位！請重新選擇桌位再換桌",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'error',iconColor:"#00c5c8"})
             return;
       }else{
         let temp_selected_table_id = this.selected_table.table_id;
@@ -201,8 +203,14 @@ export default{
           } catch (error) {
             console.error("Error fetching table data:", error);
         }
-        alert("換桌成功！");
-        window.location.reload();
+        Swal.fire({title:"換桌成功！",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+              if(res.isConfirmed){
+                window.location.reload();
+              }
+            })
+        
       }
     }
   }

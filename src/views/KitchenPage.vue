@@ -183,6 +183,7 @@ const fetchOrders = async () => {
           id: detail.meal_name,
           quantities: detail.quantities,
           order_detail: detail,
+          isfinishing:false,
         })),
         showMenu: false,
         collapsed: false,
@@ -203,6 +204,9 @@ const fetchOrders = async () => {
   } catch (error) {
     console.error('Error fetching orders:', error);
   }
+  sessionStorage.setItem("colums",JSON.stringify(columns));
+  let con = JSON.parse(sessionStorage.getItem("colums"));
+  console.log(con);
 };
 
 const refreshOrders = () => {

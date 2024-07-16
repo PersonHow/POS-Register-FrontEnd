@@ -1,5 +1,15 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+export default {
+  data(){
+    return {
+      staff:null
+    }
+  },
+  created(){
+    this.staff  = JSON.parse(sessionStorage.getItem("token"));
+  }
+}
 </script>
 <template>
     <div class="container">
@@ -11,7 +21,7 @@ import { RouterLink, RouterView } from 'vue-router'
           <li><a><RouterLink to="/OrderPage">點餐</RouterLink></a></li>
           <li><a><RouterLink to="/workingarea">工作台</RouterLink></a></li>
           <li><a><RouterLink to="/reserve">訂位</RouterLink></a></li>
-          <li><a><RouterLink to="/logout">登出</RouterLink></a></li>
+          <li v-if="this.staff"><a><RouterLink to="/logout">登出</RouterLink></a></li>
         </ul>
       </nav>
     </div>

@@ -2,20 +2,19 @@
   <div style="display: flex;">
   <div id="app">
     <div style="display: flex; align-items: center;">
-      <button @click="toggleEdit" class="btn_not_adjust_table">調整桌位</button>
-      <p v-if="this.isTargetEditing" style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;color: #00c5c8;">
-          你選擇的桌位：{{ select_table.table_id == "#" ?"尚未選擇":select_table.table_id }}<br/>
-          ->目標桌位：{{ target_table.table_id == "#" ?"尚未選擇":target_table.table_id }}</p>
-      <p v-else style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;color: #00c5c8;">
-        你選擇的桌位：{{ select_table.table_id == "#" ?"尚未選擇":select_table.table_id }}</p>
-        
+      <button @click="toggleEdit" class="btn_not_adjust_table">調整桌位</button> 
+      <button @click="toggleTarget" class="btn_cancel_target_table">設定目標桌位</button>
       <button @click='()=>{ this.select_table = {table_id:"#"};
                             this.input_table ={table_id:"#"};
                             this.target_table = {table_id:"#"};
                             this.$emit("selected_table",this.select_table);
                             this.$emit("selected_target_table",this.target_table);
                           }' class="btn_clear_select_table">清除桌位</button>
-      <button @click="toggleTarget" class="btn_cancel_target_table">設定目標桌位</button>
+      <p v-if="this.isTargetEditing" style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;font-weight: bold; font-size:1.5rem;color: #00c5c8;">
+          你選擇的桌位：{{ select_table.table_id == "#" ?"尚未選擇":select_table.table_id }}
+           >> 目標桌位：{{ target_table.table_id == "#" ?"尚未選擇":target_table.table_id }}</p>
+      <p v-else style="display: flex;flex-direction: column;margin-left: 2rem;font-weight: bold; font-size:1.5rem;margin-right:2rem;color: #00c5c8;">
+        你選擇的桌位：{{ select_table.table_id == "#" ?"尚未選擇":select_table.table_id }}</p> 
     </div>
     <!-- 當進入編輯模式時，啟用拖曳功能 -->
     <div v-if="this.isEditing">
@@ -57,6 +56,9 @@
                         </div>
                         <div class="Seat">
                           <div>用餐人數: {{ element.guest_num }}</div>
+                        </div>
+                        <div class="bill">
+                          <div>金額: 0 </div>
                         </div>
                   </div>
                 </div>
@@ -101,6 +103,9 @@
                           <div class="Seat">
                             <div>用餐人數: {{ element.guest_num }}</div>
                           </div>
+                          <div class="bill">
+                          <div>金額: 0 </div>
+                        </div>
                     </div>
                   </div>
               </template>
@@ -144,6 +149,9 @@
                           <div class="Seat">
                             <div>用餐人數: {{ element.guest_num }}</div>
                           </div>
+                          <div class="bill">
+                          <div>金額: 0 </div>
+                        </div>
                     </div>
                   </div>
               </template>
@@ -188,6 +196,9 @@
                         <div class="Seat">
                           <div>用餐人數: {{ element.guest_num }}</div>
                         </div>
+                        <div class="bill">
+                          <div>金額: 0 </div>
+                        </div>
                   </div>
                 </div>
             </template>
@@ -224,6 +235,9 @@
           <div class="Seat">
             <div>用餐人數: {{ table.guest_num }}</div>
           </div>
+          <div class="bill">
+            <div>金額: 0 </div>
+          </div>
         </div>
       </div>
       <div style="display: flex;flex-direction: row;">
@@ -255,6 +269,9 @@
                 <div class="Seat">
                   <div>用餐人數: {{ table.guest_num }}</div>
                 </div>
+                <div class="bill">
+                  <div>金額: 0 </div>
+                </div>
               </div>
         </div>
         <div style="display: flex;flex-direction: column;justify-content: space-between;min-height: 200px;min-width: 70%;">
@@ -284,6 +301,9 @@
                 </div>
                 <div class="Seat">
                   <div>用餐人數: {{ table.guest_num }}</div>
+                </div>
+                <div class="bill">
+                  <div>金額: 0 </div>
                 </div>
               </div>
         </div>
@@ -316,14 +336,19 @@
           <div class="Seat">
             <div>用餐人數: {{ table.guest_num }}</div>
           </div>
+          <div class="bill">
+            <div>金額: 0 </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div style="width: 50%;">
+  <div v-if="this.isEditTable" style="width: 30%;">
       <form class="input_add_table" >
-        <h2>你編輯的桌位如下：</h2>
-        <h2>桌號：{{ input_table.table_id == "#"? "未選擇": input_table.table_id }}</h2>
+        <div style="display: flex; justify-content: space-between;align-items: center">
+          <h2>桌號：{{ input_table.table_id == "#"? "未選擇": input_table.table_id }}</h2>
+          <button @click="cancelEditTable" style="border: none;background-color: unset;cursor: pointer;"><img src="../../assets/delete.png" width="20vw" height="20vw"/></button>
+        </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
           <h5>員工：</h5>
           <select v-model="input_table.staff_id">
@@ -490,6 +515,7 @@
         isTable_Change_count:0,
         tables_list1:[],
         isreload:false,
+        isEditTable:false,
         table_count:0,
         input_table:{table_id:"#"},
         target_table:{table_id:"#"},
@@ -529,6 +555,9 @@
       };
     },
     methods: {
+      cancelEditTable(){
+        this.isEditTable = false;
+      },
       async postTableHandler(){
         if(this.input_table.table_id == "#"){
           Swal.fire({title:"你沒有選擇桌位！請選擇桌位後再編輯",showConfirmButton:true,
@@ -628,6 +657,7 @@
         }
       },
       selectTableHandler(table){
+        this.isEditTable = true;
         if(this.isTargetEditing){
           this.target_table =table;
         }else{
@@ -656,6 +686,9 @@
         add_table.table_id = 0;
         this.add_table_list.push(add_table);
       },
+      openEditTable(){
+
+      },
       toggleEdit(e) {
         this.isEditing = !this.isEditing;
         console.log(this.isEditing);
@@ -676,6 +709,10 @@
 
       },
       async getTables(){
+        let selected_title_item ="一般區";
+        if(sessionStorage.getItem("selected_item")){
+          selected_title_item = sessionStorage.getItem("selected_item");
+        }
         try {
             const response = await fetch("http://localhost:8080/table");
             if (!response.ok) {
@@ -688,7 +725,8 @@
               //0:空位、1:使用中、2:已預約、3:帶位中
               status:
                 table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" :table.table_status === 2 ?"reserved":"take"
-            }))
+            })).filter((item)=>{ return item["table_area"] == selected_title_item});
+            console.log(this.tables_list1);
             this.$emit("tables",this.tables_list1);
           } catch (error) {
             console.error("Error fetching table data:", error);
@@ -776,13 +814,15 @@
     .status{
       width: 100%;
       display: flex;
+      font-size: 2rem;
+      justify-content: center;
       align-items: center;
       color: white;
       font-size: 1.5rem;
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
     }
-    .staffId,.booking,.time,.childSeat,.Seat{
+    .staffId,.booking,.time,.childSeat,.Seat,.bill{
       font-size: 1rem;
       width: 100%;
       display: flex;
@@ -832,17 +872,17 @@
     color:#00c5c8;
     border:2px solid #00c5c8;
     div{
-      margin-top:1rem;
-      margin-bottom: 1rem;
+      margin-top: 0.5rem;
+      height: 8vh;
       select,input{
         width:55%;
-        font-size: 2rem;
+        font-size: 1.5rem;
         background-color: white;
         border: 1px solid black;
       }
       h5{
         font-size: 1.5rem;
-        font-weight: 400;
+        font-weight: bold;
       } 
     } 
   }
@@ -1019,6 +1059,10 @@
     margin-left: 5px;
     text-align: center;
     cursor: pointer;
+}
+.swal_selected_table{
+  color: #00c5c8;
+  font-size: 5rem;
 }
   </style>
   

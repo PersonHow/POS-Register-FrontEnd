@@ -19,7 +19,8 @@
         >
           {{ item }}
       </p>
-      <p class="nav_item" @click="addTableAreaHandler">+新增其他區域</p>
+      <p class="nav_item" @click="addTableAreaHandler">+新增用餐區</p>
+      <p class="nav_item" @click="deleteTableAreaHandler">+刪除用餐區</p>
       </v-list>
     </v-menu>
   </div>
@@ -87,7 +88,8 @@
       },
       Select_itemHandler(index){
           this.selected_item_list = this.nav_item_list[index];
-          this.$emit("selected_item_list",this.selected_item_list);
+          sessionStorage.setItem("selected_item",this.selected_item_list);
+          window.location.reload();
       },
       async addTableAreaHandler(){
         Swal.fire({title: '請輸入要新增的用餐區域：',
@@ -131,6 +133,47 @@
 
         })
 
+      },
+      createDeleteTableArea(){
+        let tableAreaOption ="";
+        this.nav_item_list.map((item,index)=>{if(index !=0){
+           tableAreaOption=tableAreaOption.concat(`<option value=${item}>${item}</option>`)}})
+        return `<select id="TableAreaSelect" style="width:60%;font-size:2rem;">${tableAreaOption}</select>`;   
+      },
+      async deleteTableAreaHandler(){
+        Swal.fire({title: '請輸入要刪除的用餐區域：',
+        html:this.createDeleteTableArea(),
+        showConfirmButton:true,
+        showCancelButton:true,
+        confirmButtonColor:"#00c5c8",
+        confirmButtonText:"確定",
+        cancelButtonText:"取消"}).then(async function(result){
+          if(result.isConfirmed){
+        
+            let selectTaleArea = document.querySelector("#TableAreaSelect").options[document.querySelector("#TableAreaSelect").selectedIndex].value;
+            try {
+            const response = await fetch(`http://localhost:8080/tablearea/${selectTaleArea}`,{
+              method:"DELETE",
+              headers: {
+              'Content-Type': 'application/json',
+              },
+            });
+            if (response.status !=200) {
+              throw new Error("Network response was not ok");
+            }else{
+              Swal.fire({title:"刪除用餐區域成功！",showConfirmButton:true,
+              confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+              icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+              if(res.isConfirmed){ 
+                  window.location.reload();
+              }
+            })
+            }
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+          }
+        })
       }
     }
   }

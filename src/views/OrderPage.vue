@@ -43,9 +43,11 @@ export default {
     created() {
         if(this.$route.query.selected_table){
             this.selected_table=JSON.parse(this.$route.query.selected_table);
-            this.selected_target_table =JSON.parse(this.$route.query.selected_target_table);
-            console.log(this.selected_table);
-            console.log(this.selected_target_table);
+            console.log(this.selected_table);    
+        }
+        if(this.$route.query.selected_target_table){
+                this.selected_target_table =JSON.parse(this.$route.query.selected_target_table);
+                console.log(this.selected_target_table);
         }
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號

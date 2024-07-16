@@ -3,12 +3,13 @@ import TablePage from "@/components/Kou/Table.vue";
 import ChangeTableArea from "@/components/Kou/ChangeTableArea.vue";
 import Footer_bar_ChangeTable from "@/components/Kou/Footer_bar_ChangeTable.vue";
 import Footer_bar_Checkout from "@/components/Kou/Footer_bar_Checkout .vue";
+import Footer_bar_Order from "@/components/Kou/Footer_bar_Order.vue";
 import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      selected_item:"一般區",
       selected_table:{table_id:"#"},
-      selected_item:"",
       selected_target_table:{table_id:"#"},
       menuOpen: false,
       tables: [],
@@ -65,9 +66,6 @@ export default {
             return
           }
         })
-    },
-    GetSelected_item(item){
-      this.selected_item = item;
     },
     GetSelected_target_table(table){
       this.selected_target_table = table;
@@ -148,12 +146,16 @@ export default {
               }
             })
     }
+    if(sessionStorage.getItem("selected_item")){
+      this.selected_item = sessionStorage.getItem("selected_item");
+    }
   },
   components: {
     TablePage,
     ChangeTableArea,
     Footer_bar_ChangeTable,
-    Footer_bar_Checkout
+    Footer_bar_Checkout,
+    Footer_bar_Order
   },
 };
 </script>
@@ -162,7 +164,7 @@ export default {
   <div class="body">
     <div class="header">
       <h2 style="margin-left: 40%;color:#00c5c8;font-size: 2rem;font-weight: bold;">{{this.selected_item}}</h2>
-      <ChangeTableArea style="margin-right:2rem" v-on:selected_item_list="GetSelected_item" v-on:nav_item_list="Getnav_item_list"></ChangeTableArea>
+      <ChangeTableArea style="margin-right:2rem" v-on:nav_item_list="Getnav_item_list"></ChangeTableArea>
     </div>
     <!-- second Area = 中間桌子的區塊 -->
     <div class="second">
@@ -185,7 +187,7 @@ export default {
                 <Footer_bar_Checkout :selected_table="selected_table" :selected_target_table="selected_target_table"/>
                 <button class="menu-item" @click="TakeTableHandler">帶位</button>
                 <button class="menu-item"@click="cleanTablesHander">清除狀態</button>
-                <a class="menu-item" @click="orderHandler">點餐</a>
+                <Footer_bar_Order :selected_table="selected_table" :selected_target_table="selected_target_table"/>
               </div>
             </transition>
           </div>

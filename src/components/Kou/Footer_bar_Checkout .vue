@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog max-width="50%">
+    <v-dialog max-width="50%" style="z-index: 2;">
       <template v-slot:activator="{ props: activatorProps }">
         <button v-bind="activatorProps" class="template_dialog_btn">合併結帳</button>
       </template>
@@ -127,6 +127,7 @@
  
 </style>
 <script >
+ import Swal from "sweetalert2";
 export default{
   data(){
     return {
@@ -139,7 +140,10 @@ export default{
   methods:{
     btnHandler(){
       if(this.selected_table.table_id =="#" || this.selected_target_table.table_id=="#"){
-        alert("你尚未選擇桌位！請重新選擇桌位或是提交桌位再合併結帳");
+        Swal.fire({title:"你尚未選擇桌位！請重新選擇桌位或是提交桌位再合併結帳",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'error',iconColor:"#00c5c8"})
+            return;
       }else{
         this.$router.push({
           name:"OrderPage",
