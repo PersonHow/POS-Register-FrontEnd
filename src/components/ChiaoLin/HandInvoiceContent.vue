@@ -29,7 +29,7 @@ export default {
             </div>
             <div class="inputArea">
                 <p>發票號碼：</p>
-                <input type="text" placeholder="請輸入手開發票號碼" v-model="Billstore.handInvoiceInput">
+                <input type="text" placeholder="請輸入手開發票號碼" v-model="this.Billstore.handInvoiceInput">
                 <p>統一編號：</p>
                 <input type="text" placeholder="請輸入統編">
             </div>

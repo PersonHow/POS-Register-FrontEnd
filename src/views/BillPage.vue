@@ -62,9 +62,10 @@ export default {
             <Calculator @add-to-display="Billstore.addToDisplay" @clear-display="Billstore.clearDisplay"
                 @backspace="Billstore.backspace" />
             <div class="functionButArea">
-                <RouterLink to="/OrderPage"><button type="button" class="comeback myMouse">返回</button></RouterLink>
+                <RouterLink to="/OrderPage"><button type="button" class="comeback myMouse">取消</button></RouterLink>
                 <button type="button" class="manualInvoice myMouse" @click="Billstore.showHandInvoiceArea">手開發票</button>
                 <RouterLink to="/InvoicePage"><button type="button" class="comeback myMouse">發票設定</button></RouterLink>
+                <RouterLink to="/BillEditPage"><button type="button" class="comeback myMouse">帳務總覽</button></RouterLink>
                 <input type="checkbox" id="rightBar" v-model="Billstore.showRightNav">
                 <label for="rightBar" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
             </div>
@@ -72,7 +73,7 @@ export default {
         <div v-if="Billstore.showHandInvArea">
             <HandInvoiceContent @close="Billstore.showHandInvoiceArea" />
         </div>
-        <LeftNavEditOrder />
+        <!-- <LeftNavEditOrder /> -->
         <RightNavOtherFun />
     </div>
 </template>
@@ -89,9 +90,9 @@ export default {
 
         .functionButArea {
             display: flex;
-            width: 94%;
-            height: 8dvh;
-            line-height: 8dvh;
+            width: 95%;
+            height: 7dvh;
+            line-height: 7dvh;
             background: linear-gradient(90deg, #00c1ca, #01e1c5);
             color: #fff;
             border-radius: 10px;

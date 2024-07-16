@@ -28,9 +28,9 @@ const router = createRouter({
       component: () => import("../views/BillPage.vue"),
     },
     {
-      path: "/InvoicePage",
-      name: "InvoicePage",
-      component: () => import("../views/InvoicePage.vue"),
+      path: "/AllBillPage",
+      name: "AllBillPage",
+      component: () => import("../views/AllBillPage.vue"),
     },
     {
       path: "/calendar",
@@ -45,6 +45,11 @@ const router = createRouter({
         alert("登出成功！");
         window.location.replace("/");
       },
+    },
+    {
+      path: "/AllBillPage",
+      name: "AllBillPage",
+      component: () => import("../views/AllBillPage.vue"),
     },
   ],
 });

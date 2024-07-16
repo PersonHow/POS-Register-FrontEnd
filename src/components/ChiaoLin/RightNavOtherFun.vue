@@ -104,19 +104,17 @@ export default {
 <style scoped lang="scss">
 .navArea {
     position: fixed;
-    height: 83%;
-    top: 0;
-    width: 40%;
-    right: -42%;
+    height: 100%;
+    width: 35%;
+    right: -40%;
     overflow: hidden;
     background: white;
     border-left: 5px solid #00c1ca;
     border-bottom: 5px solid #00c1ca;
     transition: 0.3s ease;
     opacity: 90%;
-    z-index: 2;
+    z-index: 1;
     padding: 2dvh 2.5dvw;
-    overflow: scroll;
 
     &.active {
         right: 0;

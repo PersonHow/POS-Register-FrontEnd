@@ -38,7 +38,7 @@ export const useBillstore = defineStore("Billstore", {
     handInvoiceInput: "",
     changeShow: "A",
     OrderDB: [], // 從DB抓的
-    bId:null,
+    vehicleInputNum:"",
   }),
   getters: {
     // ----取值區----
@@ -61,13 +61,14 @@ export const useBillstore = defineStore("Billstore", {
       return state.inputEvent.reduce((total, event) => total + event.value, 0);
     },
     // 計算機-未收
-    // notyetChargeAmount(state) {
-    //   if (state.totalAmount > state.realChargeAmount) {
-    //     return (state.totalAmount - state.realChargeAmount).toFixed(2);
-    //   } else {
-    //     return 0;
-    //   }
-    // },
+    notyetChargeAmount(state) {
+
+      if (state.totalAmount > state.realChargeAmount) {
+        return (state.totalAmount - state.realChargeAmount).toFixed(2);
+      } else {
+        return 0;
+      }
+    },
     discountAmount(state) {
       return (state.orderAmountfromPage * state.discount) / 100;
     },
@@ -226,7 +227,7 @@ export const useBillstore = defineStore("Billstore", {
         })
           .then((res) => res.json())
           .then((data) => {
-            // console.log(data);
+            console.log(data);
             this.allbills = data;
             // 未用 只取近5筆記錄
             // this.lastFiveBills = data.slice(-5).reverse();

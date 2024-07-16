@@ -6,7 +6,7 @@ export default {
         const Billstore = useBillstore();
         return {
             Billstore,
-            ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
+            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
                 'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount', 'OrderDB']),
             ...mapActions(Billstore, ['addToDisplay', 'clearDisplay', 'backspace', 'getOderId', 'getInvoiceNum', 'tothousendShowValue',]),
         };
@@ -14,6 +14,10 @@ export default {
     methods: {
         ...mapActions(useBillstore, ['saveBillfromP']),
         saveBill() {
+            if(this.Billstore.notyetChargeAmount !== 0){
+                alert('未收不等於0')
+                return;
+            }
             let pCash = 0, pCard = 0, pOther = 0;
             this.Billstore.inputEvent.forEach(event => {
                 if (event.type === "現金") {
@@ -27,7 +31,7 @@ export default {
             let paymentWays = this.Billstore.inputEvent.map(otherPayment => otherPayment.type);
             let pOtherName = paymentWays.splice(2).join(',');
             // 待連 lastmodified_staff_id: pId
-            this.saveBillfromP(this.Billstore.bId, this.OrderDB.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", "", "", pOtherName)
+            this.saveBillfromP("", this.OrderDB.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", "", "", pOtherName)
             this.Billstore.orderAmountfromPage = 0;
             this.Billstore.discount = 0;
             this.Billstore.serviceFee = 0;
@@ -43,6 +47,7 @@ export default {
                 }
             })
             this.OrderDB.amount = 0;
+            showChangeArea();
         },
         closeShow() {
             this.$emit('close');
@@ -86,6 +91,7 @@ export default {
         // 10000000 ~ 99999999 的8位數
         const randomNum = String(Math.floor(10000000 + Math.random() * 99999999));
         this.Billstore.invoiceNum = `${firstChar}${secondChar}${randomNum}`;
+        // 檢查未收
     },
 }
 </script>
@@ -112,7 +118,7 @@ export default {
                         id="butbackspace"></div>
                 <div class="mathBut butRevise"><input type="button" value="更正" @click="Billstore.clearDisplay()"
                         id="butRevise"></div>
-                <div class="mathBut butComfirm"><input type="button" value="確定" @click="saveBill()" id="butComfirm">
+                <div class="mathBut butComfirm"><input type="button" value="完成結帳" @click="saveBill()" id="butComfirm">
                 </div>
             </div>
             <div v-if="changeArea == true">
@@ -143,8 +149,7 @@ export default {
     .calculator {
         width: 100%;
         display: flex;
-        padding-top: 3dvh;
-        margin-left: 0.5dvw;
+        padding-top: 1.5dvh;
 
         .mathbutArea {
             width: 100%;
@@ -158,12 +163,15 @@ export default {
             padding-right: 1.5dvw;
 
             input {
-                width: 100%;
+                width: 85%;
                 height: 8dvh;
                 border: 1px solid rgb(213, 212, 212);
                 background: linear-gradient(white 80%, #00c1ca 20%);
                 color: black;
                 font-size: 3dvh;
+                &.active {
+                    background: linear-gradient(rgb(152, 152, 152) 70%, #009688 30%);
+                }
             }
         }
 
@@ -172,7 +180,7 @@ export default {
             margin-right: 1dvw;
 
             .mathBut {
-                width: 110%;
+                width: 95%;
 
                 input {
                     width: 100%;

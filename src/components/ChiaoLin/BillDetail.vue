@@ -3,6 +3,7 @@ import { useBillstore } from '@/stores/BillStore'
 import { useOrderStore } from '@/stores/OrderStore'
 import { mapState, mapActions } from 'pinia';
 import { onMounted, watch } from 'vue';
+import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
 
 export default {
     setup() {
@@ -41,17 +42,20 @@ export default {
             OrderStore,
             updateValue,
             enterAddInputValue,
-            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent',]),
+            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent','theLastBill']),
             ...mapState(OrderStore, ['order_info']),
-            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB']),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB','getAllBillsAndTodayBills']),
         };
     },
     methods: {
-        
+        toggleSidebar() {
+            this.isLeftNavHidden = !this.isLeftNavHidden;
+        },
     },
     data() {
         return {
             OrderDB: [],
+            isLeftNavHidden: false,
         }
     },
     created() {
@@ -91,12 +95,14 @@ export default {
             } else {
                 AorB = 'Other';
             }
-            // 100 ~ 999 的三位數
-            const randomNum = String(Math.floor(100 + Math.random() * 900));
-            this.Billstore.bId = `${year}${month}${day}-${AorB}${randomNum}`;
+            this.showBillId = `${year}${month}${day}-${AorB}` + this.Billstore.bId;
         } else {
             console.error("Wrong oId!")
-        }
+        };
+        
+    },
+    components: {
+        LeftNavEditOrder,
     }
 
 }
@@ -106,67 +112,74 @@ export default {
     <div class="allArea">
         <div class="showOrderId">
             <div style="width: 20%;">結帳單號</div>
-            <div style="width: 50%;">{{ this.Billstore.bId }}</div>
+            <div style="width: 40%;">{{ this.Billstore.theLastBill.bill_id+1 }}</div>
             <!-- 漢堡按鈕還沒做 -->
             <input type="checkbox" id="noShowOrder" v-model="this.Billstore.showOrderArea">
-            <label for="noShowOrder" class="orderDetailLabel myMouse"><span>點餐明細</span></label>
+            <button style="cursor: pointer;" @click="toggleSidebar">
+                <p  v-if="!isLeftNavHidden">關閉左側明細</p>
+                <p  v-else>開啟左側明細</p>
+            </button>
             <label for="" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
         </div>
-        <div class="billDetailArea"></div>
-        <div class="billDetailLeftArea">
-
-        </div>
-        <div class="billDetailRightArea">
-            <div class="titleArea">
-                <p>結帳明細</p>
+        <div class="billDetailArea">
+            <div :class="['billDetailLeftArea', { hidden: isLeftNavHidden }]">
+                
+                <LeftNavEditOrder></LeftNavEditOrder>
             </div>
-        </div>
-        <div class="billdetail">
-            <p>訂單金額&nbsp;</p>
-            <div class="inputAera"><input type="text" :value="this.OrderDB.amount" disabled>
-            </div>
-            <p>折扣&nbsp;</p>
-            <div class="inputAera"><input type="text" :value="Billstore.discount"
-                    @input="updateValue($event, 'discount')" @focus="Billstore.setFocusedInput($event.target)"
-                    name="discount"><span>%</span></div>
-            <p>服務費&nbsp;</p>
-            <div class="inputAera"><input type="text" :value="Billstore.serviceFee"
-                    @input="updateValue($event, 'serviceFee')" @focus="tBillstore.setFocusedInput($event.target)"
-                    name="serviceFee"><span>%</span></div>
-            <p>招待&nbsp;</p>
-            <div class="inputAera"><input type="text" :value="Billstore.entertain"
-                    @input="updateValue($event, 'entertain')" @focus="Billstore.setFocusedInput($event.target)"
-                    name="entertain">
-            </div>
-            <p>折讓&nbsp;</p>
-            <div class="inputAera" style="border-bottom: thick double rgb(213, 212, 212);"><input type="text"
-                    :value="Billstore.allowance" @input="updateValue($event, 'allowance')"
-                    @focus="Billstore.setFocusedInput($event.target)" name="allowance"></div>
-            <!-- 其他付款方式 -->
-            <div class="inputEventArea" v-for="(event, index) in Billstore.inputEvent" :key="index">
-                <p>{{ event.type }}&nbsp; <button class="myMouse" @click="Billstore.removeInputEvent(index)"><i
-                            class="fa-solid fa-circle-minus fa-lg" style="color: #b00000;"></i></button></p>
-                <div class="inputAera"><input type="text" v-model="event.value"
-                        @focus="Billstore.setFocusedInput($event.target)" :name="event.type"></div>
-            </div>
-            <div class="inputAera addInputEventsArea">
-                <input type="text" id="addInputEvents" :value="Billstore.newInputEvent" @input="enterAddInputValue"
-                    placeholder="請輸入項目名稱">
-                <button type="button" id="addDetail" @click="Billstore.addInputEvent" class="myMouse"><i
-                        class="fa-solid fa-circle-plus fa-xl"></i></button>
+            <div :class="['billDetailRightArea', { expanded: isLeftNavHidden }]">
+                <div class="titleArea">
+                    <p>結帳明細</p>
+                </div>
+                <div class="billdetail">
+                    <p>訂單金額&nbsp;</p>
+                    <div class="inputAera"><input type="text" :value="this.OrderDB.amount" disabled>
+                    </div>
+                    <p>折扣&nbsp;</p>
+                    <div class="inputAera"><input type="text" :value="Billstore.discount"
+                            @input="updateValue($event, 'discount')" @focus="Billstore.setFocusedInput($event.target)"
+                            name="discount"><span>%</span></div>
+                    <p>服務費&nbsp;</p>
+                    <div class="inputAera"><input type="text" :value="Billstore.serviceFee"
+                            @input="updateValue($event, 'serviceFee')" @focus="Billstore.setFocusedInput($event.target)"
+                            name="serviceFee"><span>%</span></div>
+                    <p>招待&nbsp;</p>
+                    <div class="inputAera"><input type="text" :value="Billstore.entertain"
+                            @input="updateValue($event, 'entertain')" @focus="Billstore.setFocusedInput($event.target)"
+                            name="entertain">
+                    </div>
+                    <p>折讓&nbsp;</p>
+                    <div class="inputAera" style="border-bottom: thick double rgb(213, 212, 212);"><input type="text"
+                            :value="Billstore.allowance" @input="updateValue($event, 'allowance')"
+                            @focus="Billstore.setFocusedInput($event.target)" name="allowance"></div>
+                    <!-- 其他付款方式 -->
+                    <div class="inputEventArea" v-for="(event, index) in Billstore.inputEvent" :key="index">
+                        <p>{{ event.type }}&nbsp; <button class="myMouse" @click="Billstore.removeInputEvent(index)"><i
+                                    class="fa-solid fa-circle-minus fa-lg" style="color: #b00000;"></i></button></p>
+                        <div class="inputAera"><input type="text" v-model="event.value"
+                                @focus="Billstore.setFocusedInput($event.target)" :name="event.type"></div>
+                    </div>
+                    <div class="inputAera addInputEventsArea">
+                        <input type="text" id="addInputEvents" :value="Billstore.newInputEvent"
+                            @input="enterAddInputValue" placeholder="請輸入項目名稱">
+                        <button type="button" id="addDetail" @click="Billstore.addInputEvent" class="myMouse"><i
+                                class="fa-solid fa-circle-plus fa-xl"></i></button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
 .allArea {
     width: 50%;
+    font-family: "Chocolate Classical Sans", sans-serif;
 
     .titleArea {
         margin: 2dvh 0;
-        margin-top: 3dvh;
-        padding-left: 3dvw;
+        margin-bottom: 3dvh;
+        padding-left: 2.5dvw;
 
         p {
             color: gray;
@@ -176,18 +189,21 @@ export default {
 
     .showOrderId {
         display: flex;
-        height: 9dvh;
+        height: 8dvh;
         background: linear-gradient(90deg, #00c1ca, #01e1c5);
+        border-radius: 5px;
         color: white;
-        line-height: 9dvh;
+        line-height: 8dvh;
         padding-left: 2dvw;
         font-size: 2.25dvh;
 
         button {
-            width: 20%;
+            width: 25%;
             border: none;
             background: none;
             color: white;
+            font-family: "Chocolate Classical Sans", sans-serif;
+            font-size: 2dvh;
         }
 
         input {
@@ -196,7 +212,7 @@ export default {
 
         label {
             // border: 1px solid black;
-            height: 9dvh;
+            height: 8dvh;
             width: 8dvw;
             cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
             transition: 0.3s ease;
@@ -206,7 +222,7 @@ export default {
 
             i {
                 z-index: 1;
-                line-height: 9dvh;
+                line-height: 8dvh;
             }
 
             span {
@@ -215,65 +231,91 @@ export default {
         }
     }
 
-    .billdetail {
-        padding: 0 2.5dvw;
+    .billDetailArea {
+        display: flex;
+        width: 100%;
+        overflow: hidden;
 
-        input {
+        .billDetailLeftArea {
             width: 90%;
-            border-radius: 5px;
-            border: none;
-            background-color: white;
-            text-align: right;
-            font-size: 2dvh;
-        }
+            transition: width 0.3s ease;
+            overflow: hidden;
 
-        p {
-            height: 4dvh;
-            margin-left: 1dvw;
-            font-size: 2dvh;
-            padding-top: 0.5dvh;
-            margin-top: 0.5dvh;
-        }
-
-        .inputAera {
-            width: auto;
-            text-align: right;
-            padding-right: 1dvw;
-            border-bottom: 2px solid rgb(213, 212, 212);
-
-            #addDetail {
-                height: 5dvh;
-            }
-
-            #addInputEvents {
-                text-align: left;
-            }
-
-        }
-
-        .inputEventArea {
-            border-bottom: 1px solid rgb(213, 212, 212);
-
-            input {
-                text-align: right;
-            }
-
-            button {
-                background: none;
-                border: none;
+            &.hidden {
+                width: 0;
             }
         }
 
-        .addInputEventsArea {
-            input {
+        .billDetailRightArea {
+            width: 100%;
+            transition: width 0.3s ease;
+
+            &.expended {
                 width: 100%;
-                padding-left: 1dvw;
-                margin-top: 1dvh;
-                font-family: "Chocolate Classical Sans", sans-serif;
+            }
+
+            .billdetail {
+                padding: 0 1.5dvw;
+
+                input {
+                    width: 90%;
+                    border-radius: 5px;
+                    border: none;
+                    background-color: white;
+                    text-align: right;
+                    font-size: 2dvh;
+                }
+
+                p {
+                    height: 2.5dvh;
+                    margin-left: 1dvw;
+                    font-size: 2dvh;
+                    margin-top: 1dvh;
+                }
+
+                .inputAera {
+                    width: auto;
+                    text-align: right;
+                    padding-right: 1dvw;
+                    border-bottom: 2px solid rgb(213, 212, 212);
+
+                    #addDetail {
+                        height: 5dvh;
+                    }
+
+                    #addInputEvents {
+                        text-align: left;
+                    }
+
+                }
+
+                .inputEventArea {
+                    border-bottom: 1px solid rgb(213, 212, 212);
+
+                    input {
+                        text-align: right;
+                    }
+
+                    button {
+                        background: none;
+                        border: none;
+                    }
+                }
+
+                .addInputEventsArea {
+                    input {
+                        width: 100%;
+                        padding-left: 1dvw;
+                        margin-top: 1dvh;
+                        font-family: "Chocolate Classical Sans", sans-serif;
+                    }
+                }
+
             }
         }
-
     }
+
+
 
     #addDetail {
         background: none;
