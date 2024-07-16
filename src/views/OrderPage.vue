@@ -5,6 +5,8 @@ import { useOrderStore } from '@/stores/OrderStore'
 export default {
     data() {
         return {
+            selected_table:{},
+            selected_target_table:{},
             oId: "", //訂單編號
             menu: [], //所有菜單
             meal: { //餐點物件
@@ -39,6 +41,12 @@ export default {
         EditMeal
     },
     created() {
+        if(this.$route.query.selected_table){
+            this.selected_table=JSON.parse(this.$route.query.selected_table);
+            this.selected_target_table =JSON.parse(this.$route.query.selected_target_table);
+            console.log(this.selected_table);
+            console.log(this.selected_target_table);
+        }
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱
