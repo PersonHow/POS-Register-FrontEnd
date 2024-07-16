@@ -1,5 +1,6 @@
 <script>
-import EditMenu from '../components/EditMenu.vue'
+import AddMenu from '../components/AddMenu.vue'
+import UpdateCustom from '../components/UpdateCustom.vue'
 import { useMenuStore } from '@/stores/MenuStore';
 export default {
     setup(){
@@ -48,14 +49,17 @@ export default {
 
     },
     components:{
-        EditMenu,MealType
+        AddMenu,UpdateCustom
     },
 }
 </script>
 
 <template>
     <div v-show="!MenuStore.toggleEdit" class="navi">
-        <h2><font-awesome-icon icon="fa-solid fa-bars" class="icon"/> 菜單管理</h2>
+        <h2>
+            <button class="btn"><font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></button> 
+            菜單管理
+        </h2>
         <div v-for="page in pages" :key="page" class="changePage" :class="{'currentPage' : selectedPage === page}">
             <input type="radio" v-model="selectedPage" :value="page" :id="page" >
             <label @click="MenuStore.clearMeal()" :for="page">{{page}}</label>
@@ -68,7 +72,7 @@ export default {
                 <p>餐點種類</p>
                 <select name="" id="type" v-model="selectedType">
                     <option value="all">全部</option>
-                    <option v-for="type in MenuStore.types" :key="type" :value="type">{{type.name}}</option>
+                    <option v-for="(type,i) in MenuStore.types" :key="i" :value="type">{{type}}</option>
                 </select>
             </div>
             <div class="colume">
@@ -79,39 +83,39 @@ export default {
                 </select>
             </div>
         </div>
-        <button @click="selectedPage = pages[1]" class="createMenu c-btn"><font-awesome-icon icon="fa-solid fa-plus" /> 新增餐點</button>
         <div class="c-row wrap" ref="wrap">
-            <div v-for="meal in MenuStore.getItemsByType(selectedType)"  :key="meal.type" class="coluem menu">
+            <div v-for="meal in MenuStore.getItemsByType(selectedType)"  :key="meal" class="coluem menu">
                 <img :src="meal.img" alt="">
                 <div class="meal">
-                    <p>{{meal.name}}</p>
+                    <p>{{meal.meal_id+". "+meal.name}}</p>
                     NT. {{meal.price}}<br>
                     {{meal.description}}<br>
                 </div>
-                <button @click="MenuStore.editing(meal.meal_id)" class="c-btn">編輯</button>
+                <button @click="cancelEditing,MenuStore.editing(meal.meal_id)" class="c-btn">編輯</button>
             </div>
         </div>
     </div>
-    <div v-show="MenuStore.toggleEdit" class="edit p-5">
-        <div class="col mb-3">
+    <div v-if="MenuStore.toggleEdit" class="edit p-5">
+        <div v-if="MenuStore.meal.meal_id" class="col mb-3">
             <button @click="MenuStore.cancelEditing()" type="button" class="btn-close" aria-label="Close"></button>
         </div>
-        <div class="col h3">修改餐點</div>
-        <EditMenu>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-lg btn-danger mx-3">刪除餐點</button>
-                <button class="btn btn-lg btn-main">確認修改</button>
+        <AddMenu>
+            <div class="d-flex justify-content-between">
+                <button @click="MenuStore.deleteMeal(MenuStore.meal.meal_id)" class="btn btn-lg btn-danger" >刪除餐點</button>
+                <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認修改</button>
             </div>
-        </EditMenu>
+        </AddMenu>
     </div>
-    <div v-show="selectedPage === pages[1]" class="c-container">
-        <div class="col h3">新增餐點</div>
-        <EditMenu>
+    <div v-if="selectedPage === pages[1]" class="c-container">
+        <AddMenu>
             <div class="d-flex justify-content-end">
                 <button class="btn btn-lg mx-3">儲存草稿</button>
-                <button class="btn btn-lg btn-main">確認新增</button>
+                <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認新增</button>
             </div>
-        </EditMenu>
+        </AddMenu>
+    </div>
+    <div v-if="selectedPage === pages[2]" class="c-container">
+        <UpdateCustom />
     </div>
 </template>
 
@@ -120,8 +124,13 @@ export default {
 // $main-color: linear-gradient(120deg,#f9b445 0%, #ff9b69 80%);
 $main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
 $secondary-color: #FFE2C3;
+p{
+    margin-bottom: 10px;
+}
 .btn-main{
-    background: linear-gradient(90deg, #00c1ca, #01e1c5);
+    background: $main-color;
+}
+.btn{
     color: #fff;
 }
 .navi{
@@ -132,7 +141,7 @@ $secondary-color: #FFE2C3;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: linear-gradient(180deg, #00c1ca, #01e1c5);
+    background: linear-gradient(0deg, #f9b445 0%, #ff9b69 80%);
     color: #fff;
     font-size: large;
     
