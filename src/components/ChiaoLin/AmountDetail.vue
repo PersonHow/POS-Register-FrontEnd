@@ -1,8 +1,8 @@
 <script>
 import { useBillstore } from '@/stores/BillStore'
 import { mapState, mapActions } from 'pinia';
-import VehicleArea from '@/components/ChiaoLin/VehicleArea.vue'
-import BusiNumArea from '@/components/ChiaoLin/BusiNumInput.vue'
+import MobileBarcodeArea from '@/components/ChiaoLin/MobileBarcodeArea.vue'
+import UniformNumArea from '@/components/ChiaoLin/UniformNumArea.vue'
 export default {
     data() {
         return {
@@ -19,8 +19,8 @@ export default {
         };
     },
     components: {
-        VehicleArea,
-        BusiNumArea
+        MobileBarcodeArea,
+        UniformNumArea
     },
     created() {
         if (this.$route.params.orderId !== "") {
@@ -72,10 +72,10 @@ export default {
                 <button type="button" class="myMouse" @click="Billstore.showBuniNumArea"><span>統一編號</span></button>
             </div>
             <div v-if="Billstore.showVehiArea">
-                <VehicleArea @close="Billstore.showVehicleArea" />
+                <MobileBarcodeArea @close="Billstore.showVehicleArea" />
             </div>
             <div v-if="Billstore.showBusiNumInput">
-                <BusiNumArea @close="Billstore.showBuniNumArea" />
+                <UniformNumArea @close="Billstore.showBuniNumArea" />
             </div>
         </div>
         <div class="amountDetail">
@@ -98,7 +98,7 @@ export default {
                             <span id="totalAmount">{{ Billstore.tothousendShowValue(this.OrderDB.amount) }}</span>
                         </div>
                     </div>
-                    <!-- <div class="amountShowLeftChange">
+                    <div class="amountShowLeftChange" hidden>
                         <div class="changeAreaText">
                             <span>找零</span>
                         </div>
@@ -106,7 +106,7 @@ export default {
                         <div class="changeAreaAmount">
                             <span id="changeAmount">{{ Billstore.tothousendShowValue(Billstore.changeAmount) }}</span>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
                 <div class="amountShowRight">
                     <div class="amountShowRightRealCharge">

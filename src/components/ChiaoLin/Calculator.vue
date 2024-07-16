@@ -14,8 +14,8 @@ export default {
     methods: {
         ...mapActions(useBillstore, ['saveBillfromP']),
         saveBill() {
-            if(this.Billstore.notyetChargeAmount !== 0){
-                alert('未收不等於0')
+            if (this.Billstore.notyetChargeAmount > 0) {
+                alert('未收不可小於0')
                 return;
             }
             let pCash = 0, pCard = 0, pOther = 0;
@@ -30,13 +30,28 @@ export default {
             });
             let paymentWays = this.Billstore.inputEvent.map(otherPayment => otherPayment.type);
             let pOtherName = paymentWays.splice(2).join(',');
+            const staff = JSON.parse(sessionStorage.getItem("token"));
+            console.log(staff);
+            // 跳出找零box
+            this.changeArea = !this.changeArea;
+            this.needTochange = this.Billstore.changeAmount;
+            // 若有手開發票
+            if(this.Billstore.handInvoiceInput !== ""){
+                this.Billstore.invoiceNum = this.Billstore.handInvoiceInput;
+                this.Billstore.uniformNum = this.Billstore.handUniformNum;
+            }
             // 待連 lastmodified_staff_id: pId
-            this.saveBillfromP("", this.OrderDB.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", "", "", pOtherName)
+            this.saveBillfromP("", this.OrderDB.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", staff.staff_id, "", pOtherName, this.Billstore.mobileBarcode, this.Billstore.uniformNum)
+            this.OrderDB.amount = 0;
             this.Billstore.orderAmountfromPage = 0;
             this.Billstore.discount = 0;
             this.Billstore.serviceFee = 0;
             this.Billstore.entertain = 0;
             this.Billstore.allowance = 0;
+            this.Billstore.mobileBarcode = "";
+            this.Billstore.uniformNum = "";
+            this.Billstore.handInvoiceInput = "";
+            this.Billstore.handUniformNum = "";
             this.Billstore.inputEvent.forEach(event => {
                 if (event.type === "現金") {
                     event.value = 0;
@@ -46,8 +61,7 @@ export default {
                     event.value = 0;
                 }
             })
-            this.OrderDB.amount = 0;
-            showChangeArea();
+
         },
         closeShow() {
             this.$emit('close');
@@ -59,9 +73,14 @@ export default {
     data() {
         return {
             changeArea: false,
+            needTochange: 0
         }
     },
     created() {
+        // 抓目前登入在操作的員工
+        const staff = JSON.parse(sessionStorage.getItem("token"));
+        console.log(staff);
+        // 抓orderId from route
         if (this.$route.params.orderId !== "") {
             let orderId = this.$route.params.orderId
             let orderObj = {
@@ -129,10 +148,12 @@ export default {
                         </div>
                         <div class="showInfoArea">
                             <span id="ntText">NT.</span>
-                            <span id="changeAmount">{{ Billstore.tothousendShowValue(Billstore.changeAmount) }}</span>
+                            <span id="changeAmount">{{ Billstore.tothousendShowValue(this.needTochange) }}</span>
                         </div>
+                        <p>是否列印明細?</p>
                         <div class="butArea">
-                            <button @click="showChangeArea()">Close</button>
+                            <button id="closebutton" @click="showChangeArea()">是</button>
+                            <button id="closebutton" @click="showChangeArea()">Close</button>
                         </div>
                     </div>
                 </div>
@@ -169,6 +190,7 @@ export default {
                 background: linear-gradient(white 80%, #00c1ca 20%);
                 color: black;
                 font-size: 3dvh;
+
                 &.active {
                     background: linear-gradient(rgb(152, 152, 152) 70%, #009688 30%);
                 }

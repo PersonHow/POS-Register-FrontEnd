@@ -36,9 +36,11 @@ export const useBillstore = defineStore("Billstore", {
     bill_id: "",
     theLastBill: "",
     handInvoiceInput: "",
+    handUniformNum:"",
     changeShow: "A",
     OrderDB: [], // 從DB抓的
-    vehicleInputNum:"",
+    mobileBarcode:"",
+    uniformNum:""
   }),
   getters: {
     // ----取值區----
@@ -54,7 +56,7 @@ export const useBillstore = defineStore("Billstore", {
     },
     // 計算機-找零
     changeAmount(state) {
-      return (state.realChargeAmount - state.totalAmount).toFixed(2);
+      return (state.realChargeAmount - state.totalAmount)
     },
     // 計算機-實收
     realChargeAmount(state) {
@@ -158,9 +160,11 @@ export const useBillstore = defineStore("Billstore", {
       pOther,
       invNum,
       cTime,
-      pId,
+      pId, // 登入員工編號
       upTime,
-      pOtherName
+      pOtherName,
+      mobileBarcode, // 載具
+      uniformNum, // 統編
     ) {
       let saveObj = {
         bill_id: bId,
@@ -173,6 +177,8 @@ export const useBillstore = defineStore("Billstore", {
         lastmodified_staff_id: pId,
         lastmodified_time: upTime,
         memo: pOtherName,
+        mobile_barcode: mobileBarcode,
+        uniform_numbers: uniformNum
       };
       console.log(saveObj);
       fetch("http://localhost:8080/bill/create", {
