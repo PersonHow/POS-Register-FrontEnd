@@ -19,10 +19,20 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
+*{
+  box-sizing: border-box;
+  background-color: unset;
+  color:unset;
+  border:unset;
+}
+:active{
+  background-color: unset;
+  color:unset;
+  border:unset;
+}
 div.container {
-	margin-bottom: 1.5rem;
   width: 100%;
-  height: 8vh;
+  max-height: 3vh;
 	font-family: 'Work Sans', sans-serif;
   display: flex;
 	font-weight: 800;

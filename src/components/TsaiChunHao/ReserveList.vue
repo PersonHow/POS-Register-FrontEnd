@@ -236,7 +236,7 @@ export default {
       <!-- 表格標題區域 -->
       <section class="table_header">
         <!-- 系統名稱 -->
-        <h1>預訂管理系統</h1>
+        <h1 style="color:#01e1c5;">預訂管理系統</h1>
         <div class="box">
           <div class="search-box">
             <!-- 搜尋框 -->
@@ -442,10 +442,7 @@ export default {
 /* 全域樣式 */
 .tableArea {
   display: flex;
-  min-height: 100vh;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
+  overflow-y: scroll
 }
 
 table,
@@ -460,31 +457,22 @@ main.table {
   width: 82vw;
   height: 90vh;
   background-color: #ffffff;
-  box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
   border-radius: 0.8rem;
   overflow: hidden;
 }
 
 .table_header {
   display: flex;
-  width: 100%;
   height: 10%;
-  background-color: #f5f5f5;
+  background-color: white;
   padding: 0.8rem 1rem;
   justify-content: space-between;
   align-items: center;
 }
-
-.box {
-  max-width: 400px;
-  width: 100%;
-}
-
 .search-box {
-  position: relative;
-  width: 300px;
+  width: 30vw;
   margin-left: auto;
-
+  display: flex;
   @media (max-width: 768px) {
     width: 100%;
     max-width: 400px;
@@ -501,26 +489,23 @@ main.table {
     transition: border-color 0.3s ease;
 
     &:focus {
-      border-color: #0298cf;
+      border-color: #01e1c5;
     }
   }
 
   .icon {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 50px;
+    width: 5vw;
     height: 100%;
     text-align: center;
     line-height: 50px;
-    background-color: #0298cf;
+    background-color: #01e1c5;
     color: #fff;
     border-radius: 25px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: #0278a6;
+      background-color: #00af9b;
     }
   }
 }
@@ -531,6 +516,7 @@ main.table {
   background-color: #ffffff;
   margin: 0.8rem auto;
   border-radius: 0.6rem;
+  border:2px solid #000000;
   overflow: auto;
 
   th {
@@ -705,7 +691,6 @@ table {
     max-width: 600px;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 
     h2 {
       margin-bottom: 8px;

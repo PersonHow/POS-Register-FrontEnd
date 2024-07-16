@@ -119,7 +119,7 @@
           return {
             calendarData: [],
             selectData: {}, // 選中日期資訊 -> year, month, day
-            weekArr: ['S', 'M', 'T', 'W', 'T', 'F', 'S'], // 星期数组
+            weekArr: ['日', '一', '二', '三', '四', '五', '六'], // 星期数组
             dataArr: [], // 当前可视区域数据
             allDataArr: [], // 轮播数组
             isSelectedCurrentDate: false, // 是否点选当前月份信息 (配合月视图减少点击切换时的数组更新)
@@ -277,8 +277,8 @@
     
           getMonthName(month) {
           const monthNames = [
-          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+          '一月', '二月', '三月', '四月', '五月', '六月',
+          '七月', '八月', '九月', '十月', '十一月', '十二月'
         ];
         return monthNames[month - 1]; // month 是從 1 開始的，所以要減去 1
           },
