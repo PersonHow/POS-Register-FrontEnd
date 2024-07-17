@@ -4,11 +4,6 @@ import { mapState, mapActions } from 'pinia';
 import MobileBarcodeArea from '@/components/ChiaoLin/MobileBarcodeArea.vue'
 import UniformNumArea from '@/components/ChiaoLin/UniformNumArea.vue'
 export default {
-    data() {
-        return {
-            OrderDB: {}
-        }
-    },
     setup() {
         const Billstore = useBillstore();
         return {
@@ -51,10 +46,23 @@ export default {
     data() {
         return {
             OrderDB: [],
+            mobileBox: false,
+            uniformBox:false
         }
     },
-    watch:{
-        
+    methods:{
+        showMobileBox() {
+            this.mobileBox = !this.mobileBox;
+        },
+        showUniformBox() {
+            this.uniformBox = !this.uniformBox;
+        },
+        closeMobileBox() {
+            this.mobileBox = false;
+        },
+        closeUniformBox() {
+            this.uniformBox = false;
+        }
     }
 }
 </script>
@@ -68,14 +76,14 @@ export default {
             </div>
             <div class="inputShowArea">
                 <button type="button" class="myMouse"
-                    @click="Billstore.showVehicleArea"><span>載&nbsp;&nbsp;&nbsp;&nbsp;具</span></button>
-                <button type="button" class="myMouse" @click="Billstore.showBuniNumArea"><span>統一編號</span></button>
+                @click="showMobileBox()"><span>載&nbsp;&nbsp;&nbsp;&nbsp;具</span></button>
+                <button type="button" class="myMouse" @click="showUniformBox()"><span>統一編號</span></button>
             </div>
-            <div v-if="Billstore.showVehiArea">
-                <MobileBarcodeArea @close="Billstore.showVehicleArea" />
+            <div v-if="mobileBox == true">
+                <MobileBarcodeArea @close="closeMobileBox()" />
             </div>
-            <div v-if="Billstore.showBusiNumInput">
-                <UniformNumArea @close="Billstore.showBuniNumArea" />
+            <div v-if="uniformBox == true">
+                <UniformNumArea @close="closeUniformBox()" />
             </div>
         </div>
         <div class="amountDetail">
@@ -83,7 +91,7 @@ export default {
                 <p>總計 NT.{{ Billstore.tothousendShowValue(Billstore.orderAmountfromPage) }} </p>
                 <p>* 折扣{{ Billstore.discount
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.discountAmount) }}) * 服務費{{ Billstore.serviceFee
-                    }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </span>
+                    }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </p>
                 <p>- 招待NT.{{ Billstore.tothousendShowValue(Billstore.entertain) }} - 折讓NT.{{
                     Billstore.tothousendShowValue(Billstore.allowance) }}</p>
             </div>
@@ -107,7 +115,6 @@ export default {
                             <span id="changeAmount">{{ Billstore.tothousendShowValue(Billstore.changeAmount) }}</span>
                         </div>
                     </div>
-                    </div>
                 </div>
                 <div class="amountShowRight">
                     <div class="amountShowRightRealCharge">
@@ -120,16 +127,16 @@ export default {
                                 }}</span>
                         </div>
                         <div class="amountShowRightNotyet">
-                        <div class="amountShowRightNotyet">
-                            <div class="notyetChargeAreaText">
-                                <p style="margin: 0;padding: 0;">未收</p>
+                            <div class="amountShowRightNotyet">
+                                <div class="notyetChargeAreaText">
+                                    <p style="margin: 0;padding: 0;">未收</p>
+                                </div>
+                                <div class="ntTextAera"> <span id="ntText">NT.</span></div>
+                                <div class="notyetChargeAreaAmount">
+                                    <span id="notyetChargeAmount">{{ -
+                                        Billstore.tothousendShowValue(Billstore.notyetChargeAmount) }}</span>
+                                </div>
                             </div>
-                            <div class="ntTextAera"> <span id="ntText">NT.</span></div>
-                            <div class="notyetChargeAreaAmount">
-                                <span id="notyetChargeAmount">{{-
-                                    Billstore.tothousendShowValue(Billstore.notyetChargeAmount) }}</span>
-                            </div>
-                        </div>
                         </div>
                     </div>
                 </div>
@@ -199,7 +206,7 @@ export default {
 
         .amountDetailShow {
             width: 100%;
-            font-size: 1.8dvh;
+            font-size: 2dvh;
             text-align: center;
             padding: 1dvh 0;
             border-bottom: 1px solid rgb(213, 212, 212);
@@ -216,7 +223,7 @@ export default {
                 width: 45%;
 
                 .amountShowLeftTotal {
-                    padding: 0 1dvw;
+                    padding: 1dvh 1dvw;
                     width: 100%;
 
                     .totalAreaAmount {
@@ -271,13 +278,14 @@ export default {
                 }
 
                 .amountShowRightNotyet {
-                    .notyetChargeAreaText{
+                    .notyetChargeAreaText {
                         margin: 0;
                         padding: 0;
                     }
+
                     .notyetChargeAreaAmount {
                         text-align: center;
-                        font-size: 5dvh;
+                        font-size: 4dvh;
 
                         #notyetChargeAmount {
                             color: black;

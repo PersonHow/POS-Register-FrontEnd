@@ -23,7 +23,7 @@ export default {
 </script>
 
 <template>
-    <div class="showBack" @click="closeShow">
+    <div class="showBack" @click="closeShow()">
         <div class="showBox" @click.stop>
             <div class="titleArea">
                 <p>統一編號</p>
@@ -32,8 +32,8 @@ export default {
                 <input type="text" placeholder="請輸入統編" v-model="this.Billstore.uniformNum">
             </div>
             <div class="butArea">
-                <button @click="closeShow">確認</button>
-                <button @click="closeShow">關閉</button>
+                <button @click="closeShow()">確認</button>
+                <button @click="closeShow()">關閉</button>
             </div>
         </div>
     </div>
@@ -98,7 +98,6 @@ export default {
         }
 
         input {
-            width: 95%;
             height: 7dvh;
             margin: 1dvh 1dvw;
             padding: 0 1dvw;

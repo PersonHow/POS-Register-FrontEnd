@@ -1,5 +1,7 @@
 <script>
 import { useBillstore } from '@/stores/BillStore';
+import { useOrderStore } from '@/stores/OrderStore';
+import { mapState, mapActions } from 'pinia';
 export default {
     setup() {
         const Billstore = useBillstore();
@@ -36,6 +38,11 @@ export default {
         }
 
     },
+    data() {
+        return {
+            mealDetailfromDB: []
+        }
+    }
 }
 </script>
 
@@ -54,9 +61,11 @@ export default {
                     <p><span>
                             <</span>外帶單></p>
                     </p>
-                    
+
                 </div>
-                <div><p>人數：{{ Billstore.OrderDB.guest_num }}</p></div>
+                <div>
+                    <p>人數：{{ Billstore.OrderDB.guest_num }}</p>
+                </div>
                 <div>用餐金額：{{ Billstore.OrderDB.amount }}</div>
 
                 <div>點餐內容：</div>
@@ -66,7 +75,7 @@ export default {
                         <span> {{ mealList.meal_name }}</span>
                         <p>數量：{{ mealList.quantities }}</p>
                     </li>
-                    <li v-if="mealList.custom_option === null"> {{ mealList.custom_option }}</li>
+                    <li>{{ mealList.custom_option }}</li>
                 </ul>
             </li>
             <button class="myMouse">列印明細</button>
@@ -85,11 +94,12 @@ export default {
     border-right: 5px solid #00c1ca;
     transition: 0.3s ease;
     opacity: 90%;
+    padding-top: 0.5dvh;
 
 
     div {
         display: flex;
-        justify-content: right;
+        justify-content: left;
 
         label {
             width: 30px;
@@ -107,6 +117,10 @@ export default {
         }
     }
 
+    .noShowIcon {
+        justify-content: right;
+    }
+
     ul {
         padding-left: 1dvw;
 
@@ -118,8 +132,9 @@ export default {
 
             div {
                 margin: 0.5dvh 0;
-                .tableAndGuestNum{
-                        overflow: hidden;
+
+                .tableAndGuestNum {
+                    overflow: hidden;
                 }
             }
 
@@ -135,11 +150,12 @@ export default {
             border: none;
             cursor: pointer;
             border-radius: 10px;
-            background:#00c1ca;
+            background: #00c1ca;
             padding: 0.5dvw;
             color: white;
             transition: transform 0.3s;
-            &.active{
+
+            &.active {
                 transform: scale(1.2);
             }
         }

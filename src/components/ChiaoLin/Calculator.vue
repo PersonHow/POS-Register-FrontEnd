@@ -40,9 +40,8 @@ export default {
                 this.Billstore.invoiceNum = this.Billstore.handInvoiceInput;
                 this.Billstore.uniformNum = this.Billstore.handUniformNum;
             }
-            // 待連 lastmodified_staff_id: pId
+            // 存入pinia
             this.saveBillfromP("", this.OrderDB.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", staff.staff_id, "", pOtherName, this.Billstore.mobileBarcode, this.Billstore.uniformNum)
-            this.OrderDB.amount = 0;
             this.Billstore.orderAmountfromPage = 0;
             this.Billstore.discount = 0;
             this.Billstore.serviceFee = 0;
@@ -52,6 +51,7 @@ export default {
             this.Billstore.uniformNum = "";
             this.Billstore.handInvoiceInput = "";
             this.Billstore.handUniformNum = "";
+            this.OrderDB.amount = 0;
             this.Billstore.inputEvent.forEach(event => {
                 if (event.type === "現金") {
                     event.value = 0;
@@ -173,15 +173,15 @@ export default {
         padding-top: 1.5dvh;
 
         .mathbutArea {
-            width: 80%;
-            display: flex;
-            flex-wrap: wrap;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 33% 33% 33%;
         }
 
         .mathBut {
-            width: 28%;
+            width: 100%;
             height: 10dvh;
-            margin-right: 2dvw;
+            padding-right: 1.5dvw;
 
             input {
                 width: 85%;
@@ -198,7 +198,7 @@ export default {
         }
 
         .otherButArea {
-            width: 20%;
+            width: 30%;
             margin-right: 1dvw;
 
             .mathBut {

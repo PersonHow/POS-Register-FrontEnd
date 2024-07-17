@@ -23,6 +23,7 @@ export const useBillstore = defineStore("Billstore", {
     showLeftNavArea: true, // show發票左導覽列
     invoiceNum: "", // 
     lastFiveBills: [], // 近5筆紀錄
+    lastBill:[],
     allbills: [],
     // changeAmountforshouw: 0,
     chargedAllOrder: [], // 已結的所有order
@@ -32,7 +33,6 @@ export const useBillstore = defineStore("Billstore", {
     todayCreateBillsOrderId: [], // 今日已結bills的order_id
     newChargedTodayBills: [],
     bill_id: "",
-    theLastBill: "",
     handInvoiceInput: "",
     handUniformNum:"",
     changeShow: "A",
@@ -220,12 +220,13 @@ export const useBillstore = defineStore("Billstore", {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
-            console.log(data);
+            // console.log(data);
             this.allbills = data;
             // 未用 只取近5筆記錄
             // this.lastFiveBills = data.slice(-5).reverse();
             // console.log(this.lastFiveBills);
+            this.lastBill = data[data.length - 1];
+            // console.log(this.lastBill);
 
             const now = new Date();
             const today = new Date(
@@ -320,8 +321,7 @@ export const useBillstore = defineStore("Billstore", {
             console.error("Fetching order detail is error!!");
           }
         }
-        console.log(this.todayCreateBillsOrderDetail);
-        
+        // console.log(this.todayCreateBillsOrderDetail);
         return this.todayCreateBillsOrderDetail;
       } catch (error) {
         console.error("Try is error!!");
