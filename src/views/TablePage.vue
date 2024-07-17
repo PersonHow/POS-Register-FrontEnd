@@ -5,7 +5,7 @@ import Footer_bar_ChangeTable from "@/components/Kou/Footer_bar_ChangeTable.vue"
 import Footer_bar_Checkout from "@/components/Kou/Footer_bar_Checkout .vue";
 import Footer_bar_Order from "@/components/Kou/Footer_bar_Order.vue";
 import Swal from "sweetalert2";
-import { onUpdated } from "vue";
+import { jsx } from "vue/jsx-runtime";
 export default {
   data() {
     return {
@@ -67,17 +67,17 @@ export default {
           }
         })
     },
-    GetSelected_target_table(table){
-      this.selected_target_table = table;
-    },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
     },
     orderHandler(){
       this.$router.push("OrderPage");
     },
-    GetSelected_table(table){
-      this.selected_table =table;
+    Getselected_table(selected_table){
+      this.selected_table = selected_table;
+    },
+    Getselected_target_table(selected_target_table){
+      this.selected_target_table = selected_target_table;
     },
     Getnav_item_list(nav_item_list){
       this.nav_item_list=nav_item_list;
@@ -143,6 +143,15 @@ export default {
               }
             })
     }
+    if(sessionStorage.getItem("selected_table")){
+      this.selected_table = JSON.parse(sessionStorage.getItem("selected_table"));
+    }
+    if(sessionStorage.getItem("selected_target_table")){
+      this.selected_target_table = JSON.parse(sessionStorage.getItem("selected_target_table"));
+    }
+    if(sessionStorage.getItem("selected_item")){
+      this.selected_item= sessionStorage.getItem("selected_item");
+    }
   },
   components: {
     TablePage,
@@ -162,7 +171,7 @@ export default {
     </div>
     <!-- second Area = 中間桌子的區塊 -->
     <div class="second">
-      <TablePage :nav_item_list="nav_item_list" v-on:selected_table="GetSelected_table" v-on:selected_target_table="GetSelected_target_table"/>
+      <TablePage :nav_item_list="nav_item_list" v-on:selected_table="Getselected_table" v-on:selected_target_table="Getselected_target_table"/>
     </div>
     <div class="footer Area">
       <!-- footerHam = footer裡面的漢堡圖區塊 -->

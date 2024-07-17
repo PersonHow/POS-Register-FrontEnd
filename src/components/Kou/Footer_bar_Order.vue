@@ -135,7 +135,6 @@
               icon:'error',iconColor:"#00c5c8"})
               return;
         }else{
-          sessionStorage.setItem("selected_table",JSON.stringify(this.selected_table));
             this.$router.push("/OrderPage");
         }
       }

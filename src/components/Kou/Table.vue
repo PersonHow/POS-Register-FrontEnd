@@ -4,12 +4,7 @@
     <div style="display: flex; align-items: center;">
       <button @click="toggleEdit" class="btn_not_adjust_table">調整桌位</button> 
       <button @click="toggleTarget" class="btn_cancel_target_table">設定目標桌位</button>
-      <button @click='()=>{ this.select_table = {table_id:"#"};
-                            this.input_table ={table_id:"#"};
-                            this.target_table = {table_id:"#"};
-                            this.$emit("selected_table",this.select_table);
-                            this.$emit("selected_target_table",this.target_table);
-                          }' class="btn_clear_select_table">清除桌位</button>
+      <button @click="cleanselectedTable" class="btn_clear_select_table">清除桌位</button>
       <p v-if="this.isTargetEditing" style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;font-weight: bold; font-size:1.5rem;color: #00c5c8;">
           你選擇的桌位：{{ select_table.table_id == "#" ?"尚未選擇":select_table.table_id }}
            >> 目標桌位：{{ target_table.table_id == "#" ?"尚未選擇":target_table.table_id }}</p>
@@ -555,6 +550,13 @@
       };
     },
     methods: {
+      cleanselectedTable(){
+        this.select_table = {table_id:"#"};
+        this.input_table ={table_id:"#"};
+        this.target_table = {table_id:"#"};
+        sessionStorage.removeItem("selected_table");
+        sessionStorage.removeItem("selected_target_table");
+      },
       cancelEditTable(){
         this.isEditTable = false;
       },
@@ -660,13 +662,15 @@
         this.isEditTable = true;
         if(this.isTargetEditing){
           this.target_table =table;
+          this.$emit("selected_target_table",this.target_table);
+          sessionStorage.setItem("selected_target_table",JSON.stringify(this.target_table));
         }else{
           this.select_table =table;
+          this.$emit("selected_table",this.select_table);
+          sessionStorage.setItem("selected_table",JSON.stringify(this.select_table));
         }
         this.input_table = table;
         console.log(this.input_table);
-        this.$emit("selected_table",this.select_table);
-        this.$emit("selected_target_table",this.target_table);
       },
      async addTableHandler(){
         let add_table = {};
@@ -719,19 +723,13 @@
               throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            let tables = data.map((table, i) => ({
-              ...table,
-              //0:空位、1:使用中、2:已預約、3:帶位中
-              status:
-                table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" :table.table_status === 2 ?"reserved":"take"
-            }));
-            sessionStorage.setItem("tables",JSON.stringify(tables));
-            this.tables_list1 = data.map((table, i) => ({
+            this.tables = data.map((table, i) => ({
               ...table,
               //0:空位、1:使用中、2:已預約、3:帶位中
               status:
                 table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" :table.table_status === 2 ?"reserved":"take"
             })).filter((item)=>{ return item["table_area"] == selected_title_item});
+            this.tables_list1 =this.tables;
           } catch (error) {
             console.error("Error fetching table data:", error);
           }
@@ -771,8 +769,14 @@
       },
     },
     created() {
-      this.getTables();
+      if(sessionStorage.getItem("selected_table")){
+        this.select_table = JSON.parse(sessionStorage.getItem("selected_table"));
+      };
+      if(sessionStorage.getItem("selected_target_table")){
+        this.target_table = JSON.parse(sessionStorage.getItem("selected_target_table"));
+      };
       this.fetchWorkingStaffs();
+      this.getTables();
     },
   };
   </script>

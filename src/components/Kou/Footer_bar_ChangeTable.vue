@@ -131,10 +131,6 @@
 <script>
  import Swal from "sweetalert2";
 export default{
-  data(){
-    return {
-    }
-  },
   props:{
     selected_table:Object,
     selected_target_table:Object
