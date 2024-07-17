@@ -1,12 +1,13 @@
 <script>
 import { useBillstore } from '@/stores/BillStore';
 import { mapState, mapActions } from 'pinia';
+
 export default {
-    setup() {
+    setup(){
         const Billstore = useBillstore();
         return {
             Billstore,
-            ...mapState(Billstore, ['handInvoiceInput',]),
+            ...mapState(Billstore, ['uniformNum']),
         }
     },
     data() {
@@ -25,17 +26,14 @@ export default {
     <div class="showBack" @click="closeShow">
         <div class="showBox" @click.stop>
             <div class="titleArea">
-                <p>手開發票</p>
+                <p>統一編號</p>
             </div>
             <div class="inputArea">
-                <p>發票號碼：</p>
-                <input type="text" placeholder="請輸入手開發票號碼" v-model="this.Billstore.handInvoiceInput">
-                <p>統一編號：</p>
-                <input type="text" placeholder="請輸入統編" v-model="this.Billstore.handUniformNum">
+                <input type="text" placeholder="請輸入統編" v-model="this.Billstore.uniformNum">
             </div>
             <div class="butArea">
                 <button @click="closeShow">確認</button>
-                <button @click="closeShow">Close</button>
+                <button @click="closeShow">關閉</button>
             </div>
         </div>
     </div>
@@ -53,6 +51,7 @@ export default {
     align-items: center;
     justify-content: center;
     z-index: 9999;
+    font-weight: 500;
 }
 
 .showBox {
@@ -62,7 +61,7 @@ export default {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 100;
     font-size: 2.5dvh;
-    color: gray;
+    line-height: 5dvh;
 
     .titleArea {
         width: 100%;
@@ -78,7 +77,7 @@ export default {
 
         button {
             width: 9dvw;
-            height: 7dvh;
+            height: 6dvh;
             margin: 0 1dvw;
             margin-top: 1dvh;
             background: none;
@@ -94,14 +93,13 @@ export default {
     .inputArea {
         width: 100%;
         margin: 1dvh 0;
-
-        p {
+        p{
             margin: 1dvh 1dvw;
         }
 
         input {
             width: 95%;
-            height: 6dvh;
+            height: 7dvh;
             margin: 1dvh 1dvw;
             padding: 0 1dvw;
             border-radius: 5px;

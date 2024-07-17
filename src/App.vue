@@ -41,7 +41,6 @@ div.container {
             width: 100%;
           }
           &::before{
-            content: '';
             display: block;
             vertical-align:middle;
             height: 5px;

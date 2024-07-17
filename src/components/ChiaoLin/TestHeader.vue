@@ -1,5 +1,15 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+export default {
+  data(){
+    return {
+      staff:null
+    }
+  },
+  created(){
+    this.staff  = JSON.parse(sessionStorage.getItem("token"));
+  }
+}
 </script>
 <template>
     <div class="container">
@@ -9,11 +19,10 @@ import { RouterLink, RouterView } from 'vue-router'
           <li><a><RouterLink to="/calendar">行事曆</RouterLink></a></li>
           <li><a><RouterLink to="/table">桌位</RouterLink></a></li>
           <li><a><RouterLink to="/OrderPage">點餐</RouterLink></a></li>
-          <li><a><RouterLink to="/BillPage">結帳</RouterLink></a></li>
           <li><a><RouterLink to="/workingarea">工作台</RouterLink></a></li>
           <li><a><RouterLink to="/reserve">訂位</RouterLink></a></li>
           <li><a><RouterLink to="/MenuManage">菜單</RouterLink></a></li>
-          <li><a><RouterLink to="/logout">登出</RouterLink></a></li>
+          <li v-if="this.staff"><a><RouterLink to="/logout">登出</RouterLink></a></li>
         </ul>
       </nav>
     </div>
@@ -21,11 +30,22 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
+*{
+  box-sizing: border-box;
+  background-color: unset;
+  color:unset;
+  border:unset;
+}
+:active{
+  background-color: unset;
+  color:unset;
+  border:unset;
+}
 div.container {
-	margin-bottom: 1.5rem;
   width: 100%;
-  height: 8vh;
+  max-height: 3vh;
 	font-family: 'Work Sans', sans-serif;
+  display: flex;
 	font-weight: 800;
   background-color: white;
   ul{       

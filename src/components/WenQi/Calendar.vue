@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+    <div class="container">
+    
     <div class="topcalendar">
           <section class="month-names">
             <span class="month-names2" @click="handlePreMonth">{{ prevMonthName }}</span>
@@ -11,6 +12,7 @@
           <section class="header">
             {{ selectData.year }}年{{ selectData.month }}月{{ selectData.day }}日
           </section>
+    
           <ul class="week-area">
             <li
           class="week-item"
@@ -20,9 +22,10 @@
               'week-font',
               { 'highlight-sun': index === 0 },  // 星期日
               { 'highlight-sat': index === 6 },  // 星期六
-            ]">
+            ]"
+    >
       {{ item }}
-            </li>
+    </li>
           </ul>
           <section
             ref="calendar"
@@ -116,7 +119,7 @@
           return {
             calendarData: [],
             selectData: {}, // 選中日期資訊 -> year, month, day
-            weekArr: ['S', 'M', 'T', 'W', 'T', 'F', 'S'], // 星期数组
+            weekArr: ['日', '一', '二', '三', '四', '五', '六'], // 星期数组
             dataArr: [], // 当前可视区域数据
             allDataArr: [], // 轮播数组
             isSelectedCurrentDate: false, // 是否点选当前月份信息 (配合月视图减少点击切换时的数组更新)
@@ -274,8 +277,8 @@
     
           getMonthName(month) {
           const monthNames = [
-          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+          '一月', '二月', '三月', '四月', '五月', '六月',
+          '七月', '八月', '九月', '十月', '十一月', '十二月'
         ];
         return monthNames[month - 1]; // month 是從 1 開始的，所以要減去 1
           },
@@ -557,45 +560,17 @@
       }
       </script>
       
-      <style scoped lang="scss">
+      <style lang="scss" scoped>
       *{
         font-family: "Chocolate Classical Sans", sans-serif;
-        box-sizing: border-box;
       }
-      .container{
-        display: flex;
-        align-items: center;
-
-        width: 100%;
-        height: 80vh;
-        background-color: #ececec;
-        .grid {
-          border: 1px solid #01e1c5;
-          padding: 2rem;
-          height: 70%;
-          display: grid;
-          margin: 2rem;
-          grid-template-columns: repeat(2, 1fr); /* 兩列佈局 */
-          gap: 20px; /* 控制訊息框之間的距離 */
-          transition: background-color 0.5s ease;
-          transition: transform 0.3s ease;
-          :hover{
-           background-color: #e0f7fa;
-           transform: scale(1.05)
-          }
-          :active{
-           transform: scale(0.9);
-          }
-        }
-        .topcalendar{ 
+      .topcalendar{ 
         width: 500px;
-        margin-left: 3rem;
         box-shadow: -3px 3px 3px 3px #949494, 1px 0px 5px 1px #7b7b7b;
         background-color: #ffffff;
-        .calendar {
+      }
+      .calendar {
         overflow-x: hidden;
-        }
-        }
       }
       .month-names{
         background: linear-gradient(90deg, #00c1ca, #01e1c5);
@@ -729,10 +704,34 @@
     
       /* CalendarInfo */
     
+      /* 全局樣式 */
+    .container {
+      padding-left: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #ececec; /* 灰色背景 */
+    }
+    
+    .grid {
+      display: grid;
+      margin: auto;
+      grid-template-columns: repeat(2, 1fr); /* 兩列佈局 */
+      gap: 20px; /* 控制訊息框之間的距離 */
+      transition: background-color 0.5s ease;
+      transition: transform 0.3s ease;
+      :hover{
+        background-color: #e0f7fa;
+        transform: scale(1.05)
+      }
+      :active{
+        transform: scale(0.9);
+      }
+    }
     
     /* 訊息框樣式 */
     .card {
-      height: 100px;
       display: flex; /* 使用 flex 布局 */
       align-items: center; /* 垂直居中 */
       padding: 15px;
@@ -741,6 +740,16 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 陰影效果 */
       background-color: white; 
     }
+    /*
+    .card-1 { background-color: #ffffff; }
+    .card-2 { background-color: #ffffff; }
+    .card-3 { background-color: #ffffff; }
+    .card-4 { background-color: #ffffff; }
+    .card-5 { background-color: #e0f7fa; }
+    .card-6 { background-color: #ffffff; }
+    .card-7 { background-color: #ffffff; } */
+    
+    /* 圓形日期樣式 */
     .date-circle {
       display: flex;
       justify-content: center;
@@ -750,6 +759,16 @@
       border-radius: 50%; /* 圓形效果 */
       margin-right: 15px; /* 與文字之間的間隔 */
     }
+    
+    /* .date-circle-1 { background: linear-gradient(90deg, #00c1ca, #01e1c5); } 
+    .date-circle-2 { background: linear-gradient(90deg, #00c1ca, #01e1c5); } 
+    .date-circle-3 { background-color: #880e4f; }
+    .date-circle-4 { background: linear-gradient(90deg, #00c1ca, #01e1c5); } 
+    .date-circle-5 { background: linear-gradient(90deg, #00c1ca, #01e1c5);}
+    .date-circle-6 { background: linear-gradient(90deg, #00c1ca, #01e1c5); } 
+    .date-circle-7 { background: linear-gradient(90deg, #00c1ca, #01e1c5);} */
+    
+    /* 日期數字樣式 */
     .date {
       font-size: 24px;
       font-weight: bold;
@@ -763,11 +782,14 @@
     .date-color-5 { color: #ffffff; } /* 日期數字 5 顏色 */
     .date-color-6 { color: #ffffff; } /* 日期數字 6 顏色 */
     .date-color-7 { color: #ffffff; } /* 日期數字 7 顏色 */
+    
+    /* 內容樣式 */
     .content {
       display: flex;
       flex-direction: column; /* 垂直排列文字 */
       color: black; /* 預設文字顏色 */
     }
+      
     .text-color-1 { color: black; } 
     .text-color-2 { color: black; } 
     .text-color-3 { color: #880e4f; } 
@@ -777,9 +799,11 @@
       color: #880e4f;
     }} /* 內容文字 6 顏色 */
     .text-color-7 { color: black; } 
+    
     .info {
       font-size: 18px;
     }
+    
     .staff {
       margin-top: 5px;
       font-size: 16px;
