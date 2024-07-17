@@ -1,6 +1,6 @@
 <script>
-import AddMenu from '../components/AddMenu.vue'
-import UpdateCustom from '../components/UpdateCustom.vue'
+import AddMenu from '../components/Yuhan/EditMenu.vue'
+import UpdateCustom from '../components/Yuhan/EditCustom.vue'
 import { useMenuStore } from '@/stores/MenuStore';
 export default {
     setup(){
@@ -55,68 +55,73 @@ export default {
 </script>
 
 <template>
-    <div v-show="!MenuStore.toggleEdit" class="navi">
-        <h2>
-            <button class="btn"><font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></button> 
-            菜單管理
-        </h2>
-        <div v-for="page in pages" :key="page" class="changePage" :class="{'currentPage' : selectedPage === page}">
-            <input type="radio" v-model="selectedPage" :value="page" :id="page" >
-            <label @click="MenuStore.clearMeal()" :for="page">{{page}}</label>
-        </div>
-    </div>
-    <div v-show="selectedPage === pages[0]" class="c-container">
-        <!-- menu菜單頁 -->
-        <div class="type">
-            <div class="colume">
-                <p>餐點種類</p>
-                <select name="" id="type" v-model="selectedType">
-                    <option value="all">全部</option>
-                    <option v-for="(type,i) in MenuStore.types" :key="i" :value="type">{{type}}</option>
-                </select>
-            </div>
-            <div class="colume">
-                <p>工作台種類</p>
-                <select name="" id="workingArea" v-model="selectedType">
-                    <option value="all">全部</option>
-                    <option v-for="area in MenuStore.working_areas" :key="area" :value="area">{{area}}</option>
-                </select>
+    <div class="body">
+        <div v-show="!MenuStore.toggleEdit" class="navi">
+            <h2>
+                <button class="btn"><font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></button> 
+                菜單管理
+            </h2>
+            <div v-for="page in pages" :key="page" class="changePage" :class="{'currentPage' : selectedPage === page}">
+                <input type="radio" v-model="selectedPage" :value="page" :id="page" >
+                <label @click="MenuStore.clearMeal()" :for="page">{{page}}</label>
             </div>
         </div>
-        <div class="c-row wrap" ref="wrap">
-            <div v-for="meal in MenuStore.getItemsByType(selectedType)"  :key="meal" class="coluem menu">
-                <img :src="meal.img" alt="">
-                <div class="meal">
-                    <p>{{meal.meal_id+". "+meal.name}}</p>
-                    NT. {{meal.price}}<br>
-                    {{meal.description}}<br>
+        <div class="rightView">
+            <div v-show="selectedPage === pages[0]" class="c-container">
+                <!-- menu菜單頁 -->
+                <div class="type">
+                    <div class="colume">
+                        <p>餐點種類</p>
+                        <select name="" id="type" v-model="selectedType">
+                            <option value="all">全部</option>
+                            <option v-for="(type,i) in MenuStore.types" :key="i" :value="type">{{type}}</option>
+                        </select>
+                    </div>
+                    <div class="colume">
+                        <p>工作台種類</p>
+                        <select name="" id="workingArea" v-model="selectedType">
+                            <option value="all">全部</option>
+                            <option v-for="area in MenuStore.working_areas" :key="area" :value="area">{{area}}</option>
+                        </select>
+                    </div>
                 </div>
-                <button @click="cancelEditing,MenuStore.editing(meal.meal_id)" class="c-btn">編輯</button>
+                <div class="c-row wrap" ref="wrap">
+                    <div v-for="meal in MenuStore.getItemsByType(selectedType)"  :key="meal" class="coluem menu">
+                        <img :src="meal.img" alt="">
+                        <div class="meal">
+                            <p>{{meal.meal_id+". "+meal.name}}</p>
+                            NT. {{meal.price}}<br>
+                            {{meal.description}}<br>
+                        </div>
+                        <button @click="cancelEditing,MenuStore.editing(meal.meal_id)" class="c-btn">編輯</button>
+                    </div>
+                </div>
+            </div>
+            <div v-if="MenuStore.toggleEdit" class="edit p-5">
+                <div v-if="MenuStore.meal.meal_id" class="col mb-3">
+                    <button @click="MenuStore.cancelEditing()" type="button" class="btn-close" aria-label="Close"></button>
+                </div>
+                <AddMenu>
+                    <div class="d-flex justify-content-between">
+                        <button @click="MenuStore.deleteMeal(MenuStore.meal.meal_id)" class="btn btn-lg btn-danger" >刪除餐點</button>
+                        <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認修改</button>
+                    </div>
+                </AddMenu>
+            </div>
+            <div v-if="selectedPage === pages[1]" class="c-container">
+                <AddMenu>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-lg mx-3">儲存草稿</button>
+                        <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認新增</button>
+                    </div>
+                </AddMenu>
+            </div>
+            <div v-if="selectedPage === pages[2]" class="c-container">
+                <UpdateCustom />
             </div>
         </div>
     </div>
-    <div v-if="MenuStore.toggleEdit" class="edit p-5">
-        <div v-if="MenuStore.meal.meal_id" class="col mb-3">
-            <button @click="MenuStore.cancelEditing()" type="button" class="btn-close" aria-label="Close"></button>
-        </div>
-        <AddMenu>
-            <div class="d-flex justify-content-between">
-                <button @click="MenuStore.deleteMeal(MenuStore.meal.meal_id)" class="btn btn-lg btn-danger" >刪除餐點</button>
-                <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認修改</button>
-            </div>
-        </AddMenu>
-    </div>
-    <div v-if="selectedPage === pages[1]" class="c-container">
-        <AddMenu>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-lg mx-3">儲存草稿</button>
-                <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認新增</button>
-            </div>
-        </AddMenu>
-    </div>
-    <div v-if="selectedPage === pages[2]" class="c-container">
-        <UpdateCustom />
-    </div>
+    
 </template>
 
 <style scoped lang="scss">
@@ -124,6 +129,9 @@ export default {
 // $main-color: linear-gradient(120deg,#f9b445 0%, #ff9b69 80%);
 $main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
 $secondary-color: #FFE2C3;
+.body{
+    display: flex;
+}
 p{
     margin-bottom: 10px;
 }
@@ -134,14 +142,14 @@ p{
     color: #fff;
 }
 .navi{
-    width: 20vw;
+    width: 200px;
     max-height: 100vh;
     height: 100vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: linear-gradient(0deg, #f9b445 0%, #ff9b69 80%);
+    background: linear-gradient(0deg, #01e1c5, #00c1ca);
     color: #fff;
     font-size: large;
     
@@ -157,7 +165,7 @@ p{
     }
     .currentPage{
         margin-left: 50%;
-        width: 100%;
+        width: 120%;
         background: #fff;
         color: black;
         border-radius: 25em;
@@ -169,7 +177,7 @@ p{
         content: "";
         position: absolute;
         bottom: -23px;
-        right: 5vw;
+        right: 70px;
         height: 25px;
         width: 50px;
         border-top-right-radius: 25px;
