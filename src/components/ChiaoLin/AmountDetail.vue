@@ -1,26 +1,26 @@
 <script>
 import { useBillstore } from '@/stores/BillStore'
 import { mapState, mapActions } from 'pinia';
-import VehicleArea from '@/components/ChiaoLin/VehicleArea.vue'
-import BusiNumArea from '@/components/ChiaoLin/BusiNumInput.vue'
+import MobileBarcodeArea from '@/components/ChiaoLin/MobileBarcodeArea.vue'
+import UniformNumArea from '@/components/ChiaoLin/UniformNumArea.vue'
 export default {
-    data(){
-        return{
-            OrderDB:{}
+    data() {
+        return {
+            OrderDB: {}
         }
     },
     setup() {
         const Billstore = useBillstore();
         return {
             Billstore,
-            ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
+            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
                 'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount']),
             ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'updateNewInputEventValue', 'updateInputEventValue', 'tothousendShowValue', 'showVehicleArea', 'showBuniNumArea']),
         };
     },
     components: {
-        VehicleArea,
-        BusiNumArea
+        MobileBarcodeArea,
+        UniformNumArea
     },
     created() {
         if (this.$route.params.orderId !== "") {
@@ -28,8 +28,8 @@ export default {
             let orderObj = {
                 order_id: orderId,
             }
-                console.log(orderId);
-                console.log(orderObj);
+            // console.log(orderId);
+            // console.log(orderObj);
             fetch("http://localhost:8080/order_info/ById", {
                 method: "post",
                 headers: {
@@ -40,11 +40,21 @@ export default {
                 .then(res => res.json())
                 .then(data => {
                     this.OrderDB = data;
-                    console.log(this.OrderDB)
+                    // console.log(this.OrderDB)
+                    this.Billstore.orderAmountfromPage = this.OrderDB.amount;
+                    // console.log(this.orderAmountfromPage);
                 })
         } else {
             console.error("Wrong oId!")
+        };
+    },
+    data() {
+        return {
+            OrderDB: [],
         }
+    },
+    watch:{
+        
     }
 }
 </script>
@@ -62,16 +72,16 @@ export default {
                 <button type="button" class="myMouse" @click="Billstore.showBuniNumArea"><span>統一編號</span></button>
             </div>
             <div v-if="Billstore.showVehiArea">
-                <VehicleArea @close="Billstore.showVehicleArea" />
+                <MobileBarcodeArea @close="Billstore.showVehicleArea" />
             </div>
             <div v-if="Billstore.showBusiNumInput">
-                <BusiNumArea @close="Billstore.showBuniNumArea" />
+                <UniformNumArea @close="Billstore.showBuniNumArea" />
             </div>
         </div>
         <div class="amountDetail">
             <div class="amountDetailShow">
-                <p>總計 NT.{{ Billstore.tothousendShowValue(this.OrderDB.amount) }} </p>
-                    <p>* 折扣{{ Billstore.discount
+                <p>總計 NT.{{ Billstore.tothousendShowValue(Billstore.orderAmountfromPage) }} </p>
+                <p>* 折扣{{ Billstore.discount
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.discountAmount) }}) * 服務費{{ Billstore.serviceFee
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </p>
                 <p>- 招待NT.{{ Billstore.tothousendShowValue(Billstore.entertain) }} - 折讓NT.{{
@@ -88,7 +98,7 @@ export default {
                             <span id="totalAmount">{{ Billstore.tothousendShowValue(this.OrderDB.amount) }}</span>
                         </div>
                     </div>
-                    <!-- <div class="amountShowLeftChange">
+                    <div class="amountShowLeftChange" hidden>
                         <div class="changeAreaText">
                             <span>找零</span>
                         </div>
@@ -96,7 +106,7 @@ export default {
                         <div class="changeAreaAmount">
                             <span id="changeAmount">{{ Billstore.tothousendShowValue(Billstore.changeAmount) }}</span>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
                 <div class="amountShowRight">
                     <div class="amountShowRightRealCharge">
@@ -108,16 +118,16 @@ export default {
                             <span id="realChargeAmount">{{ Billstore.tothousendShowValue(Billstore.realChargeAmount)
                                 }}</span>
                         </div>
-                        <!-- <div class="amountShowRightNotyet">
+                        <div class="amountShowRightNotyet">
                             <div class="notyetChargeAreaText">
-                                <p>未收</p>
+                                <p style="margin: 0;padding: 0;">未收</p>
                             </div>
                             <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                             <div class="notyetChargeAreaAmount">
-                                <span id="notyetChargeAmount">{{
+                                <span id="notyetChargeAmount">{{-
                                     Billstore.tothousendShowValue(Billstore.notyetChargeAmount) }}</span>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -128,11 +138,11 @@ export default {
 <style scoped lang="scss">
 .AmountDetailArea {
     width: 100%;
-    padding: 0 1dvw;
+    padding-left: 0.5dvw;
 
     .showInvoiceNum {
-        height: 9dvh;
-        line-height: 9dvh;
+        height: 8dvh;
+        line-height: 8dvh;
         color: gray;
         font-weight: 600;
         font-size: 2.25dvh;
@@ -144,12 +154,13 @@ export default {
         .showInvoiceNumArea,
         .inputShowArea {
             display: flex;
+            line-height: 3dvh;
 
             button {
                 width: 9dvw;
-                height: 7dvh;
+                height: 6dvh;
                 margin: 0 1dvw;
-                margin-top: 1.5dvh;
+                margin-top: 1dvh;
                 background: none;
                 color: gray;
                 font-weight: 600;
@@ -160,9 +171,11 @@ export default {
             }
 
         }
-        .inputShowArea{
-            margin-left: 2dvh;
+
+        .showInvoiceNumArea {
+            padding-left: 1dvw;
         }
+
         p {
             width: 12dvw;
         }
@@ -187,7 +200,8 @@ export default {
             text-align: center;
             padding: 1dvh 0;
             border-bottom: 1px solid rgb(213, 212, 212);
-            p{
+
+            p {
                 margin: 0.5dvh 0;
             }
         }
@@ -196,7 +210,7 @@ export default {
             display: flex;
 
             .amountShowLeft {
-                width: 50%;
+                width: 45%;
 
                 .amountShowLeftTotal {
                     padding: 0 1dvw;
@@ -204,8 +218,8 @@ export default {
                     margin: 1dvh 0;
 
                     .totalAreaAmount {
-                        text-align: right;
-                        font-size: 7dvh;
+                        text-align: center;
+                        font-size: 5dvh;
                     }
 
                     #totalAmount {
@@ -222,8 +236,8 @@ export default {
                     width: 100%;
 
                     .changeAreaAmount {
-                        text-align: right;
-                        font-size: 5dvh;
+                        text-align: center;
+                        font-size: 4dvh;
                     }
 
                     #changeAmount {
@@ -234,15 +248,15 @@ export default {
 
             .amountShowRight {
                 width: 50%;
+                margin-left: 0.5dvw;
 
                 .amountShowRightRealCharge {
                     padding: 0 1dvw;
-                    width: 100%;
                     margin: 1dvh 0;
 
                     .realChargeAreaAmount {
-                        text-align: right;
-                        font-size: 5dvh;
+                        text-align: center;
+                        font-size: 4dvh;
                     }
 
                     #realChargeAmount {
@@ -255,8 +269,12 @@ export default {
                 }
 
                 .amountShowRightNotyet {
+                    .notyetChargeAreaText{
+                        margin: 0;
+                        padding: 0;
+                    }
                     .notyetChargeAreaAmount {
-                        text-align: right;
+                        text-align: center;
                         font-size: 5dvh;
 
                         #notyetChargeAmount {

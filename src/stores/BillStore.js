@@ -4,6 +4,7 @@ export const useBillstore = defineStore("Billstore", {
   state: () => ({
     // 暫存
     order_amount: null,
+    orderAmountfromPage:null,
     serviceFee: 10, // 預設服務費10%
     entertain: 0,
     discount: 0,
@@ -22,7 +23,7 @@ export const useBillstore = defineStore("Billstore", {
     focusedInput: null, // 根據當下點擊的 input 給值
     showOrderArea: true,
     showLeftNavArea: true, // show發票左導覽列
-    invoiceNum: "AB07150001", // 要改
+    invoiceNum: "", // 
     lastFiveBills: [], // 近5筆紀錄
     allbills: [],
     // changeAmountforshouw: 0,
@@ -35,8 +36,11 @@ export const useBillstore = defineStore("Billstore", {
     bill_id: "",
     theLastBill: "",
     handInvoiceInput: "",
+    handUniformNum:"",
     changeShow: "A",
     OrderDB: [], // 從DB抓的
+    mobileBarcode:"",
+    uniformNum:""
   }),
   getters: {
     // ----取值區----
@@ -45,14 +49,14 @@ export const useBillstore = defineStore("Billstore", {
       const discountPersent = (100 - state.discount) / 100;
       const servicePersent = (100 + state.serviceFee) / 100;
       return (
-        state.order_amount * discountPersent * servicePersent -
+        state.orderAmountfromPage * discountPersent * servicePersent -
         state.entertain -
         state.allowance
       ).toFixed(2);
     },
     // 計算機-找零
     changeAmount(state) {
-      return (state.realChargeAmount - state.totalAmount).toFixed(2);
+      return (state.realChargeAmount - state.totalAmount)
     },
     // 計算機-實收
     realChargeAmount(state) {
@@ -60,6 +64,7 @@ export const useBillstore = defineStore("Billstore", {
     },
     // 計算機-未收
     notyetChargeAmount(state) {
+
       if (state.totalAmount > state.realChargeAmount) {
         return (state.totalAmount - state.realChargeAmount).toFixed(2);
       } else {
@@ -67,10 +72,10 @@ export const useBillstore = defineStore("Billstore", {
       }
     },
     discountAmount(state) {
-      return (state.order_amount * state.discount) / 100;
+      return (state.orderAmountfromPage * state.discount) / 100;
     },
     serviceAmount(state) {
-      return state.order_amount * (state.serviceFee / 100);
+      return state.orderAmountfromPage * (state.serviceFee / 100);
     },
   },
   actions: {
@@ -155,9 +160,11 @@ export const useBillstore = defineStore("Billstore", {
       pOther,
       invNum,
       cTime,
-      pId,
+      pId, // 登入員工編號
       upTime,
-      pOtherName
+      pOtherName,
+      mobileBarcode, // 載具
+      uniformNum, // 統編
     ) {
       let saveObj = {
         bill_id: bId,
@@ -170,7 +177,10 @@ export const useBillstore = defineStore("Billstore", {
         lastmodified_staff_id: pId,
         lastmodified_time: upTime,
         memo: pOtherName,
+        mobile_barcode: mobileBarcode,
+        uniform_numbers: uniformNum
       };
+      console.log(saveObj);
       fetch("http://localhost:8080/bill/create", {
         method: "post",
         headers: {
@@ -223,7 +233,7 @@ export const useBillstore = defineStore("Billstore", {
         })
           .then((res) => res.json())
           .then((data) => {
-            // console.log(data);
+            console.log(data);
             this.allbills = data;
             // 未用 只取近5筆記錄
             // this.lastFiveBills = data.slice(-5).reverse();

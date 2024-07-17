@@ -1,10 +1,18 @@
 <script>
 import { useBillstore } from '@/stores/BillStore';
+import { mapState, mapActions } from 'pinia';
 
 export default {
-
+    setup(){
+        const Billstore = useBillstore();
+        return {
+            Billstore,
+            ...mapState(Billstore, ['mobileBarcode']),
+        }
+    },
     data() {
         return {
+            
         };
     },
     methods: {
@@ -22,11 +30,11 @@ export default {
                 <p>載&nbsp;&nbsp;&nbsp;&nbsp;具</p>
             </div>
             <div class="inputArea">
-                <input type="text" placeholder="請輸入載具號碼">
+                <input type="text" placeholder="請輸入載具號碼" v-model="this.Billstore.mobileBarcode">
             </div>
             <div class="butArea">
-                <button @click="">確認</button>
-                <button @click="closeShow">Close</button>
+                <button @click="closeShow">確認</button>
+                <button @click="closeShow">關閉</button>
             </div>
         </div>
     </div>

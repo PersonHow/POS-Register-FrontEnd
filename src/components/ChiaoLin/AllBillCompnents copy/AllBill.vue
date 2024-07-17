@@ -9,7 +9,7 @@ export default{
 </script>
 
 <template>
-add
+AllBill
 </template>
 
 <style scoped lang="scss" >

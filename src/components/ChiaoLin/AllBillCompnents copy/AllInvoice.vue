@@ -9,7 +9,7 @@ export default{
 </script>
 
 <template>
-delete
+AllInvoice
 </template>
 
 <style scoped lang="scss" >

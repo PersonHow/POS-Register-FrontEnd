@@ -1,8 +1,15 @@
 <script>
 import { useBillstore } from '@/stores/BillStore';
+import { mapState, mapActions } from 'pinia';
 
 export default {
-
+    setup(){
+        const Billstore = useBillstore();
+        return {
+            Billstore,
+            ...mapState(Billstore, ['uniformNum']),
+        }
+    },
     data() {
         return {
         };
@@ -22,11 +29,11 @@ export default {
                 <p>統一編號</p>
             </div>
             <div class="inputArea">
-                <input type="text" placeholder="請輸入統編">
+                <input type="text" placeholder="請輸入統編" v-model="this.Billstore.uniformNum">
             </div>
             <div class="butArea">
-                <button @click="">確認</button>
-                <button @click="closeShow">Close</button>
+                <button @click="closeShow">確認</button>
+                <button @click="closeShow">關閉</button>
             </div>
         </div>
     </div>
