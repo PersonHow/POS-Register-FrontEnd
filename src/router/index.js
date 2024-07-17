@@ -28,11 +28,11 @@ const router = createRouter({
       name: "BillPage",
       component: () => import("../views/BillPage.vue"),
     },
-    {
-      path: "/AllBillPage",
-      name: "AllBillPage",
-      component: () => import("../views/AllBillPage.vue"),
-    },
+    // {
+    //   path: "/AllBillPage",
+    //   name: "AllBillPage",
+    //   component: () => import("../views/AllBillPage.vue"),
+    // },
     {
       path: "/calendar",
       name: "calendar",
@@ -61,11 +61,6 @@ const router = createRouter({
           }
         });
       },
-    },
-    {
-      path: "/AllBillPage",
-      name: "AllBillPage",
-      component: () => import("../views/AllBillPage.vue"),
     },
   ],
 });
