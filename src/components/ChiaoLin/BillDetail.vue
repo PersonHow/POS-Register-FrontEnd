@@ -42,7 +42,7 @@ export default {
             OrderStore,
             updateValue,
             enterAddInputValue,
-            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent','theLastBill']),
+            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent','lastBill']),
             ...mapState(OrderStore, ['order_info']),
             ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB','getAllBillsAndTodayBills']),
         };
@@ -65,8 +65,8 @@ export default {
             let orderObj = {
                 order_id: orderId,
             }
-            console.log(orderId);
-            console.log(orderObj);
+            // console.log(orderId);
+            // console.log(orderObj);
             fetch("http://localhost:8080/order_info/ById", {
                 method: "post",
                 headers: {
@@ -95,7 +95,7 @@ export default {
             } else {
                 AorB = 'Other';
             }
-            this.showBillId = `${year}${month}${day}-${AorB}` + this.Billstore.bId;
+            this.showBillId = `${year}${month}${day}-${AorB}` + ((this.Billstore.chargedTodayBills.length)+1);
         } else {
             console.error("Wrong oId!")
         };
@@ -112,7 +112,7 @@ export default {
     <div class="allArea">
         <div class="showOrderId">
             <div style="width: 20%;">結帳單號</div>
-            <div style="width: 40%;">{{ this.Billstore.theLastBill.bill_id+1 }}</div>
+            <div style="width: 40%;">{{ this.showBillId }}</div>
             <!-- 漢堡按鈕還沒做 -->
             <input type="checkbox" id="noShowOrder" v-model="this.Billstore.showOrderArea">
             <button style="cursor: pointer;" @click="toggleSidebar">
@@ -127,9 +127,9 @@ export default {
                 <LeftNavEditOrder></LeftNavEditOrder>
             </div>
             <div :class="['billDetailRightArea', { expanded: isLeftNavHidden }]">
-                <div class="titleArea">
+                <!-- <div class="titleArea">
                     <p>結帳明細</p>
-                </div>
+                </div> -->
                 <div class="billdetail">
                     <p>訂單金額&nbsp;</p>
                     <div class="inputAera"><input type="text" :value="this.OrderDB.amount" disabled>
@@ -256,6 +256,7 @@ export default {
 
             .billdetail {
                 padding: 0 1.5dvw;
+                padding-top: 2.25dvh;
 
                 input {
                     width: 90%;
@@ -263,7 +264,7 @@ export default {
                     border: none;
                     background-color: white;
                     text-align: right;
-                    font-size: 2dvh;
+                    font-size: 2.25dvh;
                 }
 
                 p {

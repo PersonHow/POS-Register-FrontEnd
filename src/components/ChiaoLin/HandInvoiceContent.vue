@@ -2,12 +2,9 @@
 import { useBillstore } from '@/stores/BillStore';
 import { mapState, mapActions } from 'pinia';
 export default {
-    setup() {
+    setup(){
         const Billstore = useBillstore();
-        return {
-            Billstore,
-            ...mapState(Billstore, ['handInvoiceInput',]),
-        }
+        return {Billstore}
     },
     data() {
         return {
@@ -53,6 +50,7 @@ export default {
     align-items: center;
     justify-content: center;
     z-index: 9999;
+    font-weight: 500;
 }
 
 .showBox {
@@ -62,13 +60,12 @@ export default {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 100;
     font-size: 2.5dvh;
-    color: gray;
+    line-height: 5dvh;
 
     .titleArea {
         width: 100%;
         height: 5dvh;
         color: black;
-        margin: 0 1dvw;
     }
 
     .butArea {
@@ -95,12 +92,7 @@ export default {
         width: 100%;
         margin: 1dvh 0;
 
-        p {
-            margin: 1dvh 1dvw;
-        }
-
         input {
-            width: 95%;
             height: 6dvh;
             margin: 1dvh 1dvw;
             padding: 0 1dvw;
@@ -112,3 +104,4 @@ export default {
 
 }
 </style>
+

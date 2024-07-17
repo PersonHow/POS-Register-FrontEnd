@@ -16,15 +16,15 @@ export default {
         };
     },
     methods: {
-        closeShow() {
+        closeArea(){
             this.$emit('close');
-        },
+        }
     }
 }
 </script>
 
 <template>
-    <div class="showBack" @click="closeShow">
+    <div class="showBack" @click="closeArea()">
         <div class="showBox" @click.stop>
             <div class="titleArea">
                 <p>載&nbsp;&nbsp;&nbsp;&nbsp;具</p>
@@ -33,8 +33,8 @@ export default {
                 <input type="text" placeholder="請輸入載具號碼" v-model="this.Billstore.mobileBarcode">
             </div>
             <div class="butArea">
-                <button @click="closeShow">確認</button>
-                <button @click="closeShow">關閉</button>
+                <button @click="closeArea">確認</button>
+                <button @click="closeArea">關閉</button>
             </div>
         </div>
     </div>
@@ -96,7 +96,6 @@ export default {
         margin: 1dvh 0;
 
         input {
-            width: 95%;
             height: 6dvh;
             margin: 1dvh 1dvw;
             padding: 0 1dvw;

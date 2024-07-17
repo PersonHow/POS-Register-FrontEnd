@@ -40,9 +40,8 @@ export default {
                 this.Billstore.invoiceNum = this.Billstore.handInvoiceInput;
                 this.Billstore.uniformNum = this.Billstore.handUniformNum;
             }
-            // 待連 lastmodified_staff_id: pId
+            // 存入pinia
             this.saveBillfromP("", this.OrderDB.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", staff.staff_id, "", pOtherName, this.Billstore.mobileBarcode, this.Billstore.uniformNum)
-            this.OrderDB.amount = 0;
             this.Billstore.orderAmountfromPage = 0;
             this.Billstore.discount = 0;
             this.Billstore.serviceFee = 0;
@@ -52,6 +51,7 @@ export default {
             this.Billstore.uniformNum = "";
             this.Billstore.handInvoiceInput = "";
             this.Billstore.handUniformNum = "";
+            this.OrderDB.amount = 0;
             this.Billstore.inputEvent.forEach(event => {
                 if (event.type === "現金") {
                     event.value = 0;

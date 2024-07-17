@@ -40,6 +40,9 @@ export default {
         updateBillstore(event) {
             Object.assign(this.Billstore, event);
         },
+        closeShow() {
+            this.$emit('close');
+        },
     },
 }
 </script>
@@ -65,7 +68,7 @@ export default {
                 <RouterLink to="/OrderPage"><button type="button" class="comeback myMouse">取消</button></RouterLink>
                 <button type="button" class="manualInvoice myMouse" @click="Billstore.showHandInvoiceArea">手開發票</button>
                 <RouterLink to="/InvoicePage"><button type="button" class="comeback myMouse">發票設定</button></RouterLink>
-                <RouterLink to="/BillEditPage"><button type="button" class="comeback myMouse">帳務總覽</button></RouterLink>
+                <RouterLink to="/AllBillPage"> <button type="button" class="comeback myMouse">帳務總覽</button></RouterLink>
                 <input type="checkbox" id="rightBar" v-model="Billstore.showRightNav">
                 <label for="rightBar" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
             </div>

@@ -15,10 +15,17 @@ const vuetify = createVuetify({
   components,
   directives,
 });
-const app = createApp(App);
-const pinia = createPinia();
-app.use(router);
-app.use(pinia);
+
+const app = createApp(App)
+const pinia = createPinia()
+
+library.add(fas, far, fab)
+
+app.component('font-awesome-icon', FontAwesomeIcon)
+app.component('draggable', draggable);
+
+app.use(router)
+app.use(pinia)
 app.use(vuetify);
 library.add(fas, far, fab);
 app.component("font-awesome-icon", FontAwesomeIcon);
