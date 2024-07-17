@@ -1,19 +1,16 @@
 <script>
-import BillDetail from '@/components/ChiaoLin/BillDetail.vue';
-import AmountDetails from '@/components/ChiaoLin/AmountDetail.vue';
-import Calculator from '@/components/ChiaoLin/Calculator.vue';
-import HandInvoiceContent from '@/components/ChiaoLin/HandInvoiceContent.vue';
-import { useBillstore } from '../stores/BillStore'
-import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
-import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
-// import { useOrderStore } from '@/stores/OrderStore'
-
+import BillDetail from '../components/ChiaoLin/BillDetail.vue';
+import AmountDetails from '../components/ChiaoLin/AmountDetail.vue';
+import Calculator from '../components/ChiaoLin/Calculator.vue';
+import HandInvoiceContent from '../components/ChiaoLin/HandInvoiceContent.vue';
+import { useBillstore } from '../stores/BillStore';
+import LeftNavEditOrder from '../components/ChiaoLin/LeftNavEditOrder.vue';
+import RightNavOtherFun from '../components/ChiaoLin/RightNavOtherFun.vue';
+import { ref, onMounted, computed } from 'vue';
 export default {
     setup() {
         const Billstore = useBillstore();
         return { Billstore };
-        // const OrderStore = useOrderStore();
-        // return { OrderStore };
     },
     components: {
         BillDetail,
@@ -34,13 +31,18 @@ export default {
             focusedInput: null,
         }
     },
+    created(){
+        if(sessionStorage.getItem("token") == null){
+        alert("你還沒有登入，將轉向登入頁面！")
+        this.$router.push({name: 'home'})
+    }},
     methods: {
         // 更新 Billstore 中的多個屬性，將 event 中的所有屬性複製到 this.Billstore 中
         // event 的每個屬性都會覆蓋 this.Billstore 的對應屬性，就可以批量更新 Billstore 的屬性
         updateBillstore(event) {
             Object.assign(this.Billstore, event);
-        },
-    },
+        }
+    }
 }
 </script>
 
@@ -64,7 +66,6 @@ export default {
             <div class="functionButArea">
                 <RouterLink to="/OrderPage"><button type="button" class="comeback myMouse">返回</button></RouterLink>
                 <button type="button" class="manualInvoice myMouse" @click="Billstore.showHandInvoiceArea">手開發票</button>
-                <RouterLink to="/InvoicePage"><button type="button" class="comeback myMouse">發票設定</button></RouterLink>
                 <input type="checkbox" id="rightBar" v-model="Billstore.showRightNav">
                 <label for="rightBar" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
             </div>
@@ -85,13 +86,13 @@ export default {
     font-family: "Chocolate Classical Sans", sans-serif;
 
     .rightArea {
-        width: 50%;
+        width: 100%;
 
         .functionButArea {
             display: flex;
             width: 94%;
-            height: 8dvh;
-            line-height: 8dvh;
+            height: 7dvh;
+            line-height: 7dvh;
             background: linear-gradient(90deg, #00c1ca, #01e1c5);
             color: #fff;
             border-radius: 10px;
@@ -118,7 +119,7 @@ export default {
 
             label {
                 // border: 1px solid black;
-                height: 8dvh;
+                height: 7dvh;
                 width: 8dvw;
                 cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
                 transition: 0.3s ease;
@@ -128,10 +129,15 @@ export default {
 
                 i {
                     z-index: 1;
-                    line-height: 8dvh;
+                    line-height: 7dvh;
                 }
             }
         }
+    }
+
+    .showInvoiceComponent {
+        width: 50%;
+        z-index: 1;
     }
 }
 </style>

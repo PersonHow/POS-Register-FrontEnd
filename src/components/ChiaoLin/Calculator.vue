@@ -8,7 +8,7 @@ export default {
             Billstore,
             ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
                 'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount']),
-            ...mapActions(Billstore, ['addToDisplay', 'clearDisplay', 'backspace', 'getOderId', 'getInvoiceNum','tothousendShowValue',]),
+            ...mapActions(Billstore, ['addToDisplay', 'clearDisplay', 'backspace', 'getOderId', 'getInvoiceNum']),
         };
     },
     methods: {
@@ -43,17 +43,6 @@ export default {
                 }
             })
         },
-        closeShow() {
-            this.$emit('close');
-        },
-        showChangeArea(){
-            this.changeArea = !this.changeArea;
-        }
-    },
-    data() {
-        return {
-            changeArea: false,
-        }
     }
 }
 </script>
@@ -80,23 +69,10 @@ export default {
                         id="butbackspace"></div>
                 <div class="mathBut butRevise"><input type="button" value="更正" @click="Billstore.clearDisplay()"
                         id="butRevise"></div>
-                <div class="mathBut butComfirm"><input type="button" value="確定" @click="showChangeArea()" id="butComfirm">
-                </div>
-            </div>
-            <div v-if="changeArea == true">
-                <div class="showBack" @click="showChangeArea()">
-                    <div class="showBox" @click.stop>
-                        <div class="titleArea">
-                            <p>找&nbsp;&nbsp;&nbsp;&nbsp;零</p>
-                        </div>
-                        <div class="showInfoArea">
-                            <span id="ntText">NT.</span>
-                            <span id="changeAmount">{{ Billstore.tothousendShowValue(Billstore.changeAmount) }}</span>
-                        </div>
-                        <div class="butArea">
-                            <button @click="showChangeArea()">Close</button>
-                        </div>
-                    </div>
+                <div class="mathBut butComfirm"><input type="button" value="確定" @click="saveBill()" id="butComfirm">
+                    <!-- <div class="mathBut butComfirm"><input type="button" value="Test" @click="getOtherInputNameToMemo()"
+                            id="butComfirm">
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -115,15 +91,15 @@ export default {
         margin-left: 0.5dvw;
 
         .mathbutArea {
-            width: 100%;
-            display: grid;
-            grid-template-columns: 33% 33% 33%;
+            width: 80%;
+            display: flex;
+            flex-wrap: wrap;
         }
 
         .mathBut {
-            width: 100%;
+            width: 28%;
             height: 10dvh;
-            padding-right: 1.5dvw;
+            margin-right: 2dvw;
 
             input {
                 width: 100%;
@@ -136,11 +112,11 @@ export default {
         }
 
         .otherButArea {
-            width: 30%;
+            width: 20%;
             margin-right: 1dvw;
 
             .mathBut {
-                width: 110%;
+                width: 100%;
 
                 input {
                     width: 100%;
@@ -164,65 +140,5 @@ export default {
             }
         }
     }
-
-    .showBack {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    font-weight: 500;
-}
-
-.showBox {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    font-size: 3dvh;
-    line-height: 5dvh;
-
-    .titleArea {
-        width: 100%;
-        height: 5dvh;
-        color: black;
-        margin: 0 1dvw;
-    }
-
-    .butArea {
-        display: flex;
-        line-height: 8dvh;
-
-        button {
-            width: 9dvw;
-            height: 7dvh;
-            margin: 0 1dvw;
-            margin-top: 1dvh;
-            background: none;
-            color: gray;
-            font-weight: 600;
-            font-family: "Chocolate Classical Sans", sans-serif;
-            font-size: 2dvh;
-            border: 2px solid #00c1ca;
-            border-radius: 5px;
-        }
-    }
-
-    .showInfoArea {
-        width: 100%;
-        margin: 1dvh 0;
-        padding-left: 1dvw;
-        span{
-            font-size: 3dvh;
-        }
-    }
-
-}
 }
 </style>
