@@ -5,6 +5,7 @@ import Footer_bar_ChangeTable from "@/components/Kou/Footer_bar_ChangeTable.vue"
 import Footer_bar_Checkout from "@/components/Kou/Footer_bar_Checkout .vue";
 import Footer_bar_Order from "@/components/Kou/Footer_bar_Order.vue";
 import Swal from "sweetalert2";
+import { onUpdated } from "vue";
 export default {
   data() {
     return {
@@ -12,7 +13,6 @@ export default {
       selected_table:{table_id:"#"},
       selected_target_table:{table_id:"#"},
       menuOpen: false,
-      tables: [],
       selectedtable_id:0,
       nav_item_list:[],
     };
@@ -79,9 +79,6 @@ export default {
     GetSelected_table(table){
       this.selected_table =table;
     },
-    GetTables(tables){
-      this.tables = tables;
-    },
     Getnav_item_list(nav_item_list){
       this.nav_item_list=nav_item_list;
     },
@@ -146,9 +143,6 @@ export default {
               }
             })
     }
-    if(sessionStorage.getItem("selected_item")){
-      this.selected_item = sessionStorage.getItem("selected_item");
-    }
   },
   components: {
     TablePage,
@@ -168,7 +162,7 @@ export default {
     </div>
     <!-- second Area = 中間桌子的區塊 -->
     <div class="second">
-      <TablePage v-on:tables="GetTables" :nav_item_list="nav_item_list" v-on:selected_table="GetSelected_table" v-on:selected_target_table="GetSelected_target_table"/>
+      <TablePage :nav_item_list="nav_item_list" v-on:selected_table="GetSelected_table" v-on:selected_target_table="GetSelected_target_table"/>
     </div>
     <div class="footer Area">
       <!-- footerHam = footer裡面的漢堡圖區塊 -->

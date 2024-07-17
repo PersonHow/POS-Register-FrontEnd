@@ -719,15 +719,19 @@
               throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            
+            let tables = data.map((table, i) => ({
+              ...table,
+              //0:空位、1:使用中、2:已預約、3:帶位中
+              status:
+                table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" :table.table_status === 2 ?"reserved":"take"
+            }));
+            sessionStorage.setItem("tables",JSON.stringify(tables));
             this.tables_list1 = data.map((table, i) => ({
               ...table,
               //0:空位、1:使用中、2:已預約、3:帶位中
               status:
                 table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" :table.table_status === 2 ?"reserved":"take"
             })).filter((item)=>{ return item["table_area"] == selected_title_item});
-            console.log(this.tables_list1);
-            this.$emit("tables",this.tables_list1);
           } catch (error) {
             console.error("Error fetching table data:", error);
           }

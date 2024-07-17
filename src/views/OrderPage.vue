@@ -176,7 +176,6 @@ export default {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data)
                     this.orderStore.createOrder(order) //將訂餐存入orderStore
                     // this.$router.push('/BillPage/'+order.order_id);
                 })
