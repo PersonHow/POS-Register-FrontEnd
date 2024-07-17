@@ -1,5 +1,7 @@
 <script>
 import { useBillstore } from '@/stores/BillStore';
+import { useOrderStore } from '@/stores/OrderStore';
+import { mapState, mapActions } from 'pinia';
 export default {
     setup() {
         const Billstore = useBillstore();
@@ -39,14 +41,13 @@ export default {
             console.error("Wrong oId!")
         }
 
-        return { Billstore };
     },
 }
 </script>
 
 <template>
     <nav class="navArea" :class="{ active: Billstore.showOrderArea }">
-        <div>
+        <div class="noShowIcon">
             <label for="noShowOrder" class="myMouse">
                 <i class="fa-solid fa-xmark fa-2xl"></i>
             </label>
@@ -83,11 +84,11 @@ export default {
 .navArea {
     font-family: "Chocolate Classical Sans", sans-serif;
     position: fixed;
-    height: 100%;
-    top: 8dvh;
+    height: 91%;
+    top: 9dvh;
     width: 35%;
     left: -37%;
-    overflow: hidden;
+    overflow: scroll;
     background: white;
     border-right: 5px solid #00c1ca;
     transition: 0.3s ease;
@@ -101,7 +102,7 @@ export default {
 
     div {
         display: flex;
-        justify-content: right;
+        justify-content: left;
 
         label {
             width: 30px;
@@ -119,11 +120,25 @@ export default {
         }
     }
 
+    .noShowIcon {
+        justify-content: right;
+    }
+
     ul {
+        margin-top: 2dvh;
+
         li {
             list-style-type: none;
             font-size: 2.5dvh;
             color: black;
+            padding: 0 1dvw;
+
+
+            .tableAndGuestNum {
+                padding-right: 5dvw;
+                display: flex;
+                justify-content: space-between;
+            }
         }
 
         button {
@@ -132,7 +147,7 @@ export default {
             margin: 0.5dvh 0.5dvw;
             border: none;
             border-radius: 10px;
-            background:#00c1ca;
+            background: #00c1ca;
             padding: 0.5dvw;
             color: white;
         }

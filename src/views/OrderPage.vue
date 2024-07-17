@@ -1,11 +1,7 @@
 <script>
 import axios from 'axios'
 import EditMeal from '../components/Yuhan/EditOrder.vue'
-import { useOrderStore } from '@/stores/OrderStore' 
-import 'bootstrap/dist/css/bootstrap.css'
-import * as bootstrap from 'bootstrap';
-import Swal from "sweetalert2"
-
+import { useOrderStore } from '@/stores/OrderStore'
 export default {
     data() {
         return {
@@ -21,30 +17,41 @@ export default {
                 price: "",
                 options: [], //餐點選項 如:["直麵","筆管麵","天使細麵","加麵"]
             },
-            editingIndex:null, //欲修改的餐點索引
-            staff:null,
+            types: [], //餐點所有種類 如:["排餐","炸物","飯類","披薩","義大利麵"]
+            selectedType: "", //目前顯示的種類
+
+            tableNum: null, //桌號====>TODO
+            guestNum: "", //用餐人數==>TODO
+            memo: null, //備註
+            showMemoInput: false,
+
+            orderList: [], //點餐列表
+            orderItem: { //要加入列表的餐點
+                id: 0,
+                name: "",
+                price: 0,
+                option: "",
+                quantities: 1,
+                otherReq: ""
+            },
+            editingIndex: null, //欲修改的餐點索引
         }
     },
     components: {
         EditMeal
     },
-    created(){
-        this.staff = JSON.prase(sessionStorage.getItem("token"))
-        if(sessionStorage.getItem("token")==null){
-            Swal.fire({text:"你還沒有登入，將轉向登入頁面！", icon:"info"})
-            this.$router.push({name: 'home'})
-        }
+    created() {
         if(this.$route.query.selected_table){
             this.selected_table=JSON.parse(this.$route.query.selected_table);
-            this.selected_target_table =JSON.parse(this.$route.query.selected_target_table);
-            console.log(this.selected_table);
-            console.log(this.selected_target_table);
+            console.log(this.selected_table);    
+        }
+        if(this.$route.query.selected_target_table){
+                this.selected_target_table =JSON.parse(this.$route.query.selected_target_table);
+                console.log(this.selected_target_table);
         }
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱
-        window.bootstrap = bootstrap
-        this.orderStore.getOrderInfo() //取得最近五筆送單紀錄
     },
     methods: {
         //取得菜單內餐點
@@ -151,36 +158,21 @@ export default {
             })
             let order = {
                 order_id: this.oId,
-                table_num: this.tableNum,
-                guest_num: this.guestNum,
+                table_num: null,
+                guest_num: null,
                 order_detail: this.orderList,
                 amount: this.orderAmount,
                 memo: this.memo,
                 booking_num: null,
-                staff_name: this.staff,
-                lastmodified_staff_id: this.staff
+                staff_name: "Andy",
+                lastmodified_staff_id: 1
             }
             fetch("http://localhost:8080/order_info/create", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body:JSON.stringify(order)
-            })
-            .then(res => {
-                if (!res.ok) {
-                    Swal.fire("錯誤", "送出失敗，請檢查訂單是否有內容。", "error")
-                    hasError = true;
-                }
-                return res.json();
-            })
-            .then(data => {
-                console.log(data)
-                this.orderStore.createOrder(order) //將訂餐存入orderStore
-                // 觸發 secondModal 選擇是否跳轉結帳頁
-                var secondModal = new bootstrap.Modal(document.getElementById('secondModal'),{backdrop: 'static'})
-                secondModal.show()
-                this.orderStore.getOrderInfo() //更新最近五筆送單紀錄
+                body: JSON.stringify(order)
             })
                 .then(res => res.json())
                 .then(data => {
@@ -228,20 +220,9 @@ export default {
     <div class="bigArea">
         <!-- orderList點餐明細 -->
         <div class="container left-side">
-            <div class="header">
-                <span>單號: {{oId}} </span>
-                <span>{{ tableNum? "桌號: "+tableNum:"外帶" }}</span>
-                <div class="dropdown">
-                    <a class="btn btn-lg dropdown-toggle" href="#" 
-                    role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
-                        <li v-if="tableNum"><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modifyNumModal">修改人數/桌號</button></li>
-                        <!-- 返回桌位 -->
-                        <li><a class="dropdown-item" href="#">取消此筆訂單</a></li> 
-                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#orderHistoryModal">送單紀錄</a></li>
-                    </ul>
-                </div>
+            <div class="header col">
+                <span>單號: {{ oId }} </span>
+                <span><font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x" /></span>
             </div>
             <!-- 點餐列表 -->
             <div class="order-list">
@@ -280,26 +261,25 @@ export default {
 
         <!-- menu菜單 -->
         <div class="container">
-            <div class="px-3 type">
-                <div v-for="type in types" :key="type" class="colume">
+            <div class="row type">
+                <div v-for="type in types" :key="type" class="col">
                     <input type="radio" v-model="selectedType" :value="type" :id="type">
                     <label :for="type" :class="{ active: selectedType === type }">{{ type }}</label>
                 </div>
             </div>
-            <div class="arrow">
-                    <font-awesome-icon icon="fa-solid fa-chevron-right"/>
-                </div>
-            <div class="px-5 wrap" >
-                <div v-for="meal in menu" v-show="selectedType === meal.type" @click="addMealToList(meal)" :key="meal.type" class="meal">
+            <div class="row wrap">
+                <div v-for="meal in menu" v-show="selectedType === meal.type" @click="addMealToList(meal)"
+                    :key="meal.type" class="col meal">
                     <img :src="meal.img" alt="">
                     <div v-for="item in orderList" :key="item.meal_id">
                         <div v-if="item.meal_id === meal.meal_id" class="orderQty">
                             {{ mealQuantities[meal.meal_id] }}
                         </div>
                     </div>
-                    <div class="mealName mt-2">
-                        {{meal.name}}
+                    <div class="mealName">
+                        {{ meal.name }}
                     </div>
+                    <!-- <p >NT. {{meal.price}}</p> -->
                 </div>
             </div>
             <form v-show="showMemoInput" class="memo">
@@ -328,26 +308,29 @@ export default {
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">修改</button>
-                                <button  type="button" @click="placeOrder()" class="btn placeOrder" data-bs-dismiss="modal" data-bs-toggle="modal">
-                                    確認無誤，送出</button> 
+                                <button type="button" class="btn placeOrder" data-bs-dismiss="modal"
+                                    data-bs-toggle="modal" @click="placeOrder()" data-bs-target="#secondModal">
+                                    確認無誤，送出</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" data-bs-keyboard="false" id="secondModal" tabindex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="secondModal"
+                    tabindex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4><strong>送單完畢，是否前往結帳</strong></h4>
                             </div>
                             <div class="modal-body d-flex justify-content-evenly">
                                 <!-- 跳轉至桌位頁 -->
-                                <a class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
+                                <button @click="navigateToTablePage()" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">稍後再結</button>
                                 <!-- 跳轉至結帳頁 -->
-                                <a class="btn btn-primary">立即結帳</a>
+                                <button @click="navigateToBillPage" class="btn btn-primary"
+                                    data-bs-dismiss="modal">立即結帳</button>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
                 <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="secondModal"
@@ -365,65 +348,8 @@ export default {
                             </div>
                         </div>
                     </div>
-                <button @click="editMemo()" class="btn btn-nowrap">訂單備註</button>
-            </div>
-            <!-- 修改人數視窗 -->
-            <div class="modal fade" id="modifyNumModal" tabindex="-1" aria-labelledby="modifyNumModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4>編輯</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <label for="guestNum">桌號</label><input type="text" v-model="tableNum" id="guestNum">
-                            <label for="guestNum">用餐人數</label><input type="text" v-model="guestNum" id="guestNum">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn" data-bs-dismiss="modal" data-bs-toggle="modal">
-                                確認</button> 
-                        </div>
-                    </div>
                 </div>
-            </div>
-
-            <!-- 歷史訂單 -->
-            <div class="modal fade" id="orderHistoryModal" tabindex="-1" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4>已送單紀錄(最近五筆)</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="accordion" id="accordion">
-                                <div v-for="list in orderStore.order_info" :key="list.order_id" class="accordion-item">
-                                    <h2 class="accordion-header" :id="`heading${list.order_id}`">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#collapse${list.order_id}`" aria-expanded="true" :aria-controls="`collapse${list.order_id}`">
-                                        <h5>單號:{{ list.order_id }}</h5>_ <small>時間:{{list.create_time}}</small>
-                                    </button>
-                                    </h2>
-                                    <div :id="`collapse${list.order_id}`" class="accordion-collapse collapse" :aria-labelledby="`#collapse${list.order_id}`" data-bs-parent="#accordion">
-                                        <div class="accordion-body">
-                                            <p><strong>人員:</strong> {{ list.staff_name }}</p>
-                                            <p><strong>總金額:</strong> ${{ list.amount }}</p>
-                                            <strong>明細: </strong>
-                                            <p v-for="(item, i) in list.order_detail" :key="i">
-                                                {{item.meal_name}}x {{ item.quantities }}<br> 
-                                                <small>{{ item.custom_option==="null" ?  "" : item.custom_option }}</small>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="modal-footer">
-                            <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
-                                確認</button> 
-                        </div>
-                    </div>
-                </div>
+                <button @click="editMemo()" class="btn">訂單備註</button>
             </div>
         </div>
     </div>
@@ -441,7 +367,7 @@ $secondary-color: #FFE2C3;
     justify-content: end;
     font-size: 18px;
     font-family: 'Chocolate Classical Sans', sans-serif;
-    border:1px solid #F9BF45;
+    border: 1px solid #F9BF45;
 }
 
 .container {
@@ -449,20 +375,26 @@ $secondary-color: #FFE2C3;
     width: 55%;
     box-shadow: 0 0 5px rgba(128, 128, 128, 0.4);
     position: relative;
-    padding: 0;
 }
-.colume{
-    margin:2.5% 5%;
+
+.row {
+    padding: 0 5%;
+}
+
+.col {
+    width: 100%;
+    margin: 5%;
     line-height: 2;
 }
 
-.left-side{
+.left-side {
     width: 45%;
     position: relative;
-    .header{
+
+    .header {
         height: 10vh;
         margin: 0;
-
+        display: flex;
         width: 100%;
         color: #fff;
         padding: 5%;
@@ -577,11 +509,10 @@ $secondary-color: #FFE2C3;
     overflow-x: auto;
     white-space: nowrap;
     display: flex;
-    align-items: center;
     background: rgb(240, 240, 240);
     font-weight: 600;
     font-size: 20px;
-    position: relative;
+
     &::-webkit-scrollbar {
         height: 5px;
     }
@@ -602,11 +533,8 @@ $secondary-color: #FFE2C3;
     padding: 10px 20px;
     border-radius: 10px;
 }
-.arrow{
-    padding: 5% 2%;
-    background: rgb(240, 240, 240);
-}
-.meal{
+
+.meal {
     width: 10vw;
     height: 15vh;
     display: inline-block;
@@ -658,7 +586,7 @@ $secondary-color: #FFE2C3;
 .orderQty {
     clip-path: circle(30%);
     position: absolute;
-    top: -30px;
+    top: -45px;
     right: -10%;
     background: #f96c45;
     color: white;
@@ -720,7 +648,7 @@ $secondary-color: #FFE2C3;
     .btn {
         border: none;
         align-items: center;
-        width: 30%;     
+        width: 20%;
         border-radius: 10px;
         box-shadow: 0 1px 2px rgba(128, 128, 128, 0.4);
         background: #c5c5c5;
@@ -736,9 +664,5 @@ $secondary-color: #FFE2C3;
         width: 60%;
         background: $main-color;
     }
-    .btn-primary{
-        background: $main-color;
-    }
-
 }
 </style>
