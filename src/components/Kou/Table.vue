@@ -2,154 +2,214 @@
   <div style="display: flex;">
   <div id="app">
     <div style="display: flex; align-items: center;">
-      <button @click="toggleEdit" class="btn_not_adjust_table">調整桌位</button>
-      <p v-if="isTargetEditing" style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;color: #00c5c8;">
-          你選擇的桌位：{{ select_table.table_id == 0 ?"尚未選擇":select_table.table_id }}<br/>
-          ->目標桌位：{{ target_table.table_id == 0 ?"尚未選擇":target_table.table_id }}</p>
-      <p v-else style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;color: #00c5c8;">
-        你選擇的桌位：{{ select_table.table_id == 0 ?"尚未選擇":select_table.table_id }}</p>
-        
-      <button @click="()=>{ this.select_table = {table_id:0};this.input_table ={table_id:0};this.target_table = {table_id:0}}" class="btn_clear_select_table">清除桌位</button>
+      <button @click="toggleEdit" class="btn_not_adjust_table">調整桌位</button> 
       <button @click="toggleTarget" class="btn_cancel_target_table">設定目標桌位</button>
+      <button @click='()=>{ this.select_table = {table_id:"#"};
+                            this.input_table ={table_id:"#"};
+                            this.target_table = {table_id:"#"};
+                            this.$emit("selected_table",this.select_table);
+                            this.$emit("selected_target_table",this.target_table);
+                          }' class="btn_clear_select_table">清除桌位</button>
+      <p v-if="this.isTargetEditing" style="display: flex;flex-direction: column;margin-left: 2rem;margin-right:2rem;font-weight: bold; font-size:1.5rem;color: #00c5c8;">
+          你選擇的桌位：{{ select_table.table_id == "#" ?"尚未選擇":select_table.table_id }}
+           >> 目標桌位：{{ target_table.table_id == "#" ?"尚未選擇":target_table.table_id }}</p>
+      <p v-else style="display: flex;flex-direction: column;margin-left: 2rem;font-weight: bold; font-size:1.5rem;margin-right:2rem;color: #00c5c8;">
+        你選擇的桌位：{{ select_table.table_id == "#" ?"尚未選擇":select_table.table_id }}</p> 
     </div>
     <!-- 當進入編輯模式時，啟用拖曳功能 -->
-    <draggable
-      v-if="isEditing"
-      v-model="tables"
-      animation="300"
-      @start="onStart"
-      @end="onEnd"
-      style="display: flex;flex-direction: row; min-height: 200px;min-width: 200px;"
-      class="list-group"
-      tag="ul"
-      :group="group_tables"
-      v-bind="dragOptions">
-      <!-- 顯示每張桌子的內容 -->
-        <template #item="{element}">
-            <div>
-              <div
-                    :class="['table', element.status]"
-                    :id="'table-' + element.table_id"
-                    style="margin: 0.5rem;"
-                    @click="()=>{
-                      selectTableHandler(element);
-                    }">
-                    <!-- 根據桌子的狀態設置樣式 -->
-                    <div class="tableNum">
-                      <div class="Num">桌號: {{ element.table_id }}</div>
+    <div v-if="this.isEditing">
+        <draggable
+          v-model="this.tables_list1"
+          animation="300"
+          @start="onStart"
+          @end="onEnd"
+          style="display: flex;flex-direction: row; min-height: 200px;min-width: 100%;"
+          class="list-group"
+          tag="ul"
+          :group="group_tables"
+          v-bind="dragOptions">
+          <!-- 顯示每張桌子的內容 -->
+            <template #item="{element}">
+                <div>
+                  <div
+                        :class="['table', element.status]"
+                        :id="'table-' + element.table_id"
+                        style="margin: 0.5rem;"
+                        @click="()=>{
+                          selectTableHandler(element);
+                        }">
+                        <!-- 根據桌子的狀態設置樣式 -->
+                        <div class="tableNum">
+                          <div class="Num">桌號: {{ element.table_id }}</div>
+                        </div>
+                        <div class="staffId">
+                          <div>員工: {{ element.staff_name }}</div>
+                        </div>
+                        <div class="status">
+                          <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                        </div>
+                        <div class="booking">
+                          <div>預訂: {{ element.booking_num }}</div>
+                        </div>
+                        <div class="childSeat">
+                          <div>兒童座: {{ element.has_priorityseat ? '有' : '無' }}</div>
+                        </div>
+                        <div class="Seat">
+                          <div>用餐人數: {{ element.guest_num }}</div>
+                        </div>
+                        <div class="bill">
+                          <div>金額: 0 </div>
+                        </div>
+                  </div>
+                </div>
+            </template>
+        </draggable>
+        <div style="display: flex;flex-direction: row;">
+          <draggable
+            v-model="tables_list2"
+            :group="group_tables_list2"
+            animation="300"
+            @start="onStart"
+            @end="onEnd"
+            style="display:flex;width:100%;flex-direction: column;justify-content: space-between;position: relative;min-height: 200px;min-width: 70%;"
+            class="list-group"
+            tag="ul"
+            v-bind="dragOptions">
+            <template #item="{element}">
+                  <div>
+                    <div
+                          :class="['table', element.status]"
+                          :id="'table-' + element.table_id"
+                          style="margin: 0.5rem;"
+                          @click="()=>{
+                            selectTableHandler(element);
+                          }">
+                          <!-- 根據桌子的狀態設置樣式 -->
+                          <div class="tableNum">
+                            <div class="Num">桌號: {{ element.table_id }}</div>
+                          </div>
+                          <div class="staffId">
+                            <div>員工: {{ element.staff_name }}</div>
+                          </div>
+                          <div class="status">
+                            <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                          </div>
+                          <div class="booking">
+                            <div>預訂: {{ element.booking_num }}</div>
+                          </div>
+                          <div class="childSeat">
+                            <div>兒童座: {{ element.has_priorityseat ? '有' : '無' }}</div>
+                          </div>
+                          <div class="Seat">
+                            <div>用餐人數: {{ element.guest_num }}</div>
+                          </div>
+                          <div class="bill">
+                          <div>金額: 0 </div>
+                        </div>
                     </div>
-                    <div class="staffId">
-                      <div>員工: {{ element.staff_name }}</div>
+                  </div>
+              </template>
+            <!-- 顯示每張桌子的內容 -->
+          </draggable>
+          <draggable
+            v-model="tables_list3"
+            :group="group_tables_list3"
+            animation="300"
+            @start="onStart"
+            @end="onEnd"
+            style="display:flex;flex-direction: column;justify-content: space-between;width:100%;position: relative;min-height: 200px;min-width: 70%;"
+            class="list-group"
+            tag="ul"
+            v-bind="dragOptions">
+            <template #item="{element}">
+                  <div>
+                    <div
+                          :class="['table', element.status]"
+                          :id="'table-' + element.table_id"
+                          style="margin: 0.5rem;"
+                          @click="()=>{
+                            selectTableHandler(element);
+                          }">
+                          <!-- 根據桌子的狀態設置樣式 -->
+                          <div class="tableNum">
+                            <div class="Num">桌號: {{ element.table_id }}</div>
+                          </div>
+                          <div class="staffId">
+                            <div>員工: {{ element.staff_name }}</div>
+                          </div>
+                          <div class="status">
+                            <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                          </div>
+                          <div class="booking">
+                            <div>預訂: {{ element.booking_num }}</div>
+                          </div>
+                          <div class="childSeat">
+                            <div>兒童座: {{ element.has_priorityseat ? '有' : '無' }}</div>
+                          </div>
+                          <div class="Seat">
+                            <div>用餐人數: {{ element.guest_num }}</div>
+                          </div>
+                          <div class="bill">
+                          <div>金額: 0 </div>
+                        </div>
                     </div>
-                    <div class="status">
-                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": "已預約"}}</div>
-                    </div>
-                    <div class="booking">
-                      <div>預訂: {{ element.booking_num }}</div>
-                    </div>
-                    <div class="childSeat">
-                      <div>兒童座: {{ element.has_priorityseat ? '有' : '無' }}</div>
-                    </div>
-                    <div class="Seat">
-                      <div>用餐人數: {{ element.guest_num }}</div>
-                    </div>
-              </div>
-            </div>
-        </template>
-    </draggable>
-    <draggable
-      v-if="isEditing"
-      v-model="tables_list2"
-      :group="group_tables_list2"
-      animation="300"
-      @start="onStart"
-      @end="onEnd"
-      style="display:flex;flex-direction:column;width:100%;position: relative;min-height: 200px;"
-      class="list-group"
-      tag="ul"
-      v-bind="dragOptions">
-      <template #item="{element}">
-            <div>
-              <div
-                    :class="['table', element.status]"
-                    :id="'table-' + element.table_id"
-                    style="margin: 0.5rem;"
-                    @click="()=>{
-                      selectTableHandler(element);
-                    }">
-                    <!-- 根據桌子的狀態設置樣式 -->
-                    <div class="tableNum">
-                      <div class="Num">桌號: {{ element.table_id }}</div>
-                    </div>
-                    <div class="staffId">
-                      <div>員工: {{ element.staff_name }}</div>
-                    </div>
-                    <div class="status">
-                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": "已預約"}}</div>
-                    </div>
-                    <div class="booking">
-                      <div>預訂: {{ element.booking_num }}</div>
-                    </div>
-                    <div class="childSeat">
-                      <div>兒童座: {{ element.has_priorityseat ? '有' : '無' }}</div>
-                    </div>
-                    <div class="Seat">
-                      <div>用餐人數: {{ element.guest_num }}</div>
-                    </div>
-              </div>
-            </div>
-        </template>
-      <!-- 顯示每張桌子的內容 -->
-    </draggable>
-    <draggable
-      v-if="isEditing"
-      v-model="tables_list3"
-      :group="group_tables_list3"
-      animation="300"
-      @start="onStart"
-      @end="onEnd"
-      style="display:flex;flex-direction:row;width:100%;position: relative;min-height: 200px;"
-      class="list-group"
-      tag="ul"
-      v-bind="dragOptions">
-      <template #item="{element}">
-            <div>
-              <div
-                    :class="['table', element.status]"
-                    :id="'table-' + element.table_id"
-                    style="margin: 0.5rem;"
-                    @click="()=>{
-                      selectTableHandler(element);
-                    }">
-                    <!-- 根據桌子的狀態設置樣式 -->
-                    <div class="tableNum">
-                      <div class="Num">桌號: {{ element.table_id }}</div>
-                    </div>
-                    <div class="staffId">
-                      <div>員工: {{ element.staff_name }}</div>
-                    </div>
-                    <div class="status">
-                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": "已預約"}}</div>
-                    </div>
-                    <div class="booking">
-                      <div>預訂: {{ element.booking_num }}</div>
-                    </div>
-                    <div class="childSeat">
-                      <div>兒童座: {{ element.has_priorityseat ? '有' : '無' }}</div>
-                    </div>
-                    <div class="Seat">
-                      <div>用餐人數: {{ element.guest_num }}</div>
-                    </div>
-              </div>
-            </div>
-        </template>
-      <!-- 顯示每張桌子的內容 -->
-    </draggable>
+                  </div>
+              </template>
+            <!-- 顯示每張桌子的內容 -->
+          </draggable>
+        </div>
+        <draggable
+          v-model="tables_list4"
+          :group="group_tables_list4"
+          animation="300"
+          @start="onStart"
+          @end="onEnd"
+          style="display:flex;flex-direction:row;width:100%;position: relative;min-height: 200px;min-width: 100%;"
+          class="list-group"
+          tag="ul"
+          v-bind="dragOptions">
+          <template #item="{element}">
+                <div>
+                  <div
+                        :class="['table', element.status]"
+                        :id="'table-' + element.table_id"
+                        style="margin: 0.5rem;"
+                        @click="()=>{
+                          selectTableHandler(element);
+                        }">
+                        <!-- 根據桌子的狀態設置樣式 -->
+                        <div class="tableNum">
+                          <div class="Num">桌號: {{ element.table_id }}</div>
+                        </div>
+                        <div class="staffId">
+                          <div>員工: {{ element.staff_name }}</div>
+                        </div>
+                        <div class="status">
+                          <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                        </div>
+                        <div class="booking">
+                          <div>預訂: {{ element.booking_num }}</div>
+                        </div>
+                        <div class="childSeat">
+                          <div>兒童座: {{ element.has_priorityseat ? '有' : '無' }}</div>
+                        </div>
+                        <div class="Seat">
+                          <div>用餐人數: {{ element.guest_num }}</div>
+                        </div>
+                        <div class="bill">
+                          <div>金額: 0 </div>
+                        </div>
+                  </div>
+                </div>
+            </template>
+          <!-- 顯示每張桌子的內容 -->
+        </draggable>
+    </div>
     <div v-else class="noEditTableArea">
       <!-- 當不處於編輯模式時，僅顯示桌子 -->
-      <div style="display: flex;">
+      <div style="display: flex;min-height: 200px;min-width: 100%;">
         <div
-          v-for="table in tables"
+          v-for="table in this.tables_list1"
           :key="table.table_id"
           :class="['table', table.status]"
           :id="'table-' + table.table_id"
@@ -164,7 +224,7 @@
             <div>員工: {{ table.staff_name }}</div>
           </div>
           <div class="status">
-                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": table.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
           <div class="booking">
             <div>預訂: {{ table.booking_num }}</div>
@@ -174,12 +234,83 @@
           </div>
           <div class="Seat">
             <div>用餐人數: {{ table.guest_num }}</div>
+          </div>
+          <div class="bill">
+            <div>金額: 0 </div>
           </div>
         </div>
       </div>
-      <div style="display: flex;flex-direction: column;">
+      <div style="display: flex;flex-direction: row;">
+        <div style="display: flex;flex-direction: column;justify-content: space-between;min-height: 200px;min-width: 70%;">
+              <div
+                v-for="table in tables_list2"
+                :key="table.table_id"
+                :class="['table', table.status]"
+                :id="'table-' + table.table_id"
+                @click="()=>{
+                            selectTableHandler(table);
+                          }"
+                >
+                <div class="tableNum">
+                  <div class="Num">桌號: {{ table.table_id }}</div>
+                </div>
+                <div class="staffId">
+                  <div>員工: {{ table.staff_name }}</div>
+                </div>
+                <div class="status">
+                            <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": table.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                          </div>
+                <div class="booking">
+                  <div>預訂: {{ table.booking_num }}</div>
+                </div>
+                <div class="childSeat">
+                  <div>兒童座: {{ table.has_priorityseat ? '有' : '無' }}</div>
+                </div>
+                <div class="Seat">
+                  <div>用餐人數: {{ table.guest_num }}</div>
+                </div>
+                <div class="bill">
+                  <div>金額: 0 </div>
+                </div>
+              </div>
+        </div>
+        <div style="display: flex;flex-direction: column;justify-content: space-between;min-height: 200px;min-width: 70%;">
+              <div
+                v-for="table in tables_list3"
+                :key="table.table_id"
+                :class="['table', table.status]"
+                :id="'table-' + table.table_id"
+                @click="()=>{
+                            selectTableHandler(table);
+                          }"
+                >
+                <div class="tableNum">
+                  <div class="Num">桌號: {{ table.table_id }}</div>
+                </div>
+                <div class="staffId">
+                  <div>員工: {{ table.staff_name }}</div>
+                </div>
+                <div class="status">
+                            <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": table.table_status == 2 ?"已預約" :"帶位中"}}</div>
+                          </div>
+                <div class="booking">
+                  <div>預訂: {{ table.booking_num }}</div>
+                </div>
+                <div class="childSeat">
+                  <div>兒童座: {{ table.has_priorityseat ? '有' : '無' }}</div>
+                </div>
+                <div class="Seat">
+                  <div>用餐人數: {{ table.guest_num }}</div>
+                </div>
+                <div class="bill">
+                  <div>金額: 0 </div>
+                </div>
+              </div>
+        </div>
+      </div>
+      <div style="display: flex;min-height: 200px;min-width: 100%;">
         <div
-          v-for="table in tables_list2"
+          v-for="table in tables_list4"
           :key="table.table_id"
           :class="['table', table.status]"
           :id="'table-' + table.table_id"
@@ -194,7 +325,7 @@
             <div>員工: {{ table.staff_name }}</div>
           </div>
           <div class="status">
-                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": table.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
           <div class="booking">
             <div>預訂: {{ table.booking_num }}</div>
@@ -205,44 +336,19 @@
           <div class="Seat">
             <div>用餐人數: {{ table.guest_num }}</div>
           </div>
-        </div>
-    </div><div style="display: flex;">
-        <div
-          v-for="table in tables_list3"
-          :key="table.table_id"
-          :class="['table', table.status]"
-          :id="'table-' + table.table_id"
-          @click="()=>{
-                      selectTableHandler(table);
-                    }"
-          >
-          <div class="tableNum">
-            <div class="Num">桌號: {{ table.table_id }}</div>
-          </div>
-          <div class="staffId">
-            <div>員工: {{ table.staff_name }}</div>
-          </div>
-          <div class="status">
-                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": "已預約"}}</div>
-                    </div>
-          <div class="booking">
-            <div>預訂: {{ table.booking_num }}</div>
-          </div>
-          <div class="childSeat">
-            <div>兒童座: {{ table.has_priorityseat ? '有' : '無' }}</div>
-          </div>
-          <div class="Seat">
-            <div>用餐人數: {{ table.guest_num }}</div>
+          <div class="bill">
+            <div>金額: 0 </div>
           </div>
         </div>
+      </div>
     </div>
-    </div>
-    
   </div>
-  <div style="width: 50%;">
+  <div v-if="this.isEditTable" style="width: 30%;">
       <form class="input_add_table" >
-        <h2>你編輯的桌位如下：</h2>
-        <h2>桌號：{{ input_table.table_id == 0? "未選擇": input_table.table_id }}</h2>
+        <div style="display: flex; justify-content: space-between;align-items: center">
+          <h2>桌號：{{ input_table.table_id == "#"? "未選擇": input_table.table_id }}</h2>
+          <button @click="cancelEditTable" style="border: none;background-color: unset;cursor: pointer;"><img src="../../assets/delete.png" width="20vw" height="20vw"/></button>
+        </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
           <h5>員工：</h5>
           <select v-model="input_table.staff_id">
@@ -274,6 +380,7 @@
             <option :value="0">空位</option>
             <option :value="1">使用中</option>
             <option :value="2">已預約</option>
+            <option :value="3">帶位中</option>
           </select>
         </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
@@ -287,7 +394,7 @@
         <div style="display: flex; justify-content: space-between;align-items: center">
           <h5>用餐區：</h5>
           <select v-model="input_table.table_area">
-            <option v-for="table_area in table_area_list" :value="table_area">{{table_area}}</option>
+            <option v-for="table_area in this.nav_item_list" :value="table_area">{{table_area}}</option>
           </select>
         </div>
         <div style="display: flex; width: 100%; justify-content: space-between">
@@ -314,7 +421,7 @@
   <div style="display: flex;align-items:start;justify-content: space-between;">
     <div id="add_app">
     <draggable
-      v-if="isEditing"
+      v-if="this.isEditing"
       v-model="add_table_list"
       animation="300"
       @start="onStart"
@@ -322,8 +429,7 @@
       style="display: flex;min-height: 200px;min-width: 200px;"
       class="list-group"
       tag="ul"
-      :group="group_add_table_list"
-      v-bind="dragOptions">
+      :group="group_add_table_list">
       <!-- 顯示每張桌子的內容 -->
         <template #item="{element}">
             <div>
@@ -339,7 +445,7 @@
                       <div>員工: {{ element.staff_name }}</div>
                     </div>
                     <div class="status">
-                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ element.table_status==0 ? "空位": element.table_status==1 ? "使用中": element.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
                     <div class="booking">
                       <div>預訂: {{ element.booking_num }}</div>
@@ -373,7 +479,7 @@
             <div>員工: {{ table.staff_name }}</div>
           </div>
           <div class="status">
-                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": "已預約"}}</div>
+                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": table.table_status == 2 ?"已預約" :"帶位中"}}</div>
                     </div>
           <div class="booking">
             <div>預訂: {{ table.booking_num }}</div>
@@ -394,28 +500,34 @@
   
   <script>
   import draggable from "vuedraggable";
-  import { onMounted } from "vue"; // 導入 vuedraggable 用於實現拖曳功能
+  import Swal from "sweetalert2";
+    // 導入 vuedraggable 用於實現拖曳功能
   export default {
     components: {
       draggable // 將 draggable 組件套用在此vue上
     },
+    props:{
+      nav_item_list:[],
+      selected_item:"",
+    },
     data() {
       return {
+        isTable_Change_count:0,
+        tables_list1:[],
         isreload:false,
+        isEditTable:false,
         table_count:0,
-        table_area_list:["一般區","貴賓區"],
-        input_table:{table_id:0},
-        target_table:{table_id:0},
+        input_table:{table_id:"#"},
+        target_table:{table_id:"#"},
         isTargetEditing:false,
         isEditing: false, // 判斷是否為編輯模式的變數
         working_staff_list:[],//已上工的員工列表
-        tables: [],
         group_tables:{
           name:"site",
           pull:true,
           put:true
         },
-        select_table:{table_id:0},
+        select_table:{table_id:"#"},
         tables_list2: [],
         group_tables_list2:{
           name:"site",
@@ -434,13 +546,24 @@
           pull:true,
           put:true
         },
+        tables_list4:[],
+        group_tables_list4:{
+          name:"site",
+          pull:true,
+          put:true
+        },
       };
     },
     methods: {
+      cancelEditTable(){
+        this.isEditTable = false;
+      },
       async postTableHandler(){
-        if(this.input_table.table_id == 0){
-          alert("你沒有選擇桌位!請選擇桌位後再編輯");
-          return;
+        if(this.input_table.table_id == "#"){
+          Swal.fire({title:"你沒有選擇桌位！請選擇桌位後再編輯",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'error',iconColor:"#00c5c8"})
+            return;
         }
         this.input_table.status = (this.input_table.table_status=== 0 ? "available":this.input_table.table_status=== 1 ? "in-use" :"reserved");
         let table_json = {};
@@ -455,9 +578,7 @@
         table_json["guest_name"] =this.input_table["guest_name"];
         table_json["guest_phone"] =this.input_table["guest_phone"];
         table_json["guest_num"] = this.input_table["guest_num"];
-        
-        console.log(table_json);
-        if(this.input_table["table_id"] == "#"){
+        if(this.input_table["table_id"] == 0){
           //新增時使用POST
           table_json["table_id"] = 0;
           try {
@@ -472,8 +593,13 @@
               throw new Error("Network response was not ok");
             }else{
               const data = await response.json();
-              alert(`新增桌號：${data["table_id"]} 成功！`);
-              window.location.reload();
+              Swal.fire({title:`新增桌號： ${data["table_id"]} 成功！`,showConfirmButton:true,
+              confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+              icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+                if(res.isConfirmed){
+                  window.location.reload();
+                }
+              })
             }
           } catch (error) {
             console.error("Error fetching table data:", error);
@@ -492,8 +618,13 @@
             if (!response.ok) {
               throw new Error("Network response was not ok");
             }else{
-              alert(`編輯桌號：${table_json["table_id"]} 成功！`);
-              window.location.reload();
+              Swal.fire({title:`編輯桌號： ${table_json["table_id"]} 成功！`,showConfirmButton:true,
+              confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+              icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+                if(res.isConfirmed){
+                  window.location.reload();
+                }
+              })
             }
           } catch (error) {
             console.error("Error fetching table data:", error);
@@ -513,14 +644,20 @@
           if (!response.ok) {
             throw new Error("Network response was not ok");
           }else{
-            alert("刪除成功！");
-            window.location.reload();
+            Swal.fire({title:`刪除桌號： ${this.input_table.table_id} 成功！`,showConfirmButton:true,
+              confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+              icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+                if(res.isConfirmed){
+                  window.location.reload();
+                }
+              })
           }
         } catch (error) {
           console.error("Error fetching table data:", error);
         }
       },
       selectTableHandler(table){
+        this.isEditTable = true;
         if(this.isTargetEditing){
           this.target_table =table;
         }else{
@@ -528,6 +665,8 @@
         }
         this.input_table = table;
         console.log(this.input_table);
+        this.$emit("selected_table",this.select_table);
+        this.$emit("selected_target_table",this.target_table);
       },
      async addTableHandler(){
         let add_table = {};
@@ -544,11 +683,15 @@
         add_table.guest_phone="";
         add_table.lastmodified_staff_id=this.working_staff_list[0].staff_id;
         add_table.table_area = "一般區";
-        add_table.table_id = "#"
+        add_table.table_id = 0;
         this.add_table_list.push(add_table);
+      },
+      openEditTable(){
+
       },
       toggleEdit(e) {
         this.isEditing = !this.isEditing;
+        console.log(this.isEditing);
         if(this.isEditing){
           e.target.className="btn_adjust_table";
         }else{
@@ -565,27 +708,37 @@
         }
 
       },
+      async getTables(){
+        let selected_title_item ="一般區";
+        if(sessionStorage.getItem("selected_item")){
+          selected_title_item = sessionStorage.getItem("selected_item");
+        }
+        try {
+            const response = await fetch("http://localhost:8080/table");
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            let tables = data.map((table, i) => ({
+              ...table,
+              //0:空位、1:使用中、2:已預約、3:帶位中
+              status:
+                table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" :table.table_status === 2 ?"reserved":"take"
+            }));
+            sessionStorage.setItem("tables",JSON.stringify(tables));
+            this.tables_list1 = data.map((table, i) => ({
+              ...table,
+              //0:空位、1:使用中、2:已預約、3:帶位中
+              status:
+                table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" :table.table_status === 2 ?"reserved":"take"
+            })).filter((item)=>{ return item["table_area"] == selected_title_item});
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+      },
       saveTableOrder() {
         // 保存新的桌子排序
         console.log("新的桌子順序:", this.tables);
-      },
-      async fetchTables() {
-        try {
-          const response = await fetch("http://localhost:8080/table");
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          const data = await response.json();
-          this.tables = data.map((table, i) => ({
-            ...table,
-            //0:空位、1:使用中、2:已預約
-            status:
-              table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" : "reserved",
-          }));
-          this.table_count =this.tables.length;
-        } catch (error) {
-          console.error("Error fetching table data:", error);
-        }
       },
       async fetchWorkingStaffs(){
         try {
@@ -618,7 +771,7 @@
       },
     },
     created() {
-      this.fetchTables();
+      this.getTables();
       this.fetchWorkingStaffs();
     },
   };
@@ -643,6 +796,9 @@
   .reserved {
     background-color: #f4a261;
   }
+  .take{
+    background-color: #ddce4a;
+  }
 
   #app {
     width: 100%;
@@ -662,13 +818,16 @@
     .status{
       width: 100%;
       display: flex;
+      font-size: 2rem;
+      justify-content: center;
       align-items: center;
       color: white;
       font-size: 1.5rem;
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
     }
-    .staffId,.booking,.time,.childSeat,.Seat{
+    .staffId,.booking,.time,.childSeat,.Seat,.bill{
+      font-size: 1rem;
       width: 100%;
       display: flex;
       justify-content: start;
@@ -717,17 +876,17 @@
     color:#00c5c8;
     border:2px solid #00c5c8;
     div{
-      margin-top:1rem;
-      margin-bottom: 1rem;
+      margin-top: 0.5rem;
+      height: 8vh;
       select,input{
         width:55%;
-        font-size: 2rem;
+        font-size: 1.5rem;
         background-color: white;
         border: 1px solid black;
       }
       h5{
         font-size: 1.5rem;
-        font-weight: 400;
+        font-weight: bold;
       } 
     } 
   }
@@ -904,6 +1063,10 @@
     margin-left: 5px;
     text-align: center;
     cursor: pointer;
+}
+.swal_selected_table{
+  color: #00c5c8;
+  font-size: 5rem;
 }
   </style>
   

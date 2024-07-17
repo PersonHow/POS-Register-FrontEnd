@@ -210,6 +210,17 @@ export default {
 </template>
 
 <style scoped lang="scss">
+*{
+  box-sizing: border-box;
+  background-color: unset;
+  color:unset;
+  border:unset;
+}
+:active{
+  background-color: unset;
+  color:unset;
+  border:unset;
+}
 /* 表單元素樣式設定 */
 input,
 textarea,
@@ -256,22 +267,16 @@ textarea:hover {
 
 /* 整體表單容器樣式 */
 .bf-container {
-  display: flex; /* 使用Flex布局 */
-  justify-content: center; /* 水平置中 */
-  align-items: center; /* 垂直置中 */
+  display: flex; /* 使用Flex布局 */ /* 水平置中 */ /* 垂直置中 */
   width: 100%; /* 寬度佔滿父元素的100% */
   min-height: 100vh; /* 最小高度為視窗高度的100% */
   overflow-y: auto; /* 垂直溢出時顯示滾動條 */
-  padding: 20px 16px; /* 內間距為20px上下，16px左右 */
+ /* 內間距為20px上下，16px左右 */
 
   /* 表單主體樣式 */
-  .bf-body {
-    width: 500px; /* 表單主體寬度為500px */
+  .bf-body { /* 表單主體寬度為500px */
     background-color: white; /* 白色背景 */
-    padding: 20px; /* 內間距為20px */
     border-radius: 8px; /* 圓角為8px */
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* 淡淡的陰影 */
-
     /* 表單內容盒子樣式 */
     .bf-body-box {
       padding: 10px; /* 內間距為10px */

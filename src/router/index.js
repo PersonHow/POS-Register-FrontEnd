@@ -1,13 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-
+import Swal from "sweetalert2";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
       name: "home",
-      component: HomeView,
+      component: import("../views/HomeView.vue"),
     },
     {
       path: "/table",
@@ -22,13 +21,18 @@ const router = createRouter({
     {
       path: "/workingarea",
       name: "workingarea",
-      component: () => import("../views/WorkingAreaView.vue"),
+      component: () => import("../views/KitchenPage.vue"),
     },
     {
-      path: "/BillPage",
+      path: "/BillPage/:orderId",
       name: "BillPage",
       component: () => import("../views/BillPage.vue"),
     },
+    // {
+    //   path: "/AllBillPage",
+    //   name: "AllBillPage",
+    //   component: () => import("../views/AllBillPage.vue"),
+    // },
     {
       path: "/calendar",
       name: "calendar",
@@ -40,12 +44,27 @@ const router = createRouter({
       component: () => import("../views/MenuManage.vue"),
     },
     {
+      path: "/reserve",
+      name: "reserve",
+      component: () => import("../views/ReservationPage.vue"),
+    },
+    {
       path: "/logout",
       name: "logout",
       component: () => {
         sessionStorage.removeItem("token");
-        alert("登出成功！");
-        window.location.replace("/");
+        Swal.fire({
+          title: "登出成功！",
+          showConfirmButton: true,
+          confirmButtonColor: "#00c5c8",
+          confirmButtonText: "確定",
+          icon: "success",
+          iconColor: "#00c5c8",
+        }).then((res) => {
+          if (res.isConfirmed) {
+            window.location.replace("/");
+          }
+        });
       },
     },
   ],

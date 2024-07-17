@@ -64,7 +64,6 @@ export default {
             </label>
         </div>
         <ul>
-            <li>發票號碼設定</li>
             <div class="invoiceHistoryFunArea">
                 <li>當天結帳紀錄</li>
                 <button @click="showMoreBills" v-if="hasMoreBills">查看更多</button>
@@ -105,19 +104,17 @@ export default {
 <style scoped lang="scss">
 .navArea {
     position: fixed;
-    height: 85.3%;
-    top: 0;
-    width: 40%;
-    right: -42%;
+    height: 100%;
+    width: 35%;
+    right: -40%;
     overflow: hidden;
     background: white;
     border-left: 5px solid #00c1ca;
     border-bottom: 5px solid #00c1ca;
     transition: 0.3s ease;
     opacity: 90%;
-    z-index: 2;
-    padding: 2dvh 3dvw;
-    overflow: scroll;
+    z-index: 1;
+    padding: 2dvh 2.5dvw;
 
     &.active {
         right: 0;
@@ -129,7 +126,7 @@ export default {
         padding-top: 1dvh;
 
         label {
-            width: 20%;
+            width: 8%;
             height: 30px;
             display: flex !important;
             align-items: center;

@@ -4,6 +4,7 @@ export const useBillstore = defineStore("Billstore", {
   state: () => ({
     // 暫存
     order_amount: null,
+    orderAmountfromPage:null,
     serviceFee: 10, // 預設服務費10%
     entertain: 0,
     discount: 0,
@@ -15,12 +16,14 @@ export const useBillstore = defineStore("Billstore", {
     ],
     memo: [],
     newInputEvent: "", // 新增其他付款方式用
-    showHandInvArea: false,
+    showHandInvArea: false, //show手開
     showRightNav: false,
+    showVehiArea: false, // show載具
+    showBusiNumInput: false, //show統編
     focusedInput: null, // 根據當下點擊的 input 給值
     showOrderArea: true,
-    order_id: "#06", // 要改
-    invoiceNum: "AB07120004", // 要改
+    showLeftNavArea: true, // show發票左導覽列
+    invoiceNum: "", // 
     lastFiveBills: [], // 近5筆紀錄
     allbills: [],
     // changeAmountforshouw: 0,
@@ -29,7 +32,15 @@ export const useBillstore = defineStore("Billstore", {
     todayCreateBillsOrderDetail: [], // 今日已結的所有order內容
     chargedTodayBills: [], // 今日已結的bills
     todayCreateBillsOrderId: [], // 今日已結bills的order_id
-    newChargedTodayBills:[]
+    newChargedTodayBills: [],
+    bill_id: "",
+    theLastBill: "",
+    handInvoiceInput: "",
+    handUniformNum:"",
+    changeShow: "A",
+    OrderDB: [], // 從DB抓的
+    mobileBarcode:"",
+    uniformNum:""
   }),
   getters: {
     // ----取值區----
@@ -38,14 +49,14 @@ export const useBillstore = defineStore("Billstore", {
       const discountPersent = (100 - state.discount) / 100;
       const servicePersent = (100 + state.serviceFee) / 100;
       return (
-        state.order_amount * discountPersent * servicePersent -
+        state.orderAmountfromPage * discountPersent * servicePersent -
         state.entertain -
         state.allowance
       ).toFixed(2);
     },
     // 計算機-找零
     changeAmount(state) {
-      return (state.realChargeAmount - state.totalAmount).toFixed(2);
+      return (state.realChargeAmount - state.totalAmount)
     },
     // 計算機-實收
     realChargeAmount(state) {
@@ -53,6 +64,7 @@ export const useBillstore = defineStore("Billstore", {
     },
     // 計算機-未收
     notyetChargeAmount(state) {
+
       if (state.totalAmount > state.realChargeAmount) {
         return (state.totalAmount - state.realChargeAmount).toFixed(2);
       } else {
@@ -60,10 +72,10 @@ export const useBillstore = defineStore("Billstore", {
       }
     },
     discountAmount(state) {
-      return (state.order_amount * state.discount) / 100;
+      return (state.orderAmountfromPage * state.discount) / 100;
     },
     serviceAmount(state) {
-      return state.order_amount * (state.serviceFee / 100);
+      return state.orderAmountfromPage * (state.serviceFee / 100);
     },
   },
   actions: {
@@ -148,9 +160,11 @@ export const useBillstore = defineStore("Billstore", {
       pOther,
       invNum,
       cTime,
-      pId,
+      pId, // 登入員工編號
       upTime,
-      pOtherName
+      pOtherName,
+      mobileBarcode, // 載具
+      uniformNum, // 統編
     ) {
       let saveObj = {
         bill_id: bId,
@@ -163,7 +177,10 @@ export const useBillstore = defineStore("Billstore", {
         lastmodified_staff_id: pId,
         lastmodified_time: upTime,
         memo: pOtherName,
+        mobile_barcode: mobileBarcode,
+        uniform_numbers: uniformNum
       };
+      console.log(saveObj);
       fetch("http://localhost:8080/bill/create", {
         method: "post",
         headers: {
@@ -188,10 +205,21 @@ export const useBillstore = defineStore("Billstore", {
     setPaymentOther(value) {
       this.payment_other = value;
     },
-
-    // show HandInvoiceArea
+    // show showHandInvArea
     showHandInvoiceArea() {
       this.showHandInvArea = !this.showHandInvArea;
+    },
+    // show showVehicleArea
+    showVehicleArea() {
+      this.showVehiArea = !this.showVehiArea;
+    },
+    // show showBuniNumArea
+    showBuniNumArea() {
+      this.showBusiNumInput = !this.showBusiNumInput;
+    },
+    // show showInvoiceLeftNavArea
+    showInvoiceLeftNavArea() {
+      this.showLeftNavArea = !this.showLeftNavArea;
     },
     // 調出所有 bills & 當日的 bills
     async getAllBillsAndTodayBills() {
@@ -210,6 +238,8 @@ export const useBillstore = defineStore("Billstore", {
             // 未用 只取近5筆記錄
             // this.lastFiveBills = data.slice(-5).reverse();
             // console.log(this.lastFiveBills);
+            this.theLastBill = this.allbills[this.allbills.length - 1];
+            // console.log(this.theLastBill);
 
             const now = new Date();
             const today = new Date(
@@ -282,7 +312,7 @@ export const useBillstore = defineStore("Billstore", {
           }
         });
         // console.log(this.todayCreateBillsOrderId);
-        console.log(this.chargedTodayBills);
+        // console.log(this.chargedTodayBills);
         // console.log(this.chargedOrders);
         // 取出 todayCreateBillsOrderId 的 order_id 的 order 內容
         for (let orderId of this.todayCreateBillsOrderId) {
@@ -304,12 +334,17 @@ export const useBillstore = defineStore("Billstore", {
             console.error("Fetching order detail is error!!");
           }
         }
-        console.log(this.todayCreateBillsOrderDetail);
-        
+        // console.log(this.todayCreateBillsOrderDetail);
+
         return this.todayCreateBillsOrderDetail;
       } catch (error) {
         console.error("Try is error!!");
       }
+    },
+    // 切換發票設定頁的components
+    changeStep(step) {
+      console.log("前往Compnent:", step);
+      this.changeShow = step;
     },
   },
 });
