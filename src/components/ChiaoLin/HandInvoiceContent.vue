@@ -1,6 +1,6 @@
 <script>
-import { useBillstore } from '../../stores/BillStore';
-
+import { useBillstore } from '@/stores/BillStore';
+import { mapState, mapActions } from 'pinia';
 export default {
     setup(){
         const Billstore = useBillstore();
@@ -11,6 +11,7 @@ export default {
         };
     },
     methods: {
+        closeShow() {
         closeShow() {
             this.$emit('close');
         },
@@ -42,9 +43,11 @@ export default {
 
 <style scoped lang="scss">
 .showBack {
+.showBack {
     position: fixed;
     top: 0;
     left: 0;
+    width: 100%;
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
@@ -55,6 +58,7 @@ export default {
     font-weight: 500;
 }
 
+.showBox {
 .showBox {
     background: white;
     padding: 20px;

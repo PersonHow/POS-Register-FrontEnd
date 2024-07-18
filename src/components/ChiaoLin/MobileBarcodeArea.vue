@@ -10,8 +10,16 @@ export default {
             ...mapState(Billstore, ['mobileBarcode']),
         }
     },
+    setup(){
+        const Billstore = useBillstore();
+        return {
+            Billstore,
+            ...mapState(Billstore, ['mobileBarcode']),
+        }
+    },
     data() {
         return {
+            
             
         };
     },
@@ -30,6 +38,7 @@ export default {
                 <p>載&nbsp;&nbsp;&nbsp;&nbsp;具</p>
             </div>
             <div class="inputArea">
+                <input type="text" placeholder="請輸入載具號碼" v-model="this.Billstore.mobileBarcode">
                 <input type="text" placeholder="請輸入載具號碼" v-model="this.Billstore.mobileBarcode">
             </div>
             <div class="butArea">

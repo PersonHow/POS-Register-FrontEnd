@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-dialog max-width="50%">
+    <v-dialog max-width="50%" style="z-index: 2;">
       <template v-slot:activator="{ props: activatorProps }">
-        <v-btn v-bind="activatorProps" color="#00c5c8" variant="flat"><p style="color: white;font-size: 1.5rem;vertical-alig:center;text-align: center;">換桌</p></v-btn>
+        <button v-bind="activatorProps"class="template_dialog_btn">換桌</button>
       </template>
 
       <template v-slot:default="{ isActive }" class="template_dialog">
@@ -44,17 +44,14 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-              color="#00c5c8"
-              variant="flat"
+            <button
               @click="btnHandler"
-              style="font-size: 1rem;color: white;"
-            >確認</v-btn>
-            <v-btn
-              text="返回"
-              variant="text"
+              class="click_btn"
+            >確認</button>
+            <button
               @click="isActive.value = false"
-            ></v-btn>
+              class="cancel_btn"
+            >取消</button>
           </v-card-actions>
         </v-card>
       </template>
@@ -62,6 +59,41 @@
   </div>
 </template>
   <style lang="scss" scoped>
+  .click_btn{
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    color: white;
+    border-radius: 0.5rem;
+    background-color: #00c5c8;
+    &:hover{
+      background-color: #00a0a3;
+      cursor: pointer;
+    }
+  }
+  .cancel_btn{
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-left: 1rem;
+    color: black;
+    background-color: rgb(211, 211, 211);
+    &:hover{
+      background-color: #e0e0e0;
+      cursor: pointer;
+    }
+  }
+  .template_dialog_btn{
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+    background-color: unset;
+    &:hover{
+      background-color: #00c5c8;
+      cursor: pointer;
+    }
+  }
   div.dialog{
     display: flex;
     flex-direction: column;
@@ -75,8 +107,8 @@
     min-width: 100%;
     align-items: center;
       .tables_body{
-        min-width: 45%;
-        min-height: 40vh;
+        min-width: 40%;
+        min-height: 50vh;
         border: 2px solid #00c5c8;
         padding: 1rem;
         border-radius: 1rem;
@@ -97,11 +129,8 @@
  
 </style>
 <script>
+ import Swal from "sweetalert2";
 export default{
-  data(){
-    return {
-    }
-  },
   props:{
     selected_table:Object,
     selected_target_table:Object
@@ -109,7 +138,10 @@ export default{
   methods:{
     async btnHandler(){
       if(this.selected_table.table_id =="#" || this.selected_target_table.table_id=="#"){
-        alert("你尚未選擇桌位！請重新選擇桌位或是提交桌位再換桌");
+            Swal.fire({title:"你尚未選擇桌位！請重新選擇桌位再換桌",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'error',iconColor:"#00c5c8"})
+            return;
       }else{
         let temp_selected_table_id = this.selected_table.table_id;
         this.selected_table.table_id = this.selected_target_table.table_id;
@@ -167,8 +199,14 @@ export default{
           } catch (error) {
             console.error("Error fetching table data:", error);
         }
-        alert("換桌成功！");
-        window.location.reload();
+        Swal.fire({title:"換桌成功！",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+              if(res.isConfirmed){
+                window.location.reload();
+              }
+            })
+        
       }
     }
   }

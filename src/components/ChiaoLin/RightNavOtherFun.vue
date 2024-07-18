@@ -64,7 +64,6 @@ export default {
             </label>
         </div>
         <ul>
-            <li>發票號碼設定</li>
             <div class="invoiceHistoryFunArea">
                 <li>當天結帳紀錄</li>
                 <button @click="showMoreBills" v-if="hasMoreBills">查看更多</button>
@@ -127,7 +126,7 @@ export default {
         padding-top: 1dvh;
 
         label {
-            width: 20%;
+            width: 8%;
             height: 30px;
             display: flex !important;
             align-items: center;

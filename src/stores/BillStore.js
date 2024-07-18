@@ -16,8 +16,10 @@ export const useBillstore = defineStore("Billstore", {
     ],
     memo: [],
     newInputEvent: "", // 新增其他付款方式用
-    showHandInvArea: false,
+    showHandInvArea: false, //show手開
     showRightNav: false,
+    showVehiArea: false, // show載具
+    showBusiNumInput: false, //show統編
     focusedInput: null, // 根據當下點擊的 input 給值
     showOrderArea: true,
     showLeftNavArea: true, // show發票左導覽列
@@ -207,10 +209,21 @@ export const useBillstore = defineStore("Billstore", {
     setPaymentOther(value) {
       this.payment_other = value;
     },
-
-    // show HandInvoiceArea
+    // show showHandInvArea
     showHandInvoiceArea() {
       this.showHandInvArea = !this.showHandInvArea;
+    },
+    // show showVehicleArea
+    showVehicleArea() {
+      this.showVehiArea = !this.showVehiArea;
+    },
+    // show showBuniNumArea
+    showBuniNumArea() {
+      this.showBusiNumInput = !this.showBusiNumInput;
+    },
+    // show showInvoiceLeftNavArea
+    showInvoiceLeftNavArea() {
+      this.showLeftNavArea = !this.showLeftNavArea;
     },
     // 調出所有 bills & 當日的 bills
     async getAllBillsAndTodayBills() {
@@ -311,6 +324,7 @@ export const useBillstore = defineStore("Billstore", {
         });
         // console.log(this.todayCreateBillsOrderId);
         // console.log(this.chargedTodayBills);
+        // console.log(this.chargedTodayBills);
         // console.log(this.chargedOrders);
         // 取出 todayCreateBillsOrderId 的 order_id 的 order 內容
         for (let orderId of this.todayCreateBillsOrderId) {
@@ -332,11 +346,17 @@ export const useBillstore = defineStore("Billstore", {
             console.error("Fetching order detail is error!!");
           }
         }
-        console.log(this.todayCreateBillsOrderDetail);
+        // console.log(this.todayCreateBillsOrderDetail);
+
         return this.todayCreateBillsOrderDetail;
       } catch (error) {
         console.error("Try is error!!");
       }
+    },
+    // 切換發票設定頁的components
+    changeStep(step) {
+      console.log("前往Compnent:", step);
+      this.changeShow = step;
     },
   },
 });

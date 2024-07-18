@@ -9,6 +9,8 @@ import Swal from "sweetalert2"
 export default {
     data() {
         return {
+            selected_table:{},
+            selected_target_table:{},
             oId: "", //訂單編號
             menu: [], //所有菜單
             meal: { //餐點物件
@@ -59,8 +61,6 @@ export default {
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱
-        window.bootstrap = bootstrap
-        this.orderStore.getOrderInfo() //取得最近五筆送單紀錄
     },
     methods: {
         //取得菜單內餐點
@@ -165,8 +165,8 @@ export default {
             })
             let order = {
                 order_id: this.oId,
-                table_num: this.tableNum,
-                guest_num: this.guestNum,
+                table_num: null,
+                guest_num: null,
                 order_detail: this.orderList,
                 amount: this.orderAmount,
                 memo: this.memo,
@@ -312,6 +312,7 @@ export default {
                     <div class="mealName mt-2">
                         {{ meal.name }}
                     </div>
+                    <!-- <p >NT. {{meal.price}}</p> -->
                 </div>
             </div>
             <form v-show="showMemoInput" class="memo">
@@ -469,7 +470,7 @@ $secondary-color: #FFE2C3;
     .header {
         height: 10vh;
         margin: 0;
-
+        display: flex;
         width: 100%;
         color: #fff;
         padding: 5%;
@@ -584,7 +585,6 @@ $secondary-color: #FFE2C3;
     overflow-x: auto;
     white-space: nowrap;
     display: flex;
-    align-items: center;
     background: rgb(240, 240, 240);
     font-weight: 600;
     font-size: 20px;
@@ -668,7 +668,7 @@ $secondary-color: #FFE2C3;
 .orderQty {
     clip-path: circle(30%);
     position: absolute;
-    top: -30px;
+    top: -45px;
     right: -10%;
     background: #f96c45;
     color: white;

@@ -10,7 +10,7 @@ export default {
             Billstore,
             ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
                 'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount']),
-            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'updateNewInputEventValue', 'updateInputEventValue', 'tothousendShowValue',]),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'updateNewInputEventValue', 'updateInputEventValue', 'tothousendShowValue', 'showVehicleArea', 'showBuniNumArea']),
         };
     },
     components: {
@@ -92,6 +92,7 @@ export default {
                 <p>* 折扣{{ Billstore.discount
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.discountAmount) }}) * 服務費{{ Billstore.serviceFee
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </p>
+                    }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </p>
                 <p>- 招待NT.{{ Billstore.tothousendShowValue(Billstore.entertain) }} - 折讓NT.{{
                     Billstore.tothousendShowValue(Billstore.allowance) }}</p>
             </div>
@@ -160,6 +161,8 @@ export default {
         display: flex;
         justify-content: space-between;
         padding-left: 1dvw;
+        justify-content: space-between;
+        padding-left: 1dvw;
 
         .showInvoiceNumArea,
         .inputShowArea {
@@ -194,7 +197,7 @@ export default {
             height: 4dvh;
             border-radius: 5px;
             border: 1px solid gray;
-            width: 16.5dvw;
+            width: 17dvw;
         }
     }
 
@@ -225,6 +228,7 @@ export default {
                 .amountShowLeftTotal {
                     padding: 1dvh 1dvw;
                     width: 100%;
+                    margin: 1dvh 0;
 
                     .totalAreaAmount {
                         text-align: center;

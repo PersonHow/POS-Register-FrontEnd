@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import Swal from "sweetalert2";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -43,18 +44,28 @@ const router = createRouter({
       component: () => import("../views/MenuManage.vue"),
     },
     {
+      path: "/reserve",
+      name: "reserve",
+      component: () => import("../views/ReservationPage.vue"),
+    },
+    {
       path: "/logout",
       name: "logout",
       component: () => {
         sessionStorage.removeItem("token");
-        alert("登出成功！");
-        window.location.replace("/");
+        Swal.fire({
+          title: "登出成功！",
+          showConfirmButton: true,
+          confirmButtonColor: "#00c5c8",
+          confirmButtonText: "確定",
+          icon: "success",
+          iconColor: "#00c5c8",
+        }).then((res) => {
+          if (res.isConfirmed) {
+            window.location.replace("/");
+          }
+        });
       },
-    },
-    {
-      path: "/AllBillPage",
-      name: "AllBillPage",
-      component: () => import("../views/AllBillPage.vue"),
     },
   ],
 });

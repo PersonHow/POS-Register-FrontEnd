@@ -210,19 +210,30 @@ export default {
 </template>
 
 <style scoped lang="scss">
+*{
+  box-sizing: border-box;
+  background-color: unset;
+  color:unset;
+  border:unset;
+}
+:active{
+  background-color: unset;
+  color:unset;
+  border:unset;
+}
 /* 表單元素樣式設定 */
 input,
 textarea,
 select {
   width: 100%; /* 元素寬度為父元素寬度的100% */
   background-color: #f0f0f0; /* 淺灰色背景 */
-  border: 2px solid #003087; /* 2px 寬度的深藍色邊框 */
+  border: 2px solid black; /* 2px 寬度的深藍色邊框 */
   outline: none; /* 移除預設的外框 */
   padding: 10px; /* 內間距為10px */
   font-family: "Arial", sans-serif; /* 字體為Arial或sans-serif */
   margin-top: 5px; /* 上邊距為5px */
   resize: none; /* 禁止調整大小 */
-  color: #003087; /* 文字顏色為深藍色 */
+  color: black; /* 文字顏色為深藍色 */
   transition: border-color 0.3s ease-in-out; /* 加入邊框顏色變化的過渡效果 */
 }
 
@@ -256,22 +267,17 @@ textarea:hover {
 
 /* 整體表單容器樣式 */
 .bf-container {
-  display: flex; /* 使用Flex布局 */
-  justify-content: center; /* 水平置中 */
-  align-items: center; /* 垂直置中 */
-  width: 100%; /* 寬度佔滿父元素的100% */
-  min-height: 100vh; /* 最小高度為視窗高度的100% */
-  overflow-y: auto; /* 垂直溢出時顯示滾動條 */
-  padding: 20px 16px; /* 內間距為20px上下，16px左右 */
+  margin-top: 10vh;
+  border: 2px solid black;
+  display: flex; /* 使用Flex布局 */ /* 水平置中 */ /* 垂直置中 */
+  align-items: center;
+  justify-content: center;
+ /* 內間距為20px上下，16px左右 */
 
   /* 表單主體樣式 */
-  .bf-body {
-    width: 500px; /* 表單主體寬度為500px */
+  .bf-body { /* 表單主體寬度為500px */
     background-color: white; /* 白色背景 */
-    padding: 20px; /* 內間距為20px */
     border-radius: 8px; /* 圓角為8px */
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* 淡淡的陰影 */
-
     /* 表單內容盒子樣式 */
     .bf-body-box {
       padding: 10px; /* 內間距為10px */
@@ -295,7 +301,7 @@ textarea:hover {
 
 /* 送出按鈕樣式 */
 .bf-col-3 input[type="submit"] {
-  background-color: #003087; /* 深藍色背景 */
+  background-color: #00c5c8;/* 深藍色背景 */
   color: white; /* 文字顏色為白色 */
   border: none; /* 無邊框 */
   padding: 12px 20px; /* 內間距為12px上下，20px左右 */
@@ -311,12 +317,12 @@ textarea:hover {
 /* 標題和段落樣式 */
 h1 {
   font-size: 40px; /* 標題字體大小為40px */
-  color: #003087; /* 文字顏色為深藍色 */
+  color: black; /* 文字顏色為深藍色 */
   margin-bottom: 10px; /* 下邊距為10px */
 }
 
 p {
-  color: #003087; /* 文字顏色為深藍色 */
+  color: black; /* 文字顏色為深藍色 */
   margin-bottom: 10px; /* 下邊距為10px */
 }
 

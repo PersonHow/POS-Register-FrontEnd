@@ -1,116 +1,103 @@
 <template>
-    <div class="container">
-    
-    <div class="topcalendar">
-          <section class="month-names">
-            <span class="month-names2" @click="handlePreMonth">{{ prevMonthName }}</span>
-            <span class="month-names1">{{ currentMonthName }}</span>
-            <span class="month-names3" @click="handleNextMonth">{{ nextMonthName }}</span>
-          </section>
-    
-        <div class="calendar">
-          <section class="header">
-            {{ selectData.year }}年{{ selectData.month }}月{{ selectData.day }}日
-          </section>
-    
-          <ul class="week-area">
-            <li
-          class="week-item"
-            v-for="(item, index) in weekArr"
-            :key="index"
-            :class="[
-              'week-font',
-              { 'highlight-sun': index === 0 },  // 星期日
-              { 'highlight-sat': index === 6 },  // 星期六
-            ]"
-    >
-      {{ item }}
-    </li>
-          </ul>
-          <section
-            ref="calendar"
-            class="data-container"
-            :style="{
-              height: isWeekView ? `${itemHeight + touchAreaHeight}px` : `${lineNum * itemHeight + touchAreaHeight}px`,
-              transitionDuration: `${needHeightAnimation ? transitionDuration : 0}s`,
-            }"
-            @touchstart="touchStart"
-            @touchmove.stop.prevent="touchMove"
-            @touchend="touchEnd"
-          >
-            <section
-              class="month-area"
-              :style="{
-                transform: `translateX(${-(translateIndex + 1) * 100}%)`,
-                transitionDuration: `${needAnimation ? transitionDuration : 0}s`
-              }">
-              <div
-                class="banner-area"
+  <div class="main">
+      <div class="notice"><h2>公告</h2><ul><li>7/19起，因應物價成本，牛排類餐點將不提供免費加麵服務</li></ul></div>
+      <div class="container">
+        <div class="topcalendar">
+              <section class="month-names">
+                <span class="month-names2" @click="handlePreMonth">{{ prevMonthName }}</span>
+                <span class="month-names1">{{ currentMonthName }}</span>
+                <span class="month-names3" @click="handleNextMonth">{{ nextMonthName }}</span>
+              </section>
+        
+            <div class="calendar">
+              <section class="header">
+                {{ selectData.year }}年{{ selectData.month }}月{{ selectData.day }}日
+              </section>
+              <ul class="week-area">
+                <li
+                    class="week-item"
+                      v-for="(item, index) in weekArr"
+                      :key="index"
+                      :class="[
+                        'week-font',
+                        { 'highlight-sun': index === 0 },  // 星期日
+                        { 'highlight-sat': index === 6 },  // 星期六
+                      ]">
+                {{ item }}</li>
+              </ul>
+              <section
+                ref="calendar"
+                class="data-container"
                 :style="{
-                  transform: `translateY(${offsetY}px)`,
-                  transitionDuration: `${needHeightAnimation ? transitionDuration : 0}s`
-                }">
-                <ul
-                  v-for="(monthItem, monthIndex) in allDataArr"
-                  :key="monthIndex"
-                  class="data-area"
+                  height: isWeekView ? `${itemHeight + touchAreaHeight}px` : `${lineNum * itemHeight + touchAreaHeight}px`,
+                  transitionDuration: `${needHeightAnimation ? transitionDuration : 0}s`,
+                }"
+                @touchstart="touchStart"
+                @touchmove.stop.prevent="touchMove"
+                @touchend="touchEnd"
+              >
+                <section
+                  class="month-area"
                   :style="{
-                    transform: `translateX(${(translateIndex + isTouching ? touch.x : 0) * 100}%)`,
-                    transitionDuration: `${isTouching ? 0 : transitionDuration}s`
+                    transform: `translateX(${-(translateIndex + 1) * 100}%)`,
+                    transitionDuration: `${needAnimation ? transitionDuration : 0}s`
                   }">
-                  <li
-                    v-for="(item, index) in monthItem"
-                    :key="index"
-                    :class="[
-                      'data-item',
-                      { 'selected': item.isSelected },
-                      { 'other-item': item.type !== 'normal' && !isWeekView },
-                      { 'current-month': item.month === selectData.month && item.type === 'normal' },
-                    ]"
-                    :style="`height: ${itemHeight}px`"
-                    @click="checkoutDate(item)">
-                    <span class="data-font calendar-item">{{ item.day }}</span>
-                  </li>
-                </ul>
-              </div>
-            </section>
-            <section
-              class="touch-area"
-              :style="`height: ${touchAreaHeight}px; padding-top: ${touchAreaPadding}px;`">
-              <div
-                class="touch-container" 
-                :style="`height: ${touchAreaHeight - touchAreaPadding}px`">
-                <div class="touch-item"></div>
-              </div>
-            </section>
-          </section>
-        </div>
-      </div>
-    
-      <!--CalendarInfo  -->
-    
-      <div class="grid">
-          <div
-            v-for="(info, index) in calendarInfo"
-            :key="index"
-            :class="['card', `card-${index + 1}`]"
-          >
-            <div 
-              :style="{ background: info.is_holiday ? '#880e4f' : 'linear-gradient(90deg, #00c1ca, #01e1c5)' }"
-              class="date-circle"
-            >
-              <div :class="['date', `date-color-${index + 1}`]">{{ info.day }}</div>
-            </div>
-            <div :class="['content', `text-color-${index + 1}`]">
-              <div class="info">
-                {{ info.is_holiday ? '公休日' : (info.booking_count ? `預約客數 ${info.booking_count}組` : info.special_events) }}
-              </div>
-              <div class="staff" v-if="info.manager && !info.is_holiday">值班 {{ info.manager }}</div>
+                  <div
+                    class="banner-area"
+                    :style="{
+                      transform: `translateY(${offsetY}px)`,
+                      transitionDuration: `${needHeightAnimation ? transitionDuration : 0}s`
+                    }">
+                    <ul
+                      v-for="(monthItem, monthIndex) in allDataArr"
+                      :key="monthIndex"
+                      class="data-area"
+                      :style="{
+                        transform: `translateX(${(translateIndex + isTouching ? touch.x : 0) * 100}%)`,
+                        transitionDuration: `${isTouching ? 0 : transitionDuration}s`
+                      }">
+                      <li
+                        v-for="(item, index) in monthItem"
+                        :key="index"
+                        :class="[
+                          'data-item',
+                          { 'selected': item.isSelected },
+                          { 'other-item': item.type !== 'normal' && !isWeekView },
+                          { 'current-month': item.month === selectData.month && item.type === 'normal' },
+                        ]"
+                        :style="`height: ${itemHeight}px`"
+                        @click="checkoutDate(item)">
+                        <span class="data-font calendar-item">{{ item.day }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </section>
+              </section>
             </div>
           </div>
-        </div>
+        <div class="grid">
+              <div
+                v-for="(info, index) in calendarInfo"
+                :key="index"
+                :class="['card', `card-${index + 1}`]"
+              >
+                <div 
+                  :style="{ background: info.is_holiday ? '#880e4f' : 'linear-gradient(90deg, #00c1ca, #01e1c5)' }"
+                  class="date-circle"
+                >
+                  <div :class="['date', `date-color-${index + 1}`]">{{ info.day }}</div>
+                </div>
+                <div :class="['content', `text-color-${index + 1}`]">
+                  <div class="info">
+                    {{ info.is_holiday ? '公休日' : (info.booking_count ? `預約客數 ${info.booking_count}組` : info.special_events) }}
+                  </div>
+                  <div class="staff" v-if="info.manager && !info.is_holiday">值班 {{ info.manager }}</div>
+                </div>
+              </div>
+            </div>
       </div>
-      </template>
+    </div>
+</template>
       
       <script>
       export default {
@@ -119,7 +106,7 @@
           return {
             calendarData: [],
             selectData: {}, // 選中日期資訊 -> year, month, day
-            weekArr: ['S', 'M', 'T', 'W', 'T', 'F', 'S'], // 星期数组
+            weekArr: ['日', '一', '二', '三', '四', '五', '六'], // 星期数组
             dataArr: [], // 当前可视区域数据
             allDataArr: [], // 轮播数组
             isSelectedCurrentDate: false, // 是否点选当前月份信息 (配合月视图减少点击切换时的数组更新)
@@ -277,8 +264,8 @@
     
           getMonthName(month) {
           const monthNames = [
-          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+          '一月', '二月', '三月', '四月', '五月', '六月',
+          '七月', '八月', '九月', '十月', '十一月', '十二月'
         ];
         return monthNames[month - 1]; // month 是從 1 開始的，所以要減去 1
           },
@@ -563,33 +550,26 @@
       <style lang="scss" scoped>
       *{
         font-family: "Chocolate Classical Sans", sans-serif;
+        box-sizing: border-box;
       }
-      .topcalendar{ 
-        width: 500px;
+      .topcalendar{
+        max-width: 40%;
+        max-height: 50vh;
         box-shadow: -3px 3px 3px 3px #949494, 1px 0px 5px 1px #7b7b7b;
         background-color: #ffffff;
-      }
-      .calendar {
-        overflow-x: hidden;
       }
       .month-names{
         background: linear-gradient(90deg, #00c1ca, #01e1c5);
         color: #fff;
         /* border-radius: 10px; */
         text-align: center;
-        position: relative;
-        font-size: 30px;
+        justify-content: space-between;
+        padding: 0.5rem;
+        display: flex;
+        font-size: 1rem;
         transition: transform 0.3s ease;
         .month-names1{
           color: gold;
-        }
-        .month-names2{
-          position: absolute;
-          left: 5%;
-        }
-        .month-names3{
-          position: absolute;
-          right: 5%;
         }
         :hover{
           transform: scale(1.05)
@@ -600,19 +580,19 @@
       }
       
       .header {
-        padding: 0 5px; 
-        font-size: 18px;
+        font-size: 1rem;
         font-weight: 500;
         color: #2b4450;
-        line-height: 44px;
-        margin: 0 calc((14.285% - 40px) / 2 + 6px);
+        line-height: 2rem;
+        margin-left: 2rem;
+        margin-top: 1rem;
       }
       .calendar-item {
         display: block;
-        width: 40px;
-        height: 40px;
+        width: 2rem;
+        height: 2rem;
         text-align: center;
-        line-height: 40px;
+        line-height: 1rem;
       }
       .selected .calendar-item {
         background: #2b4450;
@@ -620,12 +600,12 @@
         color: #fff;
       }
       .week-area {
-        width: 92%;
+        width: 88%;
         display: flex;
+        justify-content: space-between;
       }
       .week-item {
-        height: 45px;
-        flex: 0 0 14.285%;
+        height: 2rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -639,16 +619,15 @@
         }
     
       .week-font {
-        font-size: 15px;
+        font-size: 1rem;
         color: #2b4450;
         font-weight: 500;
       }
       .data-container {
         overflow: hidden;
-        position: relative;
       }
       .banner-area {
-        width: 300%;
+        width: 290%;
         display: flex;
       }
       .data-area {
@@ -672,7 +651,7 @@
       }
       .data-font {
         color: #2b4450;
-        font-size: 18px;
+        font-size: 1rem;
         font-weight: 400;
       }
       .other-item .data-font {
@@ -703,22 +682,51 @@
       }
     
       /* CalendarInfo */
-    
+    .main{
+      display: flex;
+      flex-direction: column;
+      width: 65vw;
+      max-height: 100vh;
+      padding: 0.5rem;
+      background-color: rgb(248, 248, 248); 
+      .notice{
+        font-weight: bold;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 30%;
+        height: 20vh;
+        box-shadow: -3px 3px 3px 3px #949494, 1px 0px 5px 1px #7b7b7b;
+        h2{
+          margin-top: 0;
+          font-weight: 500;
+          background-color: #01e1c5;
+          color:white;
+        }
+        ul{
+          margin-right: 1rem;
+        }
+      }
+    }
       /* 全局樣式 */
     .container {
-      padding-left: 20px;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #ececec; /* 灰色背景 */
+      padding: 0.5rem;
     }
-    
     .grid {
+      margin-top: 1rem;
+      margin-left: 0.5rem;
       display: grid;
-      margin: auto;
-      grid-template-columns: repeat(2, 1fr); /* 兩列佈局 */
-      gap: 20px; /* 控制訊息框之間的距離 */
+      padding: 2rem;
+      overflow-y:scroll; 
+      overflow-x: auto;
+      width: 40vw;
+      grid-template-columns:repeat(2,1fr); /* 兩列佈局 */
+      grid-template-rows: 1f,1fr;
+      gap: 1rem; /* 控制訊息框之間的距離 */
       transition: background-color 0.5s ease;
       transition: transform 0.3s ease;
       :hover{
@@ -735,20 +743,11 @@
       display: flex; /* 使用 flex 布局 */
       align-items: center; /* 垂直居中 */
       padding: 15px;
-      width: 400px; /* 訊息框寬度 */
+      width: 320px; /* 訊息框寬度 */
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 陰影效果 */
       background-color: white; 
     }
-    /*
-    .card-1 { background-color: #ffffff; }
-    .card-2 { background-color: #ffffff; }
-    .card-3 { background-color: #ffffff; }
-    .card-4 { background-color: #ffffff; }
-    .card-5 { background-color: #e0f7fa; }
-    .card-6 { background-color: #ffffff; }
-    .card-7 { background-color: #ffffff; } */
-    
     /* 圓形日期樣式 */
     .date-circle {
       display: flex;
@@ -759,18 +758,10 @@
       border-radius: 50%; /* 圓形效果 */
       margin-right: 15px; /* 與文字之間的間隔 */
     }
-    
-    /* .date-circle-1 { background: linear-gradient(90deg, #00c1ca, #01e1c5); } 
-    .date-circle-2 { background: linear-gradient(90deg, #00c1ca, #01e1c5); } 
-    .date-circle-3 { background-color: #880e4f; }
-    .date-circle-4 { background: linear-gradient(90deg, #00c1ca, #01e1c5); } 
-    .date-circle-5 { background: linear-gradient(90deg, #00c1ca, #01e1c5);}
-    .date-circle-6 { background: linear-gradient(90deg, #00c1ca, #01e1c5); } 
-    .date-circle-7 { background: linear-gradient(90deg, #00c1ca, #01e1c5);} */
-    
+  
     /* 日期數字樣式 */
     .date {
-      font-size: 24px;
+      font-size: 1rem;
       font-weight: bold;
       color: white; /* 預設白色文字 */
     }

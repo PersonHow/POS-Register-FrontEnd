@@ -8,10 +8,21 @@ import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
 import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
 // import { useOrderStore } from '@/stores/OrderStore'
 
+import BillDetail from '@/components/ChiaoLin/BillDetail.vue';
+import AmountDetails from '@/components/ChiaoLin/AmountDetail.vue';
+import Calculator from '@/components/ChiaoLin/Calculator.vue';
+import HandInvoiceContent from '@/components/ChiaoLin/HandInvoiceContent.vue';
+import { useBillstore } from '../stores/BillStore'
+import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
+import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
+// import { useOrderStore } from '@/stores/OrderStore'
+
 export default {
     setup() {
         const Billstore = useBillstore();
         return { Billstore };
+        // const OrderStore = useOrderStore();
+        // return { OrderStore };
         // const OrderStore = useOrderStore();
         // return { OrderStore };
     },
@@ -39,6 +50,17 @@ export default {
         // event 的每個屬性都會覆蓋 this.Billstore 的對應屬性，就可以批量更新 Billstore 的屬性
         updateBillstore(event) {
             Object.assign(this.Billstore, event);
+        },
+    },
+    created(){
+        if(sessionStorage.getItem("token") == null){
+        Swal.fire({title:"你還沒有登入，將轉向登入頁面！",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'error',iconColor:"#00c5c8"}).then((res)=>{
+              if(res.isConfirmed){
+                this.$router.push({name: 'home'});
+              }
+            })
         },
         closeShow() {
             this.$emit('close');
@@ -90,6 +112,7 @@ export default {
 
     .rightArea {
         width: 50%;
+        width: 50%;
 
         .functionButArea {
             display: flex;
@@ -123,6 +146,7 @@ export default {
             label {
                 // border: 1px solid black;
                 height: 8dvh;
+                height: 8dvh;
                 width: 8dvw;
                 cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
                 transition: 0.3s ease;
@@ -132,6 +156,7 @@ export default {
 
                 i {
                     z-index: 1;
+                    line-height: 8dvh;
                     line-height: 8dvh;
                 }
             }

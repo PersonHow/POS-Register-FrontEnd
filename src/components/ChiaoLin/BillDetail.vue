@@ -1,6 +1,7 @@
 <script>
 import { useBillstore } from '@/stores/BillStore'
 import { useOrderStore } from '@/stores/OrderStore'
+import { useOrderStore } from '@/stores/OrderStore'
 import { mapState, mapActions } from 'pinia';
 import { onMounted, watch } from 'vue';
 import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
@@ -8,6 +9,7 @@ import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
 export default {
     setup() {
         const Billstore = useBillstore();
+        const OrderStore = useOrderStore();
         const OrderStore = useOrderStore();
         // event 對應 input, propName 對應 屬性名稱, 
         // event.target.value 當前輸入框的值, parseFloat 將字符串轉換為浮點數，確保輸入值為數字
@@ -17,6 +19,7 @@ export default {
         const enterAddInputValue = (event) => {
             Billstore.newInputEvent = event.target.value;
         };
+
 
 
         // 避免切換分頁 inputEvent 刷新
@@ -39,6 +42,7 @@ export default {
 
         return {
             Billstore,
+            OrderStore,
             OrderStore,
             updateValue,
             enterAddInputValue,
@@ -110,6 +114,7 @@ export default {
 
 <template>
     <div class="allArea">
+    <div class="allArea">
         <div class="showOrderId">
             <div style="width: 20%;">結帳單號</div>
             <div style="width: 40%;">{{ this.showBillId }}</div>
@@ -177,6 +182,7 @@ export default {
     font-family: "Chocolate Classical Sans", sans-serif;
 
     .titleArea {
+    .titleArea {
         margin: 2dvh 0;
         margin-bottom: 3dvh;
         padding-left: 2.5dvw;
@@ -217,6 +223,7 @@ export default {
             cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
             transition: 0.3s ease;
             z-index: 99; // 使其圖層絕對在最上方
+            z-index: 99; // 使其圖層絕對在最上方
             display: flex;
             justify-content: center;
 
@@ -224,6 +231,8 @@ export default {
                 z-index: 1;
                 line-height: 8dvh;
             }
+
+            span {
 
             span {
                 font-size: 2.25dvh;
