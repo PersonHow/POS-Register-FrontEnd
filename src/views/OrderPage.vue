@@ -62,6 +62,12 @@ export default {
         window.bootstrap = bootstrap
         this.orderStore.getOrderInfo() //取得最近五筆送單紀錄
     },
+    onMounted(){
+        if(!JSON.parse(sessionStorage.getItem("token"))){
+            alert("你還沒有登入，將轉向登入頁面！")
+            window.location.replace("/");
+        }
+    },
     methods:{
         //取得菜單內餐點
         getMenu(){
@@ -456,7 +462,7 @@ $secondary-color: #FFE2C3;
     .header{
         height: 10vh;
         margin: 0;
-
+        display: flex;
         width: 100%;
         color: #fff;
         padding: 5%;

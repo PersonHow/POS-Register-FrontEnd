@@ -17,9 +17,6 @@ export default {
         const enterAddInputValue = (event) => {
             Billstore.newInputEvent = event.target.value;
         };
-
-
-
         // 避免切換分頁 inputEvent 刷新
         // 在 onMounted 生命週期時從 localStorage 中恢復 newInputEvent 的值
         onMounted(() => {

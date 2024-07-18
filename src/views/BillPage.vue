@@ -93,6 +93,7 @@ export default {
         </div>
         <div v-if="Billstore.showHandInvArea">
             <HandInvoiceContent @close="Billstore.showHandInvoiceArea" />
+
         </div>
         <!-- <LeftNavEditOrder /> -->
         <!-- <RightNavOtherFun /> -->
