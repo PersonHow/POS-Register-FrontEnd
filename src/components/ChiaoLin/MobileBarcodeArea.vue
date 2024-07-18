@@ -10,13 +10,6 @@ export default {
             ...mapState(Billstore, ['mobileBarcode']),
         }
     },
-    setup(){
-        const Billstore = useBillstore();
-        return {
-            Billstore,
-            ...mapState(Billstore, ['mobileBarcode']),
-        }
-    },
     data() {
         return {
             
@@ -38,18 +31,21 @@ export default {
                 <p>載&nbsp;&nbsp;&nbsp;&nbsp;具</p>
             </div>
             <div class="inputArea">
-                <input type="text" placeholder="請輸入載具號碼" v-model="this.Billstore.mobileBarcode">
-                <input type="text" placeholder="請輸入載具號碼" v-model="this.Billstore.mobileBarcode">
+                <input type="text" placeholder="請輸入載具號碼，以'/'開頭'" v-model="this.Billstore.mobileBarcode">
             </div>
             <div class="butArea">
-                <button @click="closeArea">確認</button>
-                <button @click="closeArea">關閉</button>
+                <button @click="closeArea">確&nbsp;&nbsp;&nbsp;認</button>
+                <button @click="closeArea">關&nbsp;&nbsp;&nbsp;閉</button>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
+*{
+    font-family: "Chocolate Classical Sans", sans-serif;
+}
 .showBack {
     position: fixed;
     top: 0;
@@ -65,6 +61,7 @@ export default {
 }
 
 .showBox {
+    width: 40%;
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -87,15 +84,13 @@ export default {
 
         button {
             width: 9dvw;
-            height: 7dvh;
+            height: 6dvh;
             margin: 0 1dvw;
             margin-top: 1dvh;
-            background: none;
-            color: gray;
-            font-weight: 600;
+            background: #00c1ca;
+            color: white;
             font-family: "Chocolate Classical Sans", sans-serif;
-            font-size: 2dvh;
-            border: 2px solid #00c1ca;
+            font-size: 2.25dvh;
             border-radius: 5px;
         }
     }
@@ -105,6 +100,7 @@ export default {
         margin: 1dvh 0;
 
         input {
+            width: 89%;
             height: 6dvh;
             margin: 1dvh 1dvw;
             padding: 0 1dvw;

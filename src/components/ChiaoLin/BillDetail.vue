@@ -43,20 +43,20 @@ export default {
             OrderStore,
             updateValue,
             enterAddInputValue,
-            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent','lastBill']),
+            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'lastBill','isTopBarHidden']),
             ...mapState(OrderStore, ['order_info']),
-            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB','getAllBillsAndTodayBills']),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB', 'getAllBillsAndTodayBills','closeTopbar']),
         };
     },
     methods: {
-        toggleSidebar() {
-            this.isLeftNavHidden = !this.isLeftNavHidden;
+        closeLeftbar() {
+            this.isLeftBarHidden = !this.isLeftBarHidden;
         },
     },
     data() {
         return {
             OrderDB: [],
-            isLeftNavHidden: false,
+            isLeftBarHidden: false,
         }
     },
     created() {
@@ -96,11 +96,11 @@ export default {
             } else {
                 AorB = 'Other';
             }
-            this.showBillId = `${year}${month}${day}-${AorB}` + ((this.Billstore.chargedTodayBills.length)+1);
+            this.showBillId = `${year}${month}${day}-${AorB}` + ((this.Billstore.chargedTodayBills.length) + 1);
         } else {
             console.error("Wrong oId!")
         };
-        
+
     },
     components: {
         LeftNavEditOrder,
@@ -113,21 +113,20 @@ export default {
     <div class="allArea">
         <div class="showOrderId">
             <div style="width: 20%;">結帳單號</div>
-            <div style="width: 40%;">{{ this.showBillId }}</div>
+            <div style="width: 35%;">{{ this.showBillId }}</div>
             <!-- 漢堡按鈕還沒做 -->
-            <input type="checkbox" id="noShowOrder" v-model="this.Billstore.showOrderArea">
-            <button style="cursor: pointer;" @click="toggleSidebar">
-                <p  v-if="!isLeftNavHidden">關閉左側明細</p>
-                <p  v-else>開啟左側明細</p>
+            <button style="cursor: pointer;font-size: 2.25dvh;" @click="closeLeftbar">
+                <p v-if="!isLeftBarHidden">關閉左側明細</p>
+                <p v-else>開啟左側明細</p>
             </button>
-            <label for="" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
+            <button @click="Billstore.closeTopbar"><i class="fa-solid fa-house-chimney fa-xl"></i></button>
         </div>
         <div class="billDetailArea">
-            <div :class="['billDetailLeftArea', { hidden: isLeftNavHidden }]">
-                
+            <div :class="['billDetailLeftArea', { hidden: isLeftBarHidden }]">
+
                 <LeftNavEditOrder></LeftNavEditOrder>
             </div>
-            <div :class="['billDetailRightArea', { expanded: isLeftNavHidden }]">
+            <div :class="['billDetailRightArea', { expanded: isLeftBarHidden }]">
                 <!-- <div class="titleArea">
                     <p>結帳明細</p>
                 </div> -->
@@ -173,6 +172,7 @@ export default {
 
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
+
 .allArea {
     width: 50%;
     font-family: "Chocolate Classical Sans", sans-serif;
@@ -190,11 +190,11 @@ export default {
 
     .showOrderId {
         display: flex;
-        height: 8dvh;
+        height: 9dvh;
         background: linear-gradient(90deg, #00c1ca, #01e1c5);
         border-radius: 5px;
         color: white;
-        line-height: 8dvh;
+        line-height: 9.5dvh;
         padding-left: 2dvw;
         font-size: 2.25dvh;
 
@@ -213,18 +213,17 @@ export default {
 
         label {
             // border: 1px solid black;
-            height: 8dvh;
+            height: 9dvh;
             width: 8dvw;
             cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
             transition: 0.3s ease;
-            z-index: 99; // 使其圖層絕對在最上方
             z-index: 99; // 使其圖層絕對在最上方
             display: flex;
             justify-content: center;
 
             i {
                 z-index: 1;
-                line-height: 8dvh;
+                line-height: 9dvh;
             }
 
 

@@ -36,7 +36,7 @@ export default {
             this.changeArea = !this.changeArea;
             this.needTochange = this.Billstore.changeAmount;
             // 若有手開發票
-            if(this.Billstore.handInvoiceInput !== ""){
+            if (this.Billstore.handInvoiceInput !== "") {
                 this.Billstore.invoiceNum = this.Billstore.handInvoiceInput;
                 this.Billstore.uniformNum = this.Billstore.handUniformNum;
             }
@@ -135,7 +135,7 @@ export default {
             <div class="otherButArea">
                 <div class="mathBut butbackspace"><input type="button" value="＜＜" @click="Billstore.backspace()"
                         id="butbackspace"></div>
-                <div class="mathBut butRevise"><input type="button" value="更正" @click="Billstore.clearDisplay()"
+                <div class="mathBut butRevise"><input type="button" value="更  正" @click="Billstore.clearDisplay()"
                         id="butRevise"></div>
                 <div class="mathBut butComfirm"><input type="button" value="完成結帳" @click="saveBill()" id="butComfirm">
                 </div>
@@ -150,7 +150,7 @@ export default {
                             <span id="ntText">NT.</span>
                             <span id="changeAmount">{{ Billstore.tothousendShowValue(this.needTochange) }}</span>
                         </div>
-                        <p>是否列印明細?</p>
+                        <p style="text-align: center;">是否列印明細?</p>
                         <div class="butArea">
                             <button id="closebutton" @click="showChangeArea()">是</button>
                             <button id="closebutton" @click="showChangeArea()">Close</button>
@@ -242,6 +242,7 @@ export default {
     }
 
     .showBox {
+        width: 40%;
         background: white;
         padding: 20px;
         border-radius: 10px;
@@ -255,23 +256,23 @@ export default {
             height: 5dvh;
             color: black;
             margin: 0 1dvw;
+            padding-left: 1dvw;
         }
 
         .butArea {
             display: flex;
             line-height: 8dvh;
+            justify-content: space-between;
 
             button {
                 width: 9dvw;
-                height: 7dvh;
+                height: 6dvh;
                 margin: 0 1dvw;
                 margin-top: 1dvh;
-                background: none;
-                color: gray;
-                font-weight: 600;
+                background: #00c1ca;
+                color: white;
                 font-family: "Chocolate Classical Sans", sans-serif;
                 font-size: 2dvh;
-                border: 2px solid #00c1ca;
                 border-radius: 5px;
             }
         }
@@ -279,10 +280,13 @@ export default {
         .showInfoArea {
             width: 100%;
             margin: 1dvh 0;
-            padding-left: 1dvw;
+            text-align: center;
+            p{
+                text-align: center;
+            }
 
             span {
-                font-size: 3dvh;
+                font-size: 4dvh;
             }
         }
 

@@ -6,12 +6,17 @@ import HandInvoiceContent from '@/components/ChiaoLin/HandInvoiceContent.vue';
 import { useBillstore } from '../stores/BillStore'
 import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
 import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
+import { mapState, mapActions } from 'pinia';
 // import { useOrderStore } from '@/stores/OrderStore'
 
 export default {
     setup() {
         const Billstore = useBillstore();
-        return { Billstore };
+        return {
+            Billstore,
+            ...mapState(Billstore,['isTopBarHidden']),
+            ...mapActions(Billstore, ['closeTopbar'])
+        };
         // const OrderStore = useOrderStore();
         // return { OrderStore };
     },
@@ -44,14 +49,16 @@ export default {
             this.$emit('close');
         },
     },
-    created(){
-        if(sessionStorage.getItem("token") == null){
-        Swal.fire({title:"你還沒有登入，將轉向登入頁面！",showConfirmButton:true,
-            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
-            icon:'error',iconColor:"#00c5c8"}).then((res)=>{
-              if(res.isConfirmed){
-                this.$router.push({name: 'home'});
-              }
+    created() {
+        if (sessionStorage.getItem("token") == null) {
+            Swal.fire({
+                title: "你還沒有登入，將轉向登入頁面！", showConfirmButton: true,
+                confirmButtonColor: "#00c5c8", confirmButtonText: "確定",
+                icon: 'error', iconColor: "#00c5c8"
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    this.$router.push({ name: 'home' });
+                }
             })
         }
     },
@@ -78,17 +85,17 @@ export default {
             <div class="functionButArea">
                 <RouterLink to="/OrderPage"><button type="button" class="comeback myMouse">取消</button></RouterLink>
                 <button type="button" class="manualInvoice myMouse" @click="Billstore.showHandInvoiceArea">手開發票</button>
-                <RouterLink to="/InvoicePage"><button type="button" class="comeback myMouse">發票設定</button></RouterLink>
+                <!-- <RouterLink to="/InvoicePage"><button type="button" class="comeback myMouse">發票設定</button></RouterLink> -->
                 <RouterLink to="/AllBillPage"> <button type="button" class="comeback myMouse">帳務總覽</button></RouterLink>
                 <input type="checkbox" id="rightBar" v-model="Billstore.showRightNav">
-                <label for="rightBar" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
+                <button @click="Billstore.closeTopbar"><i class="fa-solid fa-bars fa-xl"></i></button>
             </div>
         </div>
         <div v-if="Billstore.showHandInvArea">
             <HandInvoiceContent @close="Billstore.showHandInvoiceArea" />
         </div>
         <!-- <LeftNavEditOrder /> -->
-        <RightNavOtherFun />
+        <!-- <RightNavOtherFun /> -->
     </div>
 </template>
 
@@ -139,7 +146,7 @@ export default {
                 width: 8dvw;
                 cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
                 transition: 0.3s ease;
-                z-index: 9999; // 使其圖層絕對在最上方
+                z-index: 1; // 使其圖層絕對在最上方
                 display: flex;
                 justify-content: center;
 

@@ -1,66 +1,52 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterView } from 'vue-router';
 import TestHeader from './components/ChiaoLin/TestHeader.vue';
+import { useBillstore } from '@/stores/BillStore';
+
+const billStore = useBillstore();
 </script>
 
 <template>
-<div>
-    <TestHeader />
-    <RouterView />
-</div>
+    <div class="allArea">
+        <button v-if="billStore.isLoggedIn" style="cursor: pointer; font-size: 2.25dvh;" @click="billStore.closeTopbar">
+            <i class="fa-solid fa-house-chimney"></i>
+        </button>
+        
+            <div :class="['headerArea', { hidden: billStore.isTopBarHidden }]">
+                <TestHeader />
+            </div>
+        
+        <div :class="['routerArea', { expanded: billStore.isTopBarHidden }]">
+            <RouterView />
+        </div>
+    </div>
 </template>
 
 <style scoped lang="scss">
-@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
-div.container {
-	margin-bottom: 1.5rem;
-  width: 100%;
-  height: 8vh;
-	font-family: 'Work Sans', sans-serif;
-	font-weight: 800;
-  background-color: white;
-  ul{       
-  margin: 0;
-  padding: 0;
-  list-style: none; 
-  li{
-      display: inline-block;
-      margin-left: 60px;
-      padding-top: 10px;
-      position: relative;
-        a{
-          color: #01e1c5;
-          text-decoration: none;
-          text-transform: uppercase;
-          font-size: 14px;
-          &:hover{
-            color: #01e1c5;
-          
-          }
-          &:hover::before{
-            width: 100%;
-          }
-          &::before{
-            display: block;
-            vertical-align:middle;
-            height: 5px;
-            background-color: #01e1c5;
-            position: absolute;
-            top: 0;
-            width: 0%;
-            transition: all ease-in-out 250ms;
-          }
+.allArea {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
+
+    .headerArea {
+        height: 6dvh;
+        transition: height 0.3s ease;
+        overflow: hidden;
+
+        &.hidden {
+            height: 0;
         }
-    }                
-  }
-}
-.logo {
-  float: top;
-  padding: 10px 0;
-  nav {
-  float: top;
-  height: 5vh;
-        
-  }
+    }
+
+    .routerArea {
+        flex: 1; // 使 routerArea 佔滿剩餘空間
+        transition: transform 0.3s ease; // 使用 transform 來實現滑動效果
+        height: 100%;
+
+        &.expanded {
+            transform: translateY(-1dvh); // 向上移動 headerArea 的高度
+        }
+    }
 }
 </style>

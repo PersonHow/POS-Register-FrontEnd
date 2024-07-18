@@ -10,7 +10,7 @@ export default {
             Billstore,
             ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
                 'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount']),
-            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'updateNewInputEventValue', 'updateInputEventValue', 'tothousendShowValue', 'showVehicleArea', 'showBuniNumArea']),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'updateNewInputEventValue', 'updateInputEventValue', 'tothousendShowValue',]),
         };
     },
     components: {
@@ -47,10 +47,10 @@ export default {
         return {
             OrderDB: [],
             mobileBox: false,
-            uniformBox:false
+            uniformBox: false
         }
     },
-    methods:{
+    methods: {
         showMobileBox() {
             this.mobileBox = !this.mobileBox;
         },
@@ -76,7 +76,7 @@ export default {
             </div>
             <div class="inputShowArea">
                 <button type="button" class="myMouse"
-                @click="showMobileBox()"><span>載&nbsp;&nbsp;&nbsp;&nbsp;具</span></button>
+                    @click="showMobileBox()"><span>載&nbsp;&nbsp;&nbsp;&nbsp;具</span></button>
                 <button type="button" class="myMouse" @click="showUniformBox()"><span>統一編號</span></button>
             </div>
             <div v-if="mobileBox == true">
@@ -151,8 +151,7 @@ export default {
     padding-left: 0.5dvw;
 
     .showInvoiceNum {
-        height: 8dvh;
-        line-height: 8dvh;
+        height: 9dvh;
         color: gray;
         font-weight: 600;
         font-size: 2.25dvh;
@@ -166,30 +165,30 @@ export default {
         .showInvoiceNumArea,
         .inputShowArea {
             display: flex;
-            line-height: 3dvh;
+            width: 25dvw;
 
             button {
-                width: 9dvw;
+                width: 10dvw;
                 height: 6dvh;
                 margin: 0 1dvw;
-                margin-top: 1dvh;
-                background: none;
-                color: gray;
-                font-weight: 600;
+                margin-top: 2.5dvh;
+                background: #00c1ca;
+                color: white;
                 font-family: "Chocolate Classical Sans", sans-serif;
                 font-size: 2dvh;
-                border: 2px solid #00c1ca;
                 border-radius: 5px;
+                border: none;
             }
 
         }
 
         .showInvoiceNumArea {
             padding-left: 1dvw;
+            line-height: 10dvh
         }
 
         p {
-            width: 12dvw;
+            width: 10dvw;
         }
 
         input {

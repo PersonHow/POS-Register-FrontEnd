@@ -26,20 +26,24 @@ export default {
     <div class="showBack" @click="closeShow()">
         <div class="showBox" @click.stop>
             <div class="titleArea">
-                <p>統一編號</p>
+                <p>統 一 編 號</p>
             </div>
             <div class="inputArea">
-                <input type="text" placeholder="請輸入統編" v-model="this.Billstore.uniformNum">
+                <input type="text" placeholder="請輸入8位數統編" v-model="this.Billstore.uniformNum">
             </div>
             <div class="butArea">
-                <button @click="closeShow()">確認</button>
-                <button @click="closeShow()">關閉</button>
+                <button @click="closeShow()">確&nbsp;&nbsp;&nbsp;認</button>
+                <button @click="closeShow()">關&nbsp;&nbsp;&nbsp;閉</button>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
+*{
+    font-family: "Chocolate Classical Sans", sans-serif;
+}
 .showBack {
     position: fixed;
     top: 0;
@@ -55,6 +59,7 @@ export default {
 }
 
 .showBox {
+    width: 40%;
     background: white;
     padding: 20px;
     border-radius: 10px;
@@ -65,7 +70,7 @@ export default {
 
     .titleArea {
         width: 100%;
-        height: 5dvh;
+        height: 6dvh;
         color: black;
         margin: 0 1dvw;
     }
@@ -80,12 +85,10 @@ export default {
             height: 6dvh;
             margin: 0 1dvw;
             margin-top: 1dvh;
-            background: none;
-            color: gray;
-            font-weight: 600;
+            background: #00c1ca;
+            color: white;
             font-family: "Chocolate Classical Sans", sans-serif;
-            font-size: 2dvh;
-            border: 2px solid #00c1ca;
+            font-size: 2.25dvh;
             border-radius: 5px;
         }
     }
@@ -98,7 +101,7 @@ export default {
         }
 
         input {
-            height: 7dvh;
+            height: 6dvh;
             margin: 1dvh 1dvw;
             padding: 0 1dvw;
             border-radius: 5px;

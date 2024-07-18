@@ -1,7 +1,19 @@
 <script>
 import axios from 'axios';
 import Swal from "sweetalert2";
+import { useBillstore } from '@/stores/BillStore'
+import { mapState } from 'pinia';
+import { onMounted } from 'vue';
 export default{
+    setup(){
+        const Billstore = useBillstore();
+
+        onMounted(() => {
+            Billstore.isTopBarHidden = true;
+        })
+        
+        return{Billstore,...mapState(Billstore,['isTopBarHidden']),}
+    },
     data(){
         return {
             email:"",
@@ -28,6 +40,7 @@ export default{
                 confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
                 icon:'success',iconColor:"#00c5c8"}).then((res)=>{
                     if(res.isConfirmed){
+                        this.Billstore.isTopBarHidden = false;
                         window.location.replace("/calendar");
                     }
                 })

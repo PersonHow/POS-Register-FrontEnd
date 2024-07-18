@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { ref } from 'vue';
 
 export const useBillstore = defineStore("Billstore", {
   state: () => ({
@@ -44,7 +45,7 @@ export const useBillstore = defineStore("Billstore", {
     OrderDB: [], // 從DB抓的
     mobileBarcode: "",
     uniformNum: "",
-    // paymentList:[]
+    isTopBarHidden:false, // 伸縮topBar
   }),
   getters: {
     // ----取值區----
@@ -208,6 +209,10 @@ export const useBillstore = defineStore("Billstore", {
     },
     setPaymentOther(value) {
       this.payment_other = value;
+    },
+    // 伸縮TopBar方法
+    closeTopbar() {
+      this.isTopBarHidden = !this.isTopBarHidden;
     },
     // show showHandInvArea
     showHandInvoiceArea() {

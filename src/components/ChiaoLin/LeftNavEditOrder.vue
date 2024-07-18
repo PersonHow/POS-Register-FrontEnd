@@ -150,21 +150,18 @@ export default {
         }
 
         button {
+            margin: 0.5dvh 0.5dvw;
+            cursor: pointer;
+            padding: 0.5dvw;
+            width: 8.5dvw;
+            height: 6dvh;
+            margin: 0 1dvw;
+            margin-top: 1dvh;
+            background: #00c1ca;
+            color: white;
             font-family: "Chocolate Classical Sans", sans-serif;
             font-size: 2.25dvh;
-            margin: 0.5dvh 0.5dvw;
-            border: none;
-            cursor: pointer;
-            border-radius: 10px;
-            background: #00c1ca;
-            background: #00c1ca;
-            padding: 0.5dvw;
-            color: white;
-            transition: transform 0.3s;
-
-            &.active {
-                transform: scale(1.2);
-            }
+            border-radius: 5px;
         }
     }
 }
