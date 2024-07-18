@@ -8,21 +8,10 @@ import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
 import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
 // import { useOrderStore } from '@/stores/OrderStore'
 
-import BillDetail from '@/components/ChiaoLin/BillDetail.vue';
-import AmountDetails from '@/components/ChiaoLin/AmountDetail.vue';
-import Calculator from '@/components/ChiaoLin/Calculator.vue';
-import HandInvoiceContent from '@/components/ChiaoLin/HandInvoiceContent.vue';
-import { useBillstore } from '../stores/BillStore'
-import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
-import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
-// import { useOrderStore } from '@/stores/OrderStore'
-
 export default {
     setup() {
         const Billstore = useBillstore();
         return { Billstore };
-        // const OrderStore = useOrderStore();
-        // return { OrderStore };
         // const OrderStore = useOrderStore();
         // return { OrderStore };
     },
@@ -51,6 +40,9 @@ export default {
         updateBillstore(event) {
             Object.assign(this.Billstore, event);
         },
+        closeShow() {
+            this.$emit('close');
+        },
     },
     created(){
         if(sessionStorage.getItem("token") == null){
@@ -61,10 +53,7 @@ export default {
                 this.$router.push({name: 'home'});
               }
             })
-        },
-        closeShow() {
-            this.$emit('close');
-        },
+        }
     },
 }
 </script>

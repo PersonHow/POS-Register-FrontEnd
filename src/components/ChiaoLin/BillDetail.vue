@@ -10,7 +10,6 @@ export default {
     setup() {
         const Billstore = useBillstore();
         const OrderStore = useOrderStore();
-        const OrderStore = useOrderStore();
         // event 對應 input, propName 對應 屬性名稱, 
         // event.target.value 當前輸入框的值, parseFloat 將字符串轉換為浮點數，確保輸入值為數字
         const updateValue = (event, propName) => {
@@ -114,7 +113,6 @@ export default {
 
 <template>
     <div class="allArea">
-    <div class="allArea">
         <div class="showOrderId">
             <div style="width: 20%;">結帳單號</div>
             <div style="width: 40%;">{{ this.showBillId }}</div>
@@ -182,7 +180,6 @@ export default {
     font-family: "Chocolate Classical Sans", sans-serif;
 
     .titleArea {
-    .titleArea {
         margin: 2dvh 0;
         margin-bottom: 3dvh;
         padding-left: 2.5dvw;
@@ -232,7 +229,6 @@ export default {
                 line-height: 8dvh;
             }
 
-            span {
 
             span {
                 font-size: 2.25dvh;

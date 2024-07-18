@@ -12,7 +12,6 @@ export default {
     },
     methods: {
         closeShow() {
-        closeShow() {
             this.$emit('close');
         },
     }
@@ -43,7 +42,6 @@ export default {
 
 <style scoped lang="scss">
 .showBack {
-.showBack {
     position: fixed;
     top: 0;
     left: 0;
@@ -58,7 +56,6 @@ export default {
     font-weight: 500;
 }
 
-.showBox {
 .showBox {
     background: white;
     padding: 20px;
