@@ -28,11 +28,11 @@ const router = createRouter({
       name: "BillPage",
       component: () => import("../views/BillPage.vue"),
     },
-    {
-      path: "/BillPage",
-      name: "BillPage",
-      component: () => import("../views/BillPage.vue"),
-    },
+    // {
+    //   path: "/BillPage",
+    //   name: "BillPage",
+    //   component: () => import("../views/BillPage.vue"),
+    // },
     {
       path: "/AllBillPage",
       name: "AllBillPage",
@@ -43,11 +43,11 @@ const router = createRouter({
       name: "calendar",
       component: () => import("../views/Calendar.vue"),
     },
-    // {
-    //   path: "/MenuManage",
-    //   name: "MenuManage",
-    //   component: () => import("../views/MenuManage.vue"),
-    // },
+    {
+      path: "/MenuManage",
+      name: "MenuManage",
+      component: () => import("../views/MenuManage.vue"),
+    },
     {
       path: "/MenuManage",
       name: "MenuManage",

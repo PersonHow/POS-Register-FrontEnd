@@ -21,12 +21,9 @@ export default {
           <li><a><RouterLink to="/OrderPage">點餐(外帶)</RouterLink></a></li>
           <li><a><RouterLink to="/workingarea">工作台</RouterLink></a></li>
           <li><a><RouterLink to="/reserve">訂位</RouterLink></a></li>
-<<<<<<<<< Temporary merge branch 1
           <li v-if="this.staff"><a><RouterLink to="/logout">登出</RouterLink></a></li>
-=========
           <li><a><RouterLink to="/MenuManage">菜單</RouterLink></a></li>
           <li><a><RouterLink to="/logout">登出</RouterLink></a></li>
->>>>>>>>> Temporary merge branch 2
         </ul>
       </nav>
     </div>

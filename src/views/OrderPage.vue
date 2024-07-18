@@ -350,7 +350,7 @@ export default {
                                 <!-- 跳轉至桌位頁 -->
                                 <a class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
                                 <!-- 跳轉至結帳頁 -->
-                                <a class="btn btn-primary">立即結帳</a>
+                                <a class="btn btn-primary" data-bs-dismiss="modal" @click="navigateToBillPage()">立即結帳</a>
                             </div>
                         </div>
                         
@@ -711,5 +711,5 @@ $secondary-color: #FFE2C3;
 
 }
 
-}
+
 </style>
