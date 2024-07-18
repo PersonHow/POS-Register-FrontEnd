@@ -310,16 +310,20 @@ const fetchOrders = async () => {
         create_time: order.create_time,
         elapsedTime: Date.now() - new Date(order.create_time).getTime(),
         items: order.order_detail
-          .map((detail, index) => ({
-            id: `${order.order_id}-${index}`,
-            quantities: detail.quantities,
-            order_detail: `${detail.meal_name}  
-              ${detail.custom_option !== 'null' ? '•' + detail.custom_option.replace(/;/g, ' • ') : ''}  
-              ${(detail.custom_option !== 'null' && detail.other_request !== 'null') ? '•' : ''}  
-              ${detail.other_request !== 'null' ? detail.other_request : ''}`,
-            dining_out: false,
-            working_area: detail.working_area
-          })),
+          .map((detail, index) => {
+            // Process the custom_option to remove parts with "+" and following digits
+            let processedCustomOption = detail.custom_option.replace(/\+[^;]*/g, '').replace(/;+$/, '');
+            return {
+              id: `${order.order_id}-${index}`,
+              quantities: detail.quantities,
+              order_detail: `${detail.meal_name}
+                ${processedCustomOption !== 'null' ? '•' + processedCustomOption.replace(/;/g, ' • ') : ''}
+                ${(processedCustomOption !== 'null' && detail.other_request !== 'null') ? '•' : ''}
+                ${detail.other_request !== 'null' ? detail.other_request : ''}`,
+              dining_out: false,
+              working_area: detail.working_area
+            };
+          }),
         showMenu: false,
         collapsed: false,
         shrinking: false,
@@ -348,6 +352,7 @@ const fetchOrders = async () => {
     showLargeModal();
   }
 };
+
 
 const filteredRows = computed(() => {
   const filteredColumns = selectedStation.value === '所有廚台'
@@ -426,7 +431,9 @@ const resetOrders = () => {
   resetDiningOutState(); // Reset dining_out state
   fetchOrders();
 };
-
+const refreshOrders = () => {
+  location.reload(); // Reload the page
+};
 const resetDiningOutState = () => {
   localStorage.removeItem('diningOutState');
   columns.value.forEach(column => {
