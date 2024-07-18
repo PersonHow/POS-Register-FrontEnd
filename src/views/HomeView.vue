@@ -39,7 +39,7 @@ const enrollbtnClick = async(e)=>{
     </div>
     
 </template>
-<style lang="scss" scoped>
+<style scoped lang="scss">
     body {
         font-family: 'Ubuntu', sans-serif;
     }

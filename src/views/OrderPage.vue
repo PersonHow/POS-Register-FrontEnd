@@ -44,7 +44,8 @@ export default {
         EditMeal
     },
     created(){
-        this.staff = JSON.prase(sessionStorage.getItem("token"))
+        this.staff = JSON.parse(sessionStorage.getItem("token"))
+        console.log(this.staff)
         if(sessionStorage.getItem("token")==null){
             Swal.fire({text:"你還沒有登入，將轉向登入頁面！", icon:"info"})
             this.$router.push({name: 'home'})
@@ -149,18 +150,16 @@ export default {
             this.showMemoInput = !this.showMemoInput
         },
         //下單
-        placeOrder() {
-            // 將選項去除加價後以分號串接成字串
+        placeOrder(){
+            // 將選項以分號串接成字串
             this.orderList.forEach(order => {
                 // 檢查該餐點有客製選項
                 if (order.custom_option) {
                     // 判斷選項是否為複數 是則用;串接
                     if (order.custom_option.length > 0) {
-                        order.custom_option = order.custom_option.map(option => {
-                            return option.split('+')[0]
-                        }).join(';')
+                    order.custom_option = order.custom_option.join(';')
                     } else {
-                        order.custom_option = order.custom_option[0].split('+')[0]
+                    order.custom_option = order.custom_option[0]
                     }
                 }
             })
@@ -172,8 +171,8 @@ export default {
                 amount: this.orderAmount,
                 memo: this.memo,
                 booking_num: null,
-                staff_name: this.staff,
-                lastmodified_staff_id: this.staff
+                staff_name: this.staff.staff_name,
+                lastmodified_staff_id: this.staff.staff_id
             }
             fetch("http://localhost:8080/order_info/create", {
                 method: 'POST',
@@ -185,7 +184,6 @@ export default {
             .then(res => {
                 if (!res.ok) {
                     Swal.fire("錯誤", "送出失敗，請檢查訂單是否有內容。", "error")
-                    hasError = true;
                 }
                 return res.json();
             })
@@ -288,15 +286,18 @@ export default {
 
         <!-- menu菜單 -->
         <div class="container">
-            <div class="px-3 type">
-                <div v-for="type in types" :key="type" class="colume">
-                    <input type="radio" v-model="selectedType" :value="type" :id="type">
-                    <label :for="type" :class="{ active: selectedType === type }">{{ type }}</label>
+            <!-- 餐點種類 -->
+            <div class="d-flex align-items-center">
+                <div class="px-3 type">
+                    <div v-for="type in types" :key="type" class="colume">
+                        <input type="radio" v-model="selectedType" :value="type" :id="type">
+                        <label :for="type" :class="{active : selectedType === type}">{{type}}</label>
+                    </div>
                 </div>
-            </div>
-            <div class="arrow">
+                <div class="arrow">
                     <font-awesome-icon icon="fa-solid fa-chevron-right"/>
                 </div>
+            </div>
             <div class="px-5 wrap" >
                 <div v-for="meal in menu" v-show="selectedType === meal.type" @click="addMealToList(meal)" :key="meal.type" class="meal">
                     <img :src="meal.img" alt="">

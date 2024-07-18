@@ -11,6 +11,7 @@ import { RouterLink, RouterView } from 'vue-router'
           <li><a><RouterLink to="/OrderPage">點餐</RouterLink></a></li>
           <li><a><RouterLink to="/workingarea">工作台</RouterLink></a></li>
           <li><a><RouterLink to="/reserve">訂位</RouterLink></a></li>
+          <li><a><RouterLink to="/MenuManage">菜單</RouterLink></a></li>
           <li><a><RouterLink to="/logout">登出</RouterLink></a></li>
         </ul>
       </nav>

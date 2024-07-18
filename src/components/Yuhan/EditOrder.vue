@@ -114,7 +114,7 @@ export default {
         <div v-for="(item, index) in optionList" :key="item" 
         :class="{ 'warn': item.ismustfill && !isOptionSelected(item.options) }" class="colume">
             餐點選項{{index+1}} : <span v-if="item.ismustfill">(必填)</span>
-        <div class="d-flex">
+        <div class="d-flex flex-wrap">
                 <div v-for="option in item.options" :key="option" class="wrap mx-2">
                     <input type="checkbox" v-model="selectOptions" :id="option" :value="option"
                     :required="item.ismustfill">

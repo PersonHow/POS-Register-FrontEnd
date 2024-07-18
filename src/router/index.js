@@ -38,6 +38,11 @@ const router = createRouter({
       component: () => import("../views/Calendar.vue"),
     },
     {
+      path: "/MenuManage",
+      name: "MenuManage",
+      component: () => import("../views/MenuManage.vue"),
+    },
+    {
       path: "/logout",
       name: "logout",
       component: () => {
