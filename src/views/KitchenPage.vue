@@ -474,7 +474,7 @@ const closeLargeModal = () => {
   flex: 1;
   padding: 2%;
   -ms-overflow-style: none;
-  scrollbar-width: none;
+  // scrollbar-width: none;
 
   &::-webkit-scrollbar {
     width: 0;
@@ -610,6 +610,8 @@ const closeLargeModal = () => {
   }
 }
 
+
+
 .oi {
   overflow-y: auto;
   height: 86%;
@@ -695,7 +697,14 @@ const closeLargeModal = () => {
   align-items: center;
 }
 
-
+.modal-content {
+  background: white;
+  padding: 76px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 25px;
+};
 .modal-content button {
   margin: 10px;
   padding: 10px 20px;
