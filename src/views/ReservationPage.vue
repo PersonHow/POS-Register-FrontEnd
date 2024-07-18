@@ -26,9 +26,9 @@ export default {
   <div class="body">
     <!-- second Area = 中間桌子的區塊 -->
         <div class="second">
-            <ReserveList/>
+            <ReserveList/> 
             <Reserve/>
-        </div>
+          </div>
   </div>
 </template>
 <style lang="scss" scoped>

@@ -80,6 +80,7 @@
                 v-for="(info, index) in calendarInfo"
                 :key="index"
                 :class="['card', `card-${index + 1}`]"
+                @click="()=>{selectHandler(info)}"
               >
                 <div 
                   :style="{ background: info.is_holiday ? '#880e4f' : 'linear-gradient(90deg, #00c1ca, #01e1c5)' }"
@@ -104,6 +105,9 @@
         name: 'calender',
         data() {
           return {
+            key:0,
+            selected_calendar:{calendar_id:"#"},
+            calendar_data_list:null,
             calendarData: [],
             selectData: {}, // 選中日期資訊 -> year, month, day
             weekArr: ['日', '一', '二', '三', '四', '五', '六'], // 星期数组
@@ -135,12 +139,10 @@
             bookinglist:'',
           }
         },
-    
         mounted() {
         this.checkoutCurrentDate();
         this.fetchCalendarData();
-      },
-    
+        },
         created() {
           this.checkoutCurrentDate()
         },
@@ -175,12 +177,17 @@
         },
         },
         methods: {
-    
+          selectHandler(calendar){
+            this.selected_calendar = this.calendar_data_list.filter((item)=>{return item.calendar_id == calendar.calendar_id});
+            sessionStorage.setItem("selected_calendar",JSON.stringify(this.selected_calendar[0]));
+            this.key++;
+            this.$emit("key",this.key);
+          },
           fetchCalendarData() {
           fetch('http://localhost:8080/calendar')
             .then(response => response.json())
             .then(data => {
-              console.log(data); // 在主控台顯示取得的資料
+              this.calendar_data_list = data;
               this.processCalendarData(data);
             })
             .catch(error => {
@@ -200,6 +207,7 @@
             const itemDate = new Date(item.calendar_date);
             const bookingCount = item.booking_list ? item.booking_list.split(';').length : 0;
             return {
+              calendar_id:item.calendar_id,
               day: itemDate.getDate(),
               booking_count: bookingCount,
               special_events: item.special_events,
@@ -685,7 +693,6 @@
     .main{
       display: flex;
       flex-direction: column;
-      width: 65vw;
       max-height: 100vh;
       padding: 0.5rem;
       background-color: rgb(248, 248, 248); 
@@ -721,9 +728,9 @@
       margin-left: 0.5rem;
       display: grid;
       padding: 2rem;
-      overflow-y:scroll; 
+      overflow-y:auto; 
       overflow-x: auto;
-      width: 40vw;
+      width: 44vw;
       grid-template-columns:repeat(2,1fr); /* 兩列佈局 */
       grid-template-rows: 1f,1fr;
       gap: 1rem; /* 控制訊息框之間的距離 */

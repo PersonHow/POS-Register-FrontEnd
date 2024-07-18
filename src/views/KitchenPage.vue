@@ -14,10 +14,9 @@
               <span class="table_num">{{ column.table_num || '外帶' }}</span>
               <div class="elapsed-time">{{ elapsedTime(column.create_time) }}</div>
             </div>
-
             <div class="column-header-right">
               <div class="dropdown" @click="toggleDropdown(column.id)">
-                <button class="menu-icon">≡</button>
+                <span class="id bottom-right">#{{ getLastFourDigits(column.id) }}</span>
               </div>
             </div>
           </div>
@@ -27,7 +26,7 @@
                 <div class="square"></div>
               </button>
               <span class="quantity">{{ item.quantities }}</span>
-              <span class="name">{{ formatOrderDetail(item) }}</span>
+              <span class="name">{{ item.order_detail }}</span>
             </div>
           </div>
         </div>
@@ -70,22 +69,23 @@
           <table>
             <thead>
               <tr>
-                <th>序</th>
+                <th>序號</th>
                 <th>出菜</th>
                 <th>餐點名稱</th>
                 <th>數量</th>
                 <th>桌號</th>
+                <th>訂單ID</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(order, index) in orderDetails" :key="index">
                 <td>{{ index + 1 }}</td>
-                <td><button class="menu-icon">還原</button></td>
+                <td><button class="obutton" @click="restoreOrder(index)">還原</button></td>
                 <td>{{ order.mealName }}</td>
                 <td>{{ order.quantity }}</td>
                 <td>{{ order.tableNum }}</td>
+                <td>#{{ order.orderId }}</td>
               </tr>
-
             </tbody>
           </table>
         </div>
@@ -112,10 +112,7 @@ const isMenuOpen = ref(false);
 const selectedStation = ref('所有廚台');
 const stations = ["煎台", "油炸台", "煮制台", "飲料台", "烤爐台", "冷盤台"];
 const largeModalVisible = ref(false);
-const orderDetails = ref([
-  {  mealName: '牛小排 - 3分熟;加辣', quantity: 1, tableNum: '外帶' },
-  {  mealName: '羊小排', quantity: 1, tableNum: '外帶' },
-]);
+const orderDetails = ref([]);
 
 const elapsedTime = (createTime) => {
   const start = new Date(createTime).getTime();
@@ -139,17 +136,22 @@ onMounted(() => {
   setInterval(updateElapsedTimes, 1000);
 });
 
-
 const updateTime = () => {
   const now = new Date();
   currentTime.value = now.toLocaleTimeString('zh-TW', { hour12: false });
 };
-
+//确保在页面加载时初始化 largeModalVisible 状态，并在模态框打开时调用 fetchOrders：
 onMounted(() => {
   updateTime();
   setInterval(updateTime, 1000);
   fetchOrders();
+  loadOrderDetails(); // Load order details on page load
+
+  if (largeModalVisible.value) {
+    showLargeModal();
+  }
 });
+
 
 const columns = ref([]);
 const working_area_list = new Set();
@@ -160,14 +162,139 @@ const getStoredIsFillState = () => {
   return storedState ? JSON.parse(storedState) : {};
 };
 
-const saveIsFillState = (state) => {
-  localStorage.setItem('isFillState', JSON.stringify(state));
-};
 
+// item的資料
 const isFillState = ref(getStoredIsFillState());
 
+// item的資料存進已出餐點
+const decreaseQuantity = (columnId, itemId) => {
+  const column = columns.value.find(col => col.id === columnId);
+  if (column) {
+    const item = column.items.find(itm => itm.id === itemId);
+    if (item && item.quantities > 0) {
+      item.quantities -= 1;
+      item.dining_out = true; // Set dining_out to true
+      // Save the updated state to localStorage
+      saveDiningOutState(columnId, itemId, true);
+
+      if (item.quantities === 0) {
+        const completedOrder = {
+          orderId: column.id.slice(-4),  // Include order_id here
+          mealName: item.order_detail,
+          quantity: 1,
+          tableNum: column.table_num || '外帶'
+        };
+        orderDetails.value.push(completedOrder);
+        console.log(completedOrder);
+        saveOrderDetails(orderDetails.value); // Save order details to localStorage
+        column.items = column.items.filter(itm => itm.id !== itemId);
+        if (column.items.length === 0) {
+          showModal(columnId);
+        }
+      }
+    }
+  }
+};
+const confirmIsFill = (orderId) => {
+  const column = columns.value.find(column => column.id === orderId);
+  if (column) {
+    const orderDetailsToAdd = column.items.map(item => ({
+      orderId: item.id.slice(-6, -2), // Extracting the substring from the ID
+      mealName: item.order_detail,
+      quantity: item.quantities,
+      tableNum: column.table_num || '外帶',
+    }));
+
+    orderDetails.value = [...orderDetails.value, ...orderDetailsToAdd];
+    saveOrderDetails(orderDetails.value);
+
+    column.shrinking = true;
+    setTimeout(() => {
+      isFillState.value[orderId] = true;
+      saveIsFillState(isFillState.value);
+      columns.value = columns.value.filter(column => column.id !== orderId);
+      rows.value = [];
+      for (let i = 0; i < columns.value.length; i += 3) {
+        rows.value.push(columns.value.slice(i, i + 3));
+      }
+      closeModal();
+    }, 500); // 500ms 与 CSS 中的过渡时间保持一致
+  }
+};
+
+const saveIsFillState = (state) => {
+  localStorage.setItem('isFillState', JSON.stringify(state));
+  console.log('isFillState saved:', state); // Log the saved state
+};
+
+
+const saveDiningOutState = (columnId, itemId, state) => {
+  let diningOutState = JSON.parse(localStorage.getItem('diningOutState')) || {};
+  if (!diningOutState[columnId]) {
+    diningOutState[columnId] = {};
+  }
+  diningOutState[columnId][itemId] = state;
+  localStorage.setItem('diningOutState', JSON.stringify(diningOutState));
+  console.log('diningOutState saved:', diningOutState); // Log the saved state
+};
+
+// Load the dining_out state from localStorage
+const loadDiningOutState = () => {
+  const diningOutState = JSON.parse(localStorage.getItem('diningOutState')) || {};
+  columns.value.forEach(column => {
+    column.items = column.items.filter(item => {
+      if (diningOutState[column.id] && diningOutState[column.id][item.id]) {
+        return false; // Filter out items with dining_out: true
+      }
+      return true;
+    });
+  });
+};
+const restoreOrder = (index) => {
+  const restoredOrder = orderDetails.value[index];
+  const orderId = restoredOrder.orderId;
+
+  // Find and remove the matching isFillState entry by ID or last four digits
+  for (let key in isFillState.value) {
+    if (key === orderId || key.slice(-4) === orderId) {
+      delete isFillState.value[key];
+    }
+  }
+
+  // Save the updated state to localStorage
+  saveIsFillState(isFillState.value);
+
+  // Find and remove the matching diningOutState entry by ID or last four digits
+  let diningOutState = JSON.parse(localStorage.getItem('diningOutState')) || {};
+  for (let columnKey in diningOutState) {
+    if (columnKey === orderId || columnKey.slice(-4) === orderId) {
+      delete diningOutState[columnKey];
+    } else {
+      for (let itemKey in diningOutState[columnKey]) {
+        if (itemKey === orderId || itemKey.slice(-4) === orderId) {
+          delete diningOutState[columnKey][itemKey];
+        }
+      }
+    }
+  }
+
+  // Save the updated diningOutState to localStorage
+  localStorage.setItem('diningOutState', JSON.stringify(diningOutState));
+
+  // Remove the order from orderDetails
+  orderDetails.value.splice(index, 1);
+
+  // Save the updated order details to localStorage
+  saveOrderDetails(orderDetails.value);
+
+  // Refresh columns data
+  fetchOrders();
+};
+
+// Ensure fetchOrders maintains showLargeModal state
 const fetchOrders = async () => {
   try {
+    console.log("Fetching orders...");
     const response = await fetch('http://localhost:8080/order_info');
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -186,18 +313,27 @@ const fetchOrders = async () => {
         id: order.order_id,
         table_num: order.table_num,
         create_time: order.create_time,
-        items: order.order_detail.map(detail => ({
-          id: detail.meal_name,
-          quantities: detail.quantities,
-          order_detail: detail,
-          isfinishing:false,
-        })),
+        elapsedTime: Date.now() - new Date(order.create_time).getTime(),
+        items: order.order_detail
+          .map((detail, index) => ({
+            id: `${order.order_id}-${index}`,
+            quantities: detail.quantities,
+            order_detail: `${detail.meal_name}  
+              ${detail.custom_option !== 'null' ? '•' + detail.custom_option.replace(/;/g, ' • ') : ''}  
+              ${(detail.custom_option !== 'null' && detail.other_request !== 'null') ? '•' : ''}  
+              ${detail.other_request !== 'null' ? detail.other_request : ''}`,
+            dining_out: false,
+            working_area: detail.working_area
+          })),
         showMenu: false,
         collapsed: false,
         shrinking: false,
         isfill: storedIsFillState[order.order_id] || false,
         working_area: order.order_detail.map(detail => detail.working_area),
       }));
+    console.log("Fetched columns:", columns.value);
+
+    loadDiningOutState();
 
     data.map((order) => order.order_detail)
       .forEach(item_list => item_list.forEach(item => working_area_list.add(item["working_area"])));
@@ -205,56 +341,48 @@ const fetchOrders = async () => {
     rows.value = [];
     for (let i = 0; i < columns.value.length; i += 3) {
       rows.value.push(columns.value.slice(i, i + 3));
-      isCollapsed.value.push(false);
     }
-    isCollapsed.value = isCollapsed.value.map(() => false);
+    console.log("Updated rows:", rows.value);
   } catch (error) {
-    console.error('Error fetching orders:', error);
+    console.error('Fetch error:', error);
   }
-  sessionStorage.setItem("colums",JSON.stringify(columns));
-  let con = JSON.parse(sessionStorage.getItem("colums"));
-  console.log(con);
+  localStorage.setItem("columns", JSON.stringify(columns.value));
+
+  // Maintain showLargeModal state after fetching orders
+  if (largeModalVisible.value) {
+    showLargeModal();
+  }
 };
 
-const refreshOrders = () => {
-  fetchOrders();
-};
 
-const showModal = (id) => {
-  modalOrderId.value = id;
+const filteredRows = computed(() => {
+  const filteredColumns = selectedStation.value === '所有廚台'
+    ? columns.value
+    : columns.value.filter(column =>
+      column.items.some(item =>
+        item.working_area === selectedStation.value // Correct filtering logic here
+      )
+    );
+
+  // Sort the columns based on elapsed time in descending order (longest time first)
+  const sortedColumns = filteredColumns.sort((a, b) => b.elapsedTime - a.elapsedTime);
+
+  const groupedRows = [];
+  for (let i = 0; i < sortedColumns.length; i += 3) {
+    //每頁3筆資料一組
+    groupedRows.push(sortedColumns.slice(i, i + 3));
+  }
+  return groupedRows;
+});
+
+const showModal = (columnId) => {
   modalVisible.value = true;
+  modalOrderId.value = columnId;
 };
 
 const closeModal = () => {
   modalVisible.value = false;
-};
-
-const confirmIsFill = (id) => {
-  toggleIsFill(id);
-  closeModal();
-};
-
-const toggleIsFill = (id) => {
-  const columnIndex = columns.value.findIndex(col => col.id === id);
-  if (columnIndex !== -1) {
-    columns.value[columnIndex].shrinking = true;
-    setTimeout(() => {
-      columns.value.splice(columnIndex, 1);
-      isFillState.value[id] = true;
-      saveIsFillState(isFillState.value);
-    }, 500);
-  }
-};
-
-const resetIsFill = () => {
-  columns.value.forEach(column => {
-    column.isfill = false;
-  });
-  isFillState.value = columns.value.reduce((acc, column) => {
-    acc[column.id] = false;
-    return acc;
-  }, {});
-  saveIsFillState(isFillState.value);
+  modalOrderId.value = null;
 };
 
 const toggleMenu = () => {
@@ -271,6 +399,26 @@ const selectAllStations = () => {
   isMenuOpen.value = false;
 };
 
+const getLastFourDigits = (id) => {
+  return id.slice(-4);
+};
+
+// const getLastFourDigit = (id) => {
+// return id.slice(-4);
+// };
+
+
+const saveOrderDetails = (details) => {
+  localStorage.setItem('orderDetails', JSON.stringify(details));
+};
+
+const loadOrderDetails = () => {
+  const storedOrderDetails = localStorage.getItem('orderDetails');
+  if (storedOrderDetails) {
+    orderDetails.value = JSON.parse(storedOrderDetails);
+  }
+};
+
 const showLargeModal = () => {
   largeModalVisible.value = true;
 };
@@ -279,46 +427,28 @@ const closeLargeModal = () => {
   largeModalVisible.value = false;
 };
 
-const filteredRows = computed(() => {
-  let filteredColumns = [];
-
-  if (selectedStation.value === '所有廚台') {
-    filteredColumns = columns.value;
-  } else {
-    filteredColumns = columns.value.filter(column =>
-      column.working_area.includes(selectedStation.value)
-    );
-  }
-
-  const groupedRows = [];
-  for (let i = 0; i < filteredColumns.length; i += 3) {
-    groupedRows.push(filteredColumns.slice(i, i + 3));
-  }
-
-  return groupedRows;
-});
-
-const formatOrderDetail = (item) => {
-  const { meal_name, custom_option, other_request } = item.order_detail;
-  return `${meal_name}${custom_option !== 'null' ? ' - ' + custom_option : ''}${other_request !== 'null' ? ' - ' + other_request : ''}`;
+const resetOrders = () => {
+  localStorage.removeItem('isFillState');
+  localStorage.removeItem('completedItems');
+  localStorage.removeItem('orderDetails'); // Clear order details as well
+  isFillState.value = {};
+  orderDetails.value = [];
+  resetDiningOutState(); // Reset dining_out state
+  fetchOrders();
 };
 
-const decreaseQuantity = (columnId, itemId) => {
-  const column = columns.value.find(col => col.id === columnId);
-  if (column) {
-    const item = column.items.find(itm => itm.id === itemId);
-    if (item && item.quantities > 0) {
-      item.quantities -= 1;
-      if (item.quantities === 0) {
-        column.items = column.items.filter(itm => itm.id !== itemId);
-        if (column.items.length === 0) {
-          showModal(columnId);
-        }
-      }
-    }
-  }
+const resetDiningOutState = () => {
+  localStorage.removeItem('diningOutState');
+  columns.value.forEach(column => {
+    column.items.forEach(item => {
+      item.dining_out = false;
+    });
+  });
 };
+
 </script>
+
+
 
 <style scoped lang="scss">
 .tcontainer {
@@ -330,7 +460,7 @@ const decreaseQuantity = (columnId, itemId) => {
 
 .order-list {
   min-width: 100%;
-  margin-top:-26px;
+  margin-top: -26px;
   display: flex;
   flex-direction: column;
   overflow-x: auto;
@@ -356,7 +486,7 @@ const decreaseQuantity = (columnId, itemId) => {
   flex: 0 0 calc(33.33% - 10px);
   margin-right: 10px;
   height: 75dvh;
-  transition: height 0.3s ease, transform 0.5s ease, opacity 0;
+  transition: height 0.3s ease, transform 0.5s ease, opacity 0.5s;
 
   &.collapsed {
     height: 8dvh;
@@ -365,6 +495,19 @@ const decreaseQuantity = (columnId, itemId) => {
   &.shrinking {
     transform: scale(0);
     opacity: 0;
+    height: 0;
+    margin-right: 0;
+  }
+
+  .order-column .id.bottom-right[data-v-48f2c3d1] {
+    position: absolute;
+    bottom: -56px;
+    right: -8px;
+    margin: 8px;
+    color: white;
+    padding: 3px 0px;
+    border-radius: 3px;
+    font-size: 26px;
   }
 }
 
@@ -470,7 +613,7 @@ const decreaseQuantity = (columnId, itemId) => {
     align-items: center;
     padding: 20px;
     border: 1px solid #cccccc92;
-    font-size: 25px;
+    font-size: 23px;
 
     .icon {
       width: 40px;
@@ -545,21 +688,25 @@ const decreaseQuantity = (columnId, itemId) => {
   align-items: center;
 }
 
-.modal-content {
+.modal-content {;
   background: white;
-  padding: 20px;
+  padding: 76px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-
-  button {
-    margin: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+  font-size: 25px;
 }
+
+.modal-content button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #00c1ca;
+  color: white;
+}
+
 
 .off-canvas-menu {
   position: fixed;
@@ -630,6 +777,7 @@ const decreaseQuantity = (columnId, itemId) => {
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: relative;
+    overflow-y: auto;
   }
 
   .mh {
@@ -696,5 +844,16 @@ const decreaseQuantity = (columnId, itemId) => {
     background-color: #f8f8f8;
     font-weight: bold;
   }
+
+  .obutton {
+    background-color: rgb(227, 226, 226);
+    border: 1px solid #ccc;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: -20px;
+  }
+
 }
 </style>
