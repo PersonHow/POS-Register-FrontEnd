@@ -1,9 +1,11 @@
 <script>
 import Swal from "sweetalert2"; // 引入 SweetAlert2 庫
+import { onUpdated } from "vue";
 
 export default {
   data() {
     return {
+      selected_calendar:{calendar_id:"#"},
       staff:null,
       booking_list_today:[],
       working_staff_list:[],
@@ -30,6 +32,24 @@ export default {
     this.setCurrentTime(); // 初始化當前時間
     this.setTomorrowDate(); // 設定明天的日期
     this.getBookingsToday();
+  },
+  created(){
+    if(JSON.parse(sessionStorage.getItem("selected_calendar"))){
+      this.selected_calendar = JSON.parse(sessionStorage.getItem("selected_calendar"));
+      this.formData.calendar_id = this.selected_calendar.calendar_id;
+      this.formData.calendar_date = this.selected_calendar.calendar_date;
+      this.formData.booking_list = this.selected_calendar.booking_list;
+      this.formData.staff_id = this.selected_calendar.staff_id;
+      this.formData.staff_name = this.selected_calendar.staff_name;
+      this.formData.isholiday = this.selected_calendar.isholiday;
+      if(this.selected_calendar.booking_list){
+          this.booking_list = this.selected_calendar.booking_list.split(";").map((item)=>{return parseInt(item)});
+          console.log(this.booking_list);
+      }
+      if(!this.selected_calendar.isholiday){
+        this.formData.special_events = this.selected_calendar.special_events;
+      }
+    } 
   },
   methods: {
     async fetchWorkingStaffs(){
@@ -99,13 +119,15 @@ export default {
       },
     resetForm() {
         this.formData.calendar_id="#";
-        this.formData.booking_list=[];
+        this.formData.booking_list="";
         this.formData.special_events="";
         this.formData.staff_name="";
         this.formData.staff_id="#";
         this.formData.lastmodified_staff_id="#";
         this.formData.isholiday=false;
         this.formData.calendar_date="";
+        this.booking_list = [];
+        sessionStorage.removeItem("selected_calendar");
     },
     addSelected_booking_num(){
       if(this.selected_booking_num){
@@ -128,8 +150,168 @@ export default {
         this.selected_booking_num =null;
       }
     },
-    postCalendarHandler(){
-      console.log(this.formData);
+    async postCalendarHandler(){
+      
+      if(!this.formData.calendar_date){
+          Swal.fire({title:"活動日期為空，請重新輸入！",showConfirmButton:true,
+                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                      icon:'error',iconColor:"#00c5c8"})
+                      return;
+      }
+      if(!this.formData.isholiday && this.formData.staff_id=="#"){
+        Swal.fire({title:"非公休日必須選擇值班員工，請重新輸入！",showConfirmButton:true,
+                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                      icon:'error',iconColor:"#00c5c8"})
+                      return;
+      }else{
+        this.formData.lastmodified_staff_id = this.staff.staff_id;
+      }
+      let data_json={};
+      data_json["isholiday"] = this.formData.isholiday;
+      data_json["lastmodified_staff_id"] = this.staff.staff_id;
+      data_json["calendar_date"] = this.formData.calendar_date;
+      if(this.formData.isholiday){
+        if(this.formData.calendar_id =="#"){
+          try {
+            const response = await fetch(`http://localhost:8080/calendar`,{
+              method:"POST",
+              headers: {
+              'Content-Type': 'application/json',
+              },
+              body:JSON.stringify(data_json)
+            });
+            if (response.status !=201) {
+              throw new Error("Network response was not ok");
+            }else{
+              Swal.fire({title:`新增行事曆活動成功！`,showConfirmButton:true,
+              confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+              icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+                if(res.isConfirmed){
+                  window.location.reload();
+                }
+              })
+            }
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+        }else{
+          data_json["calendar_id"] = this.formData.calendar_id;
+          try {
+            const response = await fetch(`http://localhost:8080/calendar`,{
+              method:"PUT",
+              headers: {
+              'Content-Type': 'application/json',
+              },
+              body:JSON.stringify(data_json)
+            });
+            if (response.status !=200) {
+              throw new Error("Network response was not ok");
+            }else{
+              Swal.fire({title:`編輯行事曆活動成功！`,showConfirmButton:true,
+              confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+              icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+                if(res.isConfirmed){
+                  this.resetForm();
+                  window.location.reload();
+                }
+              })
+            }
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+        }
+        
+      }else{
+        data_json["staff_id"]= this.formData.staff_id;
+        let staff = this.working_staff_list.filter((item)=>{return item.staff_id == this.formData.staff_id})[0];
+        data_json["special_events"] = this.formData.special_events;
+        if(this.booking_list.length != 0 ){
+          data_json["booking_list"] = this.booking_list.join(";");
+        }else{
+          data_json["booking_list"] = "";
+        }
+        data_json["staff_name"] = staff.staff_name;
+        if(this.formData.calendar_id =="#"){
+          try {
+            const response = await fetch(`http://localhost:8080/calendar`,{
+              method:"POST",
+              headers: {
+              'Content-Type': 'application/json',
+              },
+              body:JSON.stringify(data_json)
+            });
+            if (response.status !=201) {
+              throw new Error("Network response was not ok");
+            }else{
+              await response.json();
+              Swal.fire({title:`新增行事曆活動成功！`,showConfirmButton:true,
+              confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+              icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+                if(res.isConfirmed){
+                  window.location.reload();
+                }
+              })
+            }
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+        }else{
+          data_json["calendar_id"] = this.formData.calendar_id;
+          try {
+            const response = await fetch(`http://localhost:8080/calendar`,{
+              method:"PUT",
+              headers: {
+              'Content-Type': 'application/json',
+              },
+              body:JSON.stringify(data_json)
+            });
+            if (response.status !=200) {
+              throw new Error("Network response was not ok");
+            }else{
+              Swal.fire({title:`編輯行事曆活動成功！`,showConfirmButton:true,
+              confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+              icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+                if(res.isConfirmed){
+                  window.location.reload();
+                }
+              })
+            }
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+        }
+      }
+    },
+    async deleteCalendarHandler(){
+      if(this.formData.calendar_id == "#"){
+        Swal.fire({title:"你沒有選擇行事曆活動，請重新輸入！",showConfirmButton:true,
+                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                      icon:'error',iconColor:"#00c5c8"})
+                      return;
+      }else{
+        try {
+            const response = await fetch(`http://localhost:8080/calendar/${this.formData.calendar_id}`,{
+              method:"DELETE",
+              headers: {
+              'Content-Type': 'application/json',
+              },
+            });
+            if (response.status !=200) {
+              throw new Error("Network response was not ok");
+            }else{
+              Swal.fire({title:"刪除行事曆活動成功！！",showConfirmButton:true,
+                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                      icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+                        if(res.isConfirmed){
+                          window.location.reload();
+                        }
+              })
+            }
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+        
+      }
     }
   },
 };
@@ -139,13 +321,14 @@ export default {
   <div class="bf-container">
     <div class="bf-body">
       <div class="bf-body-box">
-        <h1>活動設定</h1>
+        <h1>行事曆活動管理</h1>
+        <p>行事曆編號：{{this.formData.calendar_id == "#"? "未選擇":this.formData.calendar_id}}</p>
         <!-- 活動日期輸入欄 -->
         <div class="bf-row">
           <div class="bf-col-12">
-            <p>活動日期</p>
+            <p>行事曆日期(必填)</p>
             <input
-              v-model="formData.date"
+              v-model="this.formData.calendar_date"
               type="date"
               :min="tomorrowDate"
             />
@@ -168,10 +351,10 @@ export default {
         <div class="bf-row">
           <div class="bf-col-12">
             <p>活動類型</p>
-            <select>
-              <option>一般活動</option>
-              <option>慶功活動</option>
-              <option>生日活動</option>
+            <select v-model="this.formData.special_events">
+              <option value="一般活動">一般活動</option>
+              <option value="慶功活動">慶功活動</option>
+              <option Value="生日活動">生日活動</option>
             </select>
           </div>
         </div>
@@ -186,7 +369,7 @@ export default {
         </div>
         <div class="bf-row">
           <div class="bf-col-12">
-            <p>值班員工</p>
+            <p>值班員工(非公休日必填)</p>
             <select v-model="this.formData.staff_id">
               <option v-for="working_staff in working_staff_list" :key="working_staff_list.staff_id" :value="working_staff.staff_id">{{ working_staff.staff_name }}</option>
             </select>
@@ -198,7 +381,10 @@ export default {
             <input type="submit" value="提交" @click="postCalendarHandler"/>
           </div>
           <div class="bf-col-3">
-            <input value="刪除" style="height: 100%;font-size: 1rem;text-align: center;cursor: pointer;"/>
+            <input type="submit" value="清除" @click="resetForm"/>
+          </div>
+          <div class="bf-col-3">
+            <input value="刪除" style="height: 100%;font-size: 1rem;text-align: center;cursor: pointer;" @click="deleteCalendarHandler"/>
           </div>
         </div>
       </div>
@@ -263,9 +449,7 @@ textarea:hover {
 
 /* 整體表單容器樣式 */
 .bf-container {
-  min-width: 28vw;
-  font-size: 1.2rem;
-  margin-left: 2rem;
+  margin: 2rem;
   border: 2px solid black;
   display: flex; /* 使用Flex布局 */ /* 水平置中 */ /* 垂直置中 */
   align-items: center;
@@ -278,10 +462,10 @@ textarea:hover {
     border-radius: 8px; /* 圓角為8px */
     /* 表單內容盒子樣式 */
     .bf-body-box {
-      width: 25vw;
+      width: 28vw;
       max-height: 70vh;
-      overflow-y: scroll;
-      padding: 10px;
+      overflow-y: auto;
+      padding: 2rem;
       display:flex;
       flex-direction: column;
 
