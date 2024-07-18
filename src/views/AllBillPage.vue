@@ -154,7 +154,8 @@ export default {
         width: 100%;
 
         .leftArea {
-            width: 25%;
+            width: 20%;
+            height: 83dvh;
             transition: width 0.3s ease;
             overflow: hidden;
 

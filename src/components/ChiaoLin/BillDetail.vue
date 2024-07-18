@@ -269,7 +269,7 @@ export default {
                 p {
                     height: 2.5dvh;
                     margin-left: 1dvw;
-                    font-size: 2dvh;
+                    font-size: 2.25dvh;
                     margin-top: 1dvh;
                 }
 
@@ -291,6 +291,10 @@ export default {
 
                 .inputEventArea {
                     border-bottom: 1px solid rgb(213, 212, 212);
+
+                    i{
+                        font-size: 2.5dvh;
+                    }
 
                     input {
                         text-align: right;

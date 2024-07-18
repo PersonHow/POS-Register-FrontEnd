@@ -115,7 +115,7 @@ export default {
             display: flex;
             width: 95%;
             height: 7dvh;
-            line-height: 7dvh;
+            line-height: 7.5dvh;
             background: linear-gradient(90deg, #00c1ca, #01e1c5);
             color: #fff;
             border-radius: 10px;
@@ -153,7 +153,6 @@ export default {
 
                 i {
                     z-index: 1;
-                    line-height: 8dvh;
                     line-height: 8dvh;
                 }
             }

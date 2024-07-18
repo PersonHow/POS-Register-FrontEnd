@@ -141,7 +141,7 @@ export default {
                 </div>
             </div>
             <div v-if="changeArea == true">
-                <div class="showBack" @click="showChangeArea()">
+                <div class="showBack">
                     <div class="showBox" @click.stop>
                         <div class="titleArea">
                             <p>找&nbsp;&nbsp;&nbsp;&nbsp;零</p>
@@ -181,7 +181,6 @@ export default {
         .mathBut {
             width: 100%;
             height: 10dvh;
-            padding-right: 1.5dvw;
 
             input {
                 width: 85%;
@@ -190,6 +189,7 @@ export default {
                 background: linear-gradient(white 80%, #00c1ca 20%);
                 color: black;
                 font-size: 3dvh;
+                border-radius: 5px;
 
                 &.active {
                     background: linear-gradient(rgb(152, 152, 152) 70%, #009688 30%);
@@ -199,7 +199,6 @@ export default {
 
         .otherButArea {
             width: 30%;
-            margin-right: 1dvw;
 
             .mathBut {
                 width: 95%;
@@ -208,6 +207,7 @@ export default {
                     width: 100%;
                     font-family: "Chocolate Classical Sans", sans-serif;
                     font-size: 2dvh;
+                    border-radius: 5px;
                 }
 
                 #butbackspace,
@@ -222,6 +222,7 @@ export default {
                     height: 18dvh;
                     background: linear-gradient(90deg, #00c1ca, #01e1c5);
                     color: white;
+                    border-radius: 5px;
                 }
             }
         }
@@ -274,6 +275,7 @@ export default {
                 font-family: "Chocolate Classical Sans", sans-serif;
                 font-size: 2dvh;
                 border-radius: 5px;
+                border: none;
             }
         }
 

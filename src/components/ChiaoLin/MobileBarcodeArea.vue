@@ -25,7 +25,7 @@ export default {
 </script>
 
 <template>
-    <div class="showBack" @click="closeArea()">
+    <div class="showBack">
         <div class="showBox" @click.stop>
             <div class="titleArea">
                 <p>載&nbsp;&nbsp;&nbsp;&nbsp;具</p>
@@ -92,6 +92,7 @@ export default {
             font-family: "Chocolate Classical Sans", sans-serif;
             font-size: 2.25dvh;
             border-radius: 5px;
+            border: none
         }
     }
 

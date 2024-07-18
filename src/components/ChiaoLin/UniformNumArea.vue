@@ -90,6 +90,7 @@ export default {
             font-family: "Chocolate Classical Sans", sans-serif;
             font-size: 2.25dvh;
             border-radius: 5px;
+            border: none;
         }
     }
 
@@ -101,6 +102,7 @@ export default {
         }
 
         input {
+            width: 89%;
             height: 6dvh;
             margin: 1dvh 1dvw;
             padding: 0 1dvw;

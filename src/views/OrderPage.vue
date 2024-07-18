@@ -341,7 +341,7 @@ export default {
                                 <!-- 跳轉至桌位頁 -->
                                 <a v-if="tableInfo" @click="navigateToTablePage()" class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
                                 <!-- 跳轉至結帳頁 -->
-                                <a @click="navigateToBillPage()" class="btn btn-primary">立即結帳</a>
+                                <a @click="navigateToBillPage()" data-bs-dismiss="modal" class="btn btn-primary">立即結帳</a>
                             </div>
                         </div>
                         

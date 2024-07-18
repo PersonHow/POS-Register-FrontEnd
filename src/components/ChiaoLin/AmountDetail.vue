@@ -165,10 +165,10 @@ export default {
         .showInvoiceNumArea,
         .inputShowArea {
             display: flex;
-            width: 25dvw;
+            width: 23.5dvw;
 
             button {
-                width: 10dvw;
+                width: 9.5dvw;
                 height: 6dvh;
                 margin: 0 1dvw;
                 margin-top: 2.5dvh;
@@ -184,7 +184,7 @@ export default {
 
         .showInvoiceNumArea {
             padding-left: 1dvw;
-            line-height: 10dvh
+            line-height: 9dvh
         }
 
         p {
@@ -204,6 +204,8 @@ export default {
         color: gray;
         font-weight: 600;
         margin: 0 0.5dvw;
+        margin-right: 1.5dvw;
+        border-radius: 5px;
 
         .amountDetailShow {
             width: 100%;

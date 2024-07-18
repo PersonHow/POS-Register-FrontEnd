@@ -70,7 +70,7 @@ div.container {
 
     li {
       display: inline-block;
-      padding-top: 1dvh;
+      padding-top: 0.5dvh;
       margin-right: 6dvw;
       position: relative;
 

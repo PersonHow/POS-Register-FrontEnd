@@ -19,7 +19,7 @@ export default {
 </script>
 
 <template>
-    <div class="showBack" @click="closeShow">
+    <div class="showBack">
         <div class="showBox" @click.stop>
             <div class="titleArea">
                 <p>手開發票</p>
@@ -92,6 +92,7 @@ export default {
             font-family: "Chocolate Classical Sans", sans-serif;
             font-size: 2.25dvh;
             border-radius: 5px;
+            border: none;
         }
     }
 

@@ -46,12 +46,7 @@ const router = createRouter({
     {
       path: "/MenuManage",
       name: "MenuManage",
-      component: () => import("../views/MenuManage.vue"),
-    },
-    {
-      path: "/MenuManage",
-      name: "MenuManage",
-      component: () => import("../views/MenuManage.vue"),
+      component: () => import("../components/Yuhan/MenuManage.vue"),
     },
     {
       path: "/reserve",
