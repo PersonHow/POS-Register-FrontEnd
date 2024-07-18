@@ -196,7 +196,11 @@
                         </div>
                   </div>
                 </div>
+                  </div>
+                </div>
             </template>
+          <!-- 顯示每張桌子的內容 -->
+        </draggable>
           <!-- 顯示每張桌子的內容 -->
         </draggable>
     </div>
@@ -456,6 +460,8 @@
                     </div>
               </div>
             </div>
+              </div>
+            </div>
         </template>
     </draggable>
     <div v-else class="noEditTableArea">
@@ -641,6 +647,11 @@
         }
         this.input_table = {};
         this.select_table ={};
+      },
+      async deleteTableHandler(){
+        try {
+          const response = await fetch(`http://localhost:8080/table/${this.input_table.table_id}`,{
+            method:"DELETE",
       },
       async deleteTableHandler(){
         try {
@@ -839,6 +850,8 @@
 
   #app {
     width: 100%;
+  #app {
+    width: 100%;
     flex-direction: column;
     max-height: 80vh;
     padding:1%;
@@ -924,6 +937,66 @@
       h5{
         font-size: 1.5rem;
         font-weight: bold;
+      } 
+    } 
+  }
+   
+  .noEditTableArea {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 200px;
+    .tableNum {
+      width: 100%;
+      min-width:200px;
+      display: flex;
+      justify-content: baseline;
+    }
+    .status{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      color: white;
+      font-size: 1.5rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .staffId,.booking,.time,.childSeat,.Seat{
+      width: 100%;
+      display: flex;
+      justify-content: start;
+      color: white;
+    }
+  }
+  .btn {
+    margin-top: 1rem;
+    width: 100px;
+    background: #FFFFFF;
+    border: 2px solid #00c5c8;
+    transform: translate3d(0px, 0%, 0px);
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    transition-delay: 0.6s;
+    overflow: hidden;
+    &:before,&:after 
+    {
+        content: '';
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        transition: all 0.6s ease;
+    }
+    &:before{
+      background: #00c5c8;
+      border-radius: 50% 50% 0 0;
+      transform: translateY(100%) scaleY(0.5);
+    }
+    &:after{
+      background: #FFFFFF;
       } 
     } 
   }
@@ -1074,7 +1147,31 @@
     margin-left: 5px;
     text-align: center;
     cursor: pointer;
+.btn_clear_select_table{
+    background-color: #3AD2D0;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: monospace;
+    color: white;
+    padding: 10px;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
 }
+.btn_target_table{
+    background-color: #e76f51;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: monospace;
+    color: white;
+    padding: 10px;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
 .btn_target_table{
     background-color: #e76f51;
     border: none;
@@ -1089,7 +1186,18 @@
     cursor: pointer;
 }
 .btn_cancel_target_table{
+.btn_cancel_target_table{
   background-color: #3AD2D0;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: monospace;
+    color: white;
+    padding: 10px;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
     border: none;
     border-radius: 5px;
     font-weight: bold;
@@ -1104,6 +1212,11 @@
 .swal_selected_table{
   color: #00c5c8;
   font-size: 5rem;
+.swal_selected_table{
+  color: #00c5c8;
+  font-size: 5rem;
 }
+  </style>
+  
   </style>
   

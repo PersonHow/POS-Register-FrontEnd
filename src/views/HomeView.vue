@@ -81,7 +81,7 @@ export default{
                 <input v-model="this.password" class="pass" type="password" placeholder="你的密碼">
                 <div class="position">
                     <p>你的職位：</p>
-                    <select class="un"v-model="this.position">
+                    <select class="un" v-model="this.position">
                         <option value="員工">員工</option>
                         <option value="主管">主管</option>
                     </select>
@@ -92,7 +92,7 @@ export default{
         </div>
     
 </template>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     body {
         font-family: 'Ubuntu', sans-serif;
     }

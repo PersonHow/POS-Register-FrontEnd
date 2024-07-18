@@ -26,4 +26,3 @@ library.add(fas, far, fab);
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.component("draggable", draggable);
 app.mount("#app");
-

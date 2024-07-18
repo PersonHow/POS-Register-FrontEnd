@@ -29,6 +29,11 @@ const router = createRouter({
       component: () => import("../views/BillPage.vue"),
     },
     {
+      path: "/BillPage",
+      name: "BillPage",
+      component: () => import("../views/BillPage.vue"),
+    },
+    {
       path: "/AllBillPage",
       name: "AllBillPage",
       component: () => import("../views/AllBillPage.vue"),
@@ -43,6 +48,11 @@ const router = createRouter({
     //   name: "MenuManage",
     //   component: () => import("../views/MenuManage.vue"),
     // },
+    {
+      path: "/MenuManage",
+      name: "MenuManage",
+      component: () => import("../views/MenuManage.vue"),
+    },
     {
       path: "/reserve",
       name: "reserve",
