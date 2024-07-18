@@ -11,9 +11,9 @@ export default {
         // 將餐點種類和工作台轉成multiselect可以使用的形式
         let types = MenuStore.types.map(type => ({ name: type }))
         let areas = MenuStore.working_areas.map(area => ({ name: area }))
-        let customs = MenuStore.custom_options.map(option => ({ name: option.options , id: option.custom_id}))
+        let customs = MenuStore.custom_options.map(option => ({ name: option.option , id: option.custom_id}))
 
-        let customsVal = ref(MenuStore.meal.options)
+        let customsVal = ref(MenuStore.meal.option)
 
 
         //若已有選中的項目 將它轉換成multiselect可用的形式
@@ -24,12 +24,12 @@ export default {
         watch(() => MenuStore.meal, (newMeal) => {
             typeVal.value = { name: newMeal.type };
             areaVal.value = { name: newMeal.working_area };
-            customsVal.value = newMeal.options;
+            customsVal.value = newMeal.option;
         }, { deep: true });
 
         //若有選項發生變化 將值反應給MenuStore
         watch(customsVal, (newVal) => {
-            MenuStore.meal.options = newVal;
+            MenuStore.meal.option = newVal;
         })
         watch(typeVal, (newVal) => {
             MenuStore.meal.type = newVal.name
@@ -57,7 +57,6 @@ export default {
             this.types.push(option)
             this.typeVal = option
         },
-
     },
 }
 </script>
@@ -88,14 +87,14 @@ export default {
         </div>
         <div class="type-select mb-3">
             <label class="typo__label">選擇餐點種類</label>
-            <Multiselect v-model="typeVal" deselect-label="Can't remove this value" track-by="name" label="name"
+            <Multiselect v-model="typeVal" track-by="name" label="name"
                 placeholder="選一個種類或新增種類" :options="types" :taggable="true" @tag="addTypeOption" :allow-empty="false">
                 <template v-slot:singleLabel="{ option }"><strong>{{ option.name }}</strong></template>
             </multiselect>
         </div>
         <div class="type-select mb-3">
             <label class="typo__label">選擇工作台</label>
-            <Multiselect v-model="areaVal" deselect-label="Can't remove this value" track-by="name" label="name"
+            <Multiselect v-model="areaVal"  track-by="name" label="name"
                 placeholder="選擇餐點製作區域" :options="areas" :allow-empty="false">
                 <template v-slot:singleLabel="{ option }"><strong>{{ option.name }}</strong></template>
             </multiselect>
