@@ -22,8 +22,7 @@ export default {
             types:[], //餐點所有種類 如:["排餐","炸物","飯類","披薩","義大利麵"]
             selectedType:"", //目前顯示的種類
             
-            tableNum:null, //桌號====>TODO
-            guestNum:"", //用餐人數==>TODO
+            tableInfo:{table_id:null, guest_num:null}, //桌位狀態
             memo:null, //備註
             showMemoInput:false,
             
@@ -45,22 +44,18 @@ export default {
     },
     created(){
         this.staff = JSON.parse(sessionStorage.getItem("token"))
-        console.log(this.staff)
         if(sessionStorage.getItem("token")==null){
             Swal.fire({text:"你還沒有登入，將轉向登入頁面！", icon:"info"})
             this.$router.push({name: 'home'})
         }
-        if(this.$route.query.selected_table){
-            this.selected_table=JSON.parse(this.$route.query.selected_table);
-            this.selected_target_table =JSON.parse(this.$route.query.selected_target_table);
-            console.log(this.selected_table);
-            console.log(this.selected_target_table);
+        if(sessionStorage.selected_table){
+            this.tableInfo=JSON.parse(sessionStorage.getItem("selected_table"));
+            console.log(this.tableInfo);
         }
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱
         window.bootstrap = bootstrap
-        this.orderStore.getOrderInfo() //取得最近五筆送單紀錄
     },
     methods:{
         //取得菜單內餐點
@@ -165,8 +160,8 @@ export default {
             })
             let order={
                 order_id: this.oId,
-                table_num: this.tableNum,
-                guest_num: this.guestNum,
+                table_num: this.tableInfo.table_id,
+                guest_num: this.tableInfo.guest_num,
                 order_detail: this.orderList,
                 amount: this.orderAmount,
                 memo: this.memo,
@@ -236,16 +231,16 @@ export default {
         <div class="container left-side">
             <div class="header">
                 <span>單號: {{oId}} </span>
-                <span>{{ tableNum? "桌號: "+tableNum:"外帶" }}</span>
+                <span>{{ tableInfo.table_id? "桌號: "+tableInfo.table_id:"外帶" }}</span>
                 <div class="dropdown">
                     <a class="btn btn-lg dropdown-toggle" href="#" 
                     role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                     <font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
-                        <li v-if="tableNum"><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modifyNumModal">修改人數/桌號</button></li>
+                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modifyNumModal">修改人數/桌號</button></li>
                         <!-- 返回桌位 -->
-                        <li><a class="dropdown-item" href="#">取消此筆訂單</a></li> 
-                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#orderHistoryModal">送單紀錄</a></li>
+                        <li><a class="dropdown-item" @click="navigateToTablePage()">取消此筆訂單</a></li> 
+                        <li><a class="dropdown-item" @click="orderStore.getOrderInfo()" data-bs-toggle="modal" data-bs-target="#orderHistoryModal">送單紀錄</a></li>
                     </ul>
                 </div>
             </div>
@@ -292,9 +287,6 @@ export default {
                         <input type="radio" v-model="selectedType" :value="type" :id="type">
                         <label :for="type" :class="{active : selectedType === type}">{{type}}</label>
                     </div>
-                </div>
-                <div class="arrow">
-                    <font-awesome-icon icon="fa-solid fa-chevron-right"/>
                 </div>
             </div>
             <div class="px-5 wrap" >
@@ -346,9 +338,9 @@ export default {
                             <div class="modal-header"><h4><strong>送單完畢，是否前往結帳</strong></h4></div>
                             <div class="modal-body d-flex justify-content-evenly">
                                 <!-- 跳轉至桌位頁 -->
-                                <a class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
+                                <a v-if="tableInfo" @click="navigateToTablePage()" class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
                                 <!-- 跳轉至結帳頁 -->
-                                <a class="btn btn-primary">立即結帳</a>
+                                <a @click="navigateToBillPage()" class="btn btn-primary">立即結帳</a>
                             </div>
                         </div>
                         
@@ -356,7 +348,7 @@ export default {
                     </div>
                 <button @click="editMemo()" class="btn btn-nowrap">訂單備註</button>
             </div>
-            <!-- 修改人數視窗 -->
+            <!-- 修改桌號人數視窗 -->
             <div class="modal fade" id="modifyNumModal" tabindex="-1" aria-labelledby="modifyNumModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -365,8 +357,8 @@ export default {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <label for="guestNum">桌號</label><input type="text" v-model="tableNum" id="guestNum">
-                            <label for="guestNum">用餐人數</label><input type="text" v-model="guestNum" id="guestNum">
+                            <label for="guestNum">桌號</label><input type="text" v-model="tableInfo.table_id" id="guestNum">
+                            <label for="guestNum">用餐人數</label><input type="text" v-model="tableInfo.guest_num" id="guestNum">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn" data-bs-dismiss="modal" data-bs-toggle="modal">
@@ -578,10 +570,6 @@ $secondary-color: #FFE2C3;
     color: #fff;
     padding: 10px 20px;
     border-radius: 10px;
-}
-.arrow{
-    padding: 5% 2%;
-    background: rgb(240, 240, 240);
 }
 .meal{
     width: 10vw;

@@ -1,6 +1,6 @@
 <script>
-import AddMenu from '../components/Yuhan/EditMenu.vue'
-import UpdateCustom from '../components/Yuhan/EditCustom.vue'
+import AddMenu from './EditMenu.vue'
+import UpdateCustom from './EditCustom.vue'
 import { useMenuStore } from '@/stores/MenuStore';
 export default {
     setup(){
