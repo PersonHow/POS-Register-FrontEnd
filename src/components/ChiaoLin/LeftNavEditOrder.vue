@@ -2,8 +2,6 @@
 import { useBillstore } from '@/stores/BillStore';
 import { useOrderStore } from '@/stores/OrderStore';
 import { mapState, mapActions } from 'pinia';
-import { useOrderStore } from '@/stores/OrderStore';
-import { mapState, mapActions } from 'pinia';
 export default {
     setup() {
         const Billstore = useBillstore();

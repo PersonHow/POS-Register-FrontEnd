@@ -1,7 +1,6 @@
 <script>
 import { useBillstore } from '@/stores/BillStore'
 import { useOrderStore } from '@/stores/OrderStore'
-import { useOrderStore } from '@/stores/OrderStore'
 import { mapState, mapActions } from 'pinia';
 import { onMounted, watch } from 'vue';
 import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
@@ -41,7 +40,6 @@ export default {
 
         return {
             Billstore,
-            OrderStore,
             OrderStore,
             updateValue,
             enterAddInputValue,

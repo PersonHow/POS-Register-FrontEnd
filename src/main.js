@@ -19,19 +19,11 @@ const vuetify = createVuetify({
 const app = createApp(App)
 const pinia = createPinia()
 
-library.add(fas, far, fab)
-
-app.component('font-awesome-icon', FontAwesomeIcon)
-app.component('draggable', draggable);
-
 app.use(router)
 app.use(pinia)
 app.use(vuetify);
 library.add(fas, far, fab);
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.component("draggable", draggable);
-<<<<<<<<< Temporary merge branch 1
 app.mount("#app");
-=========
-app.mount("#app");
->>>>>>>>> Temporary merge branch 2
+

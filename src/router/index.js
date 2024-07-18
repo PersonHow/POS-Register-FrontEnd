@@ -38,11 +38,11 @@ const router = createRouter({
       name: "calendar",
       component: () => import("../views/Calendar.vue"),
     },
-    {
-      path: "/MenuManage",
-      name: "MenuManage",
-      component: () => import("../views/MenuManage.vue"),
-    },
+    // {
+    //   path: "/MenuManage",
+    //   name: "MenuManage",
+    //   component: () => import("../views/MenuManage.vue"),
+    // },
     {
       path: "/reserve",
       name: "reserve",

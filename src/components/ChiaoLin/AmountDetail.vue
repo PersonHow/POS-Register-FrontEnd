@@ -92,7 +92,6 @@ export default {
                 <p>* 折扣{{ Billstore.discount
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.discountAmount) }}) * 服務費{{ Billstore.serviceFee
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </p>
-                    }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </p>
                 <p>- 招待NT.{{ Billstore.tothousendShowValue(Billstore.entertain) }} - 折讓NT.{{
                     Billstore.tothousendShowValue(Billstore.allowance) }}</p>
             </div>
