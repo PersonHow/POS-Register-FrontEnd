@@ -9,19 +9,16 @@ export default {
     methods: {},
     created() {
     if(sessionStorage.getItem("token") == null){
+        this.$router.push({name: 'home'});
         Swal.fire({title:"你還沒有登入，將轉向登入頁面！",showConfirmButton:true,
             confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
-            icon:'error',iconColor:"#00c5c8"}).then((res)=>{
-              if(res.isConfirmed){
-                this.$router.push({name: 'home'});
-              }
-            })
+            icon:'error',iconColor:"#00c5c8"})
         }
     },
-components: {
-    Reserve,
-    ReserveList
-  },
+    components: {
+        Reserve,
+        ReserveList
+    },
 };
 </script>
 <template>
@@ -29,7 +26,7 @@ components: {
   <div class="body">
     <!-- second Area = 中間桌子的區塊 -->
         <div class="second">
-            <ReserveList style="width:70%"/>
+            <ReserveList/>
             <Reserve/>
         </div>
   </div>
@@ -48,16 +45,17 @@ components: {
   border:unset;
 }
 .body {
-  width: 100%;
-  height: 90vh; 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
     .second {
+        width: 100%;
+        height: 90vh; 
         display:flex;
-        overflow-y: scroll;
-        justify-content: space-between;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
     }
 }
 </style>

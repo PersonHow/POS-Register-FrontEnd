@@ -18,7 +18,7 @@ export default {
         <ul>
           <li><a><RouterLink to="/calendar">行事曆</RouterLink></a></li>
           <li><a><RouterLink to="/table">桌位</RouterLink></a></li>
-          <li><a><RouterLink to="/OrderPage">點餐</RouterLink></a></li>
+          <li><a><RouterLink to="/OrderPage">點餐(外帶)</RouterLink></a></li>
           <li><a><RouterLink to="/workingarea">工作台</RouterLink></a></li>
           <li><a><RouterLink to="/reserve">訂位</RouterLink></a></li>
           <li v-if="this.staff"><a><RouterLink to="/logout">登出</RouterLink></a></li>

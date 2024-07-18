@@ -442,7 +442,7 @@ export default {
 /* 全域樣式 */
 .tableArea {
   display: flex;
-  overflow-y: scroll
+  font-size: 1.2rem;
 }
 
 table,
@@ -454,11 +454,10 @@ td {
 }
 
 main.table {
-  width: 82vw;
+  min-width: 70vw;
   height: 90vh;
   background-color: #ffffff;
   border-radius: 0.8rem;
-  overflow: hidden;
 }
 
 .table_header {

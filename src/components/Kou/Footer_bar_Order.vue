@@ -2,7 +2,7 @@
     <div>
       <v-dialog max-width="50%" style="z-index: 2;">
         <template v-slot:activator="{ props: activatorProps }">
-          <button v-bind="activatorProps"class="template_dialog_btn">點餐</button>
+          <button v-bind="activatorProps"class="template_dialog_btn">點餐(內用)</button>
         </template>
   
         <template v-slot:default="{ isActive }" class="template_dialog">

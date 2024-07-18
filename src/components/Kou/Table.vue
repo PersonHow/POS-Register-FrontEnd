@@ -367,7 +367,10 @@
         </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
         <h5>訂位：<br>(0:未訂位)</h5>
-          <input v-model="input_table.booking_num" type="text">
+          <select v-model="input_table.booking_num">
+            <option :value="0">0</option>
+            <option v-for="booking in this.booking_list_today" :key="booking.bookingNum" :value="booking.bookingNum">{{ booking.bookingNum }}</option>
+          </select>
         </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
         <h5>桌位狀態：</h5>
@@ -410,7 +413,7 @@
     </div>
   </div>
   <div style="display: flex;align-items: center; justify-content: space-between;">
-    <p style="color:#00c5c8;margin-left: 1rem;font-size: 1.5rem">你預計新增桌位如下：</p>
+    <h2 style="color:#00c5c8;margin-left: 1rem;font-size: 1.5rem">你預計新增桌位如下：</h2>
     <a @click="addTableHandler"><img src="../../assets/add.png" style="width: 50px;margin-right: 1rem;"></a>
   </div>
   <div style="display: flex;align-items:start;justify-content: space-between;">
@@ -508,6 +511,8 @@
     data() {
       return {
         isTable_Change_count:0,
+        booking_list_today:[],
+        tables:[],
         tables_list1:[],
         isreload:false,
         isEditTable:false,
@@ -556,6 +561,8 @@
         this.target_table = {table_id:"#"};
         sessionStorage.removeItem("selected_table");
         sessionStorage.removeItem("selected_target_table");
+        this.$emit("selected_table",this.select_table);
+        this.$emit("selected_target_table",this.target_table);
       },
       cancelEditTable(){
         this.isEditTable = false;
@@ -730,6 +737,31 @@
                 table.table_status  === 0 ? "available" : table.table_status === 1 ? "in-use" :table.table_status === 2 ?"reserved":"take"
             })).filter((item)=>{ return item["table_area"] == selected_title_item});
             this.tables_list1 =this.tables;
+            this.$emit("tables",this.tables);
+          } catch (error) {
+            console.error("Error fetching table data:", error);
+          }
+      },
+      async getBookingsToday(){
+        try {
+            const response = await fetch("http://localhost:8080/reserve/search");
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            const data_lists =
+            data.reserveList.filter((item)=>{
+              const TIME = 24*60*60*1000;
+              let duration= new Date().getTime()-new Date(item.date).getTime();
+              if(duration<0){
+                return false;
+              }
+              if(duration>TIME){
+                return false;
+              }
+              return true;
+            })
+            this.booking_list_today = data_lists;
           } catch (error) {
             console.error("Error fetching table data:", error);
           }
@@ -777,6 +809,7 @@
       };
       this.fetchWorkingStaffs();
       this.getTables();
+      this.getBookingsToday();
     },
   };
   </script>

@@ -96,7 +96,14 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-
+import Swal from 'sweetalert2';
+if(sessionStorage.getItem("token") == null){
+      Swal.fire({title:"你還沒有登入，將轉向登入頁面！",showConfirmButton:true,
+                confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                icon:'error',iconColor:"#00c5c8"}).then((res)=>{
+                  window.location.replace("/");
+      });
+}
 const currentTime = ref('');
 const isCollapsed = ref([]);
 const modalVisible = ref(false);

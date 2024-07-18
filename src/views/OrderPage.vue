@@ -2,6 +2,7 @@
 import axios from 'axios'
 import EditMeal from '../components/Yuhan/EditOrder.vue'
 import { useOrderStore } from '@/stores/OrderStore'
+import Swal from 'sweetalert2';
 export default {
     data() {
         return {
@@ -41,6 +42,12 @@ export default {
         EditMeal
     },
     created() {
+        if(sessionStorage.getItem("token") == null){
+            this.$router.push({name: 'home'});
+        Swal.fire({title:"你還沒有登入，將轉向登入頁面！",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'error',iconColor:"#00c5c8"});
+        }
         if(this.$route.query.selected_table){
             this.selected_table=JSON.parse(this.$route.query.selected_table);
             console.log(this.selected_table);    

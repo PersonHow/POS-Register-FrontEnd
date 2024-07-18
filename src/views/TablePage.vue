@@ -15,6 +15,7 @@ export default {
       menuOpen: false,
       selectedtable_id:0,
       nav_item_list:[],
+      tables:[]
     };
   },
   methods: {
@@ -61,14 +62,26 @@ export default {
                 window.location.reload();
               }
             })
-            
           }else{
             return
           }
         })
     },
+    TakeBillHandler(){
+      if(this.selected_table.table_id == "#"){
+        Swal.fire({title:"你還沒有選取桌位，請重新選擇！",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'error',iconColor:"#00c5c8"})
+            return;
+      }else{
+        
+      }
+    },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
+    },
+    GetTables(tables){
+      this.tables = tables;
     },
     orderHandler(){
       this.$router.push("OrderPage");
@@ -135,13 +148,10 @@ export default {
   },
   created() {
     if(sessionStorage.getItem("token") == null){
+      this.$router.push({name: 'home'});
         Swal.fire({title:"你還沒有登入，將轉向登入頁面！",showConfirmButton:true,
             confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
-            icon:'error',iconColor:"#00c5c8"}).then((res)=>{
-              if(res.isConfirmed){
-                this.$router.push({name: 'home'});
-              }
-            })
+            icon:'error',iconColor:"#00c5c8"});
     }
     if(sessionStorage.getItem("selected_table")){
       this.selected_table = JSON.parse(sessionStorage.getItem("selected_table"));
@@ -171,7 +181,7 @@ export default {
     </div>
     <!-- second Area = 中間桌子的區塊 -->
     <div class="second">
-      <TablePage :nav_item_list="nav_item_list" v-on:selected_table="Getselected_table" v-on:selected_target_table="Getselected_target_table"/>
+      <TablePage v-on:tables="GetTables" :nav_item_list="nav_item_list" v-on:selected_table="Getselected_table" v-on:selected_target_table="Getselected_target_table"/>
     </div>
     <div class="footer Area">
       <!-- footerHam = footer裡面的漢堡圖區塊 -->
@@ -186,6 +196,7 @@ export default {
             <transition name="slide">
               <div v-if="menuOpen" class="menu-content">
                 <button class="menu-item" href="#">開錢櫃</button>
+                <button class="menu-item" @click="TakeBillHandler">結帳</button>
                 <Footer_bar_ChangeTable :selected_table="selected_table" :selected_target_table="selected_target_table"/>
                 <Footer_bar_Checkout :selected_table="selected_table" :selected_target_table="selected_target_table"/>
                 <button class="menu-item" @click="TakeTableHandler">帶位</button>

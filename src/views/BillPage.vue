@@ -41,6 +41,17 @@ export default {
             Object.assign(this.Billstore, event);
         },
     },
+    created(){
+        if(sessionStorage.getItem("token") == null){
+        Swal.fire({title:"你還沒有登入，將轉向登入頁面！",showConfirmButton:true,
+            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+            icon:'error',iconColor:"#00c5c8"}).then((res)=>{
+              if(res.isConfirmed){
+                this.$router.push({name: 'home'});
+              }
+            })
+        }
+    }
 }
 </script>
 
