@@ -196,11 +196,7 @@
                         </div>
                   </div>
                 </div>
-                  </div>
-                </div>
             </template>
-          <!-- 顯示每張桌子的內容 -->
-        </draggable>
           <!-- 顯示每張桌子的內容 -->
         </draggable>
     </div>
@@ -351,7 +347,8 @@
         <div style="display: flex; justify-content: space-between;align-items: center">
           <h5>員工：</h5>
           <select v-model="input_table.staff_id">
-            <option v-for="working_staff in working_staff_list" :key="working_staff_list.staff_id" :value="working_staff.staff_id">{{ working_staff.staff_name }}</option>
+            <option v-for="working_staff in working_staff_list" :key="working_staff_list.staff_id"
+              :value="working_staff.staff_id">{{ working_staff.staff_name }}</option>
           </select>
         </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
@@ -366,8 +363,8 @@
           <input v-model="input_table.guest_name" type="text" maxlength="10">
         </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
-        <h5>客人電話：</h5>
-        <input v-model="input_table.guest_phone" type='text' maxlength="10"/>
+          <h5>客人電話：</h5>
+          <input v-model="input_table.guest_phone" type='text' maxlength="10" />
         </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
         <h5>訂位：<br>(0:未訂位)</h5>
@@ -377,7 +374,7 @@
           </select>
         </div>
         <div style="display: flex; justify-content: space-between;align-items: center">
-        <h5>桌位狀態：</h5>
+          <h5>桌位狀態：</h5>
           <select v-model="input_table.table_status">
             <option :value="0">空位</option>
             <option :value="1">使用中</option>
@@ -402,14 +399,14 @@
         <div style="display: flex; width: 100%; justify-content: space-between">
           <a href="javascript: void(0)" class="btn" @click="postTableHandler">
             <div>
-                <span>提交</span>
-                <span>提交</span>
+              <span>提交</span>
+              <span>提交</span>
             </div>
           </a>
           <a href="javascript: void(0)" class="btn" @click="deleteTableHandler">
             <div>
-                <span>刪除</span>
-                <span>刪除</span>
+              <span>刪除</span>
+              <span>刪除</span>
             </div>
           </a>
         </div>
@@ -460,46 +457,41 @@
                     </div>
               </div>
             </div>
+        </template>
+      </draggable>
+      <div v-else class="noEditTableArea">
+        <!-- 當不處於編輯模式時，僅顯示桌子 -->
+        <div style="display: flex;">
+          <div v-for="table in add_table_list" :key="table.table_id" :class="['table', table.status]"
+            :id="'table-' + table.table_id" @click="() => {
+              selectTableHandler(table);
+            }">
+            <div class="tableNum">
+              <div class="Num">桌號: {{ table.table_id }}</div>
+            </div>
+            <div class="staffId">
+              <div>員工: {{ table.staff_name }}</div>
+            </div>
+            <div class="status">
+              <div>{{ table.table_status == 0 ? "空位" : table.table_status == 1 ? "使用中" : table.table_status == 2 ? "已預約"
+                :"帶位中"}}
               </div>
             </div>
-        </template>
-    </draggable>
-    <div v-else class="noEditTableArea">
-      <!-- 當不處於編輯模式時，僅顯示桌子 -->
-      <div style="display: flex;">
-        <div
-          v-for="table in add_table_list"
-          :key="table.table_id"
-          :class="['table', table.status]"
-          :id="'table-' + table.table_id"
-          @click="()=>{
-                      selectTableHandler(table);
-                    }"
-          >
-          <div class="tableNum">
-            <div class="Num">桌號: {{ table.table_id }}</div>
-          </div>
-          <div class="staffId">
-            <div>員工: {{ table.staff_name }}</div>
-          </div>
-          <div class="status">
-                      <div>{{ table.table_status==0 ? "空位": table.table_status==1 ? "使用中": table.table_status == 2 ?"已預約" :"帶位中"}}</div>
-                    </div>
-          <div class="booking">
-            <div>預訂: {{ table.booking_num }}</div>
-          </div>
-          <div class="childSeat">
-            <div>兒童座: {{ table.has_priorityseat ? '有' : '無' }}</div>
-          </div>
-          <div class="Seat">
-            <div>用餐人數: {{ table.guest_num }}</div>
+            <div class="booking">
+              <div>預訂: {{ table.booking_num }}</div>
+            </div>
+            <div class="childSeat">
+              <div>兒童座: {{ table.has_priorityseat ? '有' : '無' }}</div>
+            </div>
+            <div class="Seat">
+              <div>用餐人數: {{ table.guest_num }}</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
-</div>
-  
+  </div>
+
 </template>
   
   <script>
@@ -647,11 +639,6 @@
         }
         this.input_table = {};
         this.select_table ={};
-      },
-      async deleteTableHandler(){
-        try {
-          const response = await fetch(`http://localhost:8080/table/${this.input_table.table_id}`,{
-            method:"DELETE",
       },
       async deleteTableHandler(){
         try {
@@ -850,8 +837,6 @@
 
   #app {
     width: 100%;
-  #app {
-    width: 100%;
     flex-direction: column;
     max-height: 80vh;
     padding:1%;
@@ -997,79 +982,21 @@
     }
     &:after{
       background: #FFFFFF;
-      } 
-    } 
-  }
-   
-  .noEditTableArea {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 200px;
-    .tableNum {
-      width: 100%;
-      min-width:200px;
-      display: flex;
-      justify-content: baseline;
-    }
-    .status{
-      width: 100%;
-      display: flex;
-      align-items: center;
-      color: white;
-      font-size: 1.5rem;
-      margin-top: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .staffId,.booking,.time,.childSeat,.Seat{
-      width: 100%;
-      display: flex;
-      justify-content: start;
-      color: white;
-    }
-  }
-  .btn {
-    margin-top: 1rem;
-    width: 100px;
-    background: #FFFFFF;
-    border: 2px solid #00c5c8;
-    transform: translate3d(0px, 0%, 0px);
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    transition-delay: 0.6s;
-    overflow: hidden;
-    &:before,&:after 
-    {
-        content: '';
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: 100%;
-        height: 100%;
-        transition: all 0.6s ease;
-    }
-    &:before{
-      background: #00c5c8;
-      border-radius: 50% 50% 0 0;
-      transform: translateY(100%) scaleY(0.5);
-    }
-    &:after{
-      background: #FFFFFF;
     border-radius: 0;
     transform: translateY(0) scaleY(1);
-    }
-    div{
-      position: relative;
+  }
+
+  div {
+    position: relative;
     top: 0px;
     left: 0px;
     width: 100%;
     height: 32px;
     text-transform: uppercase;
     overflow: hidden;
-    }
-    span{
+  }
+
+  span {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -1077,146 +1004,119 @@
     z-index: 1;
     text-align: center;
     transition: transform 0.5s ease;
-      &:first-child{
-        color: #FFFFFF;
-        transform: translateY(24px);
-        } 
-      &:last-child{
-        color: #3AD2D0;
-        transform: translateY(0);
-      }
+
+    &:first-child {
+      color: #FFFFFF;
+      transform: translateY(24px);
     }
-  &:hover{
+
+    &:last-child {
+      color: #3AD2D0;
+      transform: translateY(0);
+    }
+  }
+
+  &:hover {
     background: #3AD2D0;
     transition: #3AD2D0 0.2s linear;
     transition-delay: 0.6s;
     color: #FFFFFF;
   }
-  &:hover::after{
+
+  &:hover::after {
     border-radius: 0 0 50% 50%;
     transform: translateY(-100%) scaleY(0.5);
     transition-delay: 0;
   }
-  &:hover:before{
+
+  &:hover:before {
     border-radius: 0;
     transform: translateY(0) scaleY(1);
     transition-delay: 0;
   }
 }
+
 .btn:hover span:first-child {
-    transform: translateY(0);
+  transform: translateY(0);
 }
+
 .btn:hover span:last-child {
-    transform: translateY(-32px);
+  transform: translateY(-32px);
 }
-.btn_adjust_table{
-    background-color: #e76f51;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: monospace;
-    color: white;
-    padding: 10px;
-    margin-left: 5px;
-    text-align: center;
-    cursor: pointer;
+
+.btn_adjust_table {
+  background-color: #e76f51;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: monospace;
+  color: white;
+  padding: 10px;
+  margin-left: 5px;
+  text-align: center;
+  cursor: pointer;
 }
-.btn_not_adjust_table{
-    background-color: #3AD2D0;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: monospace;
-    color: white;
-    padding: 10px;
-    margin-left: 5px;
-    text-align: center;
-    cursor: pointer;
-}
-.btn_clear_select_table{
-    background-color: #3AD2D0;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: monospace;
-    color: white;
-    padding: 10px;
-    margin-left: 5px;
-    text-align: center;
-    cursor: pointer;
-.btn_clear_select_table{
-    background-color: #3AD2D0;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: monospace;
-    color: white;
-    padding: 10px;
-    margin-left: 5px;
-    text-align: center;
-    cursor: pointer;
-}
-.btn_target_table{
-    background-color: #e76f51;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: monospace;
-    color: white;
-    padding: 10px;
-    margin-left: 5px;
-    text-align: center;
-    cursor: pointer;
-.btn_target_table{
-    background-color: #e76f51;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: monospace;
-    color: white;
-    padding: 10px;
-    margin-left: 5px;
-    text-align: center;
-    cursor: pointer;
-}
-.btn_cancel_target_table{
-.btn_cancel_target_table{
+
+.btn_not_adjust_table {
   background-color: #3AD2D0;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: monospace;
-    color: white;
-    padding: 10px;
-    margin-left: 5px;
-    text-align: center;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    font-family: monospace;
-    color: white;
-    padding: 10px;
-    margin-left: 5px;
-    text-align: center;
-    cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: monospace;
+  color: white;
+  padding: 10px;
+  margin-left: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn_clear_select_table {
+  background-color: #3AD2D0;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: monospace;
+  color: white;
+  padding: 10px;
+  margin-left: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn_target_table {
+  background-color: #e76f51;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: monospace;
+  color: white;
+  padding: 10px;
+  margin-left: 5px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.btn_cancel_target_table {
+  background-color: #3AD2D0;
+  background-color: #3AD2D0;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  font-family: monospace;
+  color: white;
+  padding: 10px;
+  margin-left: 5px;
+  text-align: center;
+  cursor: pointer;
 }
 .swal_selected_table{
   color: #00c5c8;
   font-size: 5rem;
-.swal_selected_table{
-  color: #00c5c8;
-  font-size: 5rem;
 }
-  </style>
-  
   </style>
   
