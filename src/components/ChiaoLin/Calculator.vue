@@ -79,7 +79,7 @@ export default {
     created() {
         // 抓目前登入在操作的員工
         const staff = JSON.parse(sessionStorage.getItem("token"));
-        console.log(staff);
+        // console.log(staff);
         // 抓orderId from route
         if (this.$route.params.orderId !== "") {
             let orderId = this.$route.params.orderId

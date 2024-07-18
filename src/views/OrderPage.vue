@@ -1,7 +1,7 @@
 <script>
 import axios from 'axios'
 import EditMeal from '../components/Yuhan/EditOrder.vue'
-import { useOrderStore } from '@/stores/OrderStore' 
+import { useOrderStore } from '@/stores/OrderStore'
 import 'bootstrap/dist/css/bootstrap.css'
 import * as bootstrap from 'bootstrap';
 import Swal from "sweetalert2"
@@ -36,23 +36,23 @@ export default {
                 quantities: 1,
                 otherReq: ""
             },
-            editingIndex:null, //欲修改的餐點索引
-            staff:null,
+            editingIndex: null, //欲修改的餐點索引
+            staff: null,
         }
     },
     components: {
         EditMeal
     },
-    created(){
+    created() {
         this.staff = JSON.parse(sessionStorage.getItem("token"))
         console.log(this.staff)
-        if(sessionStorage.getItem("token")==null){
-            Swal.fire({text:"你還沒有登入，將轉向登入頁面！", icon:"info"})
-            this.$router.push({name: 'home'})
+        if (sessionStorage.getItem("token") == null) {
+            Swal.fire({ text: "你還沒有登入，將轉向登入頁面！", icon: "info" })
+            this.$router.push({ name: 'home' })
         }
-        if(this.$route.query.selected_table){
-            this.selected_table=JSON.parse(this.$route.query.selected_table);
-            this.selected_target_table =JSON.parse(this.$route.query.selected_target_table);
+        if (this.$route.query.selected_table) {
+            this.selected_table = JSON.parse(this.$route.query.selected_table);
+            this.selected_target_table = JSON.parse(this.$route.query.selected_target_table);
             console.log(this.selected_table);
             console.log(this.selected_target_table);
         }
@@ -150,16 +150,16 @@ export default {
             this.showMemoInput = !this.showMemoInput
         },
         //下單
-        placeOrder(){
+        placeOrder() {
             // 將選項以分號串接成字串
             this.orderList.forEach(order => {
                 // 檢查該餐點有客製選項
                 if (order.custom_option) {
                     // 判斷選項是否為複數 是則用;串接
                     if (order.custom_option.length > 0) {
-                    order.custom_option = order.custom_option.join(';')
+                        order.custom_option = order.custom_option.join(';')
                     } else {
-                    order.custom_option = order.custom_option[0]
+                        order.custom_option = order.custom_option[0]
                     }
                 }
             })
@@ -181,20 +181,20 @@ export default {
                 },
                 body: JSON.stringify(order)
             })
-            .then(res => {
-                if (!res.ok) {
-                    Swal.fire("錯誤", "送出失敗，請檢查訂單是否有內容。", "error")
-                }
-                return res.json();
-            })
-            .then(data => {
-                console.log(data)
-                this.orderStore.createOrder(order) //將訂餐存入orderStore
-                // 觸發 secondModal 選擇是否跳轉結帳頁
-                var secondModal = new bootstrap.Modal(document.getElementById('secondModal'),{backdrop: 'static'})
-                secondModal.show()
-                this.orderStore.getOrderInfo() //更新最近五筆送單紀錄
-            })
+                .then(res => {
+                    if (!res.ok) {
+                        Swal.fire("錯誤", "送出失敗，請檢查訂單是否有內容。", "error")
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    console.log(data)
+                    this.orderStore.createOrder(order) //將訂餐存入orderStore
+                    // 觸發 secondModal 選擇是否跳轉結帳頁
+                    var secondModal = new bootstrap.Modal(document.getElementById('secondModal'), { backdrop: 'static' })
+                    secondModal.show()
+                    this.orderStore.getOrderInfo() //更新最近五筆送單紀錄
+                })
         },
         // 將訂單編號作為參數傳給帳單頁
         navigateToBillPage() {
@@ -235,17 +235,19 @@ export default {
         <!-- orderList點餐明細 -->
         <div class="container left-side">
             <div class="header">
-                <span>單號: {{oId}} </span>
-                <span>{{ tableNum? "桌號: "+tableNum:"外帶" }}</span>
+                <span>單號: {{ oId }} </span>
+                <span>{{ tableNum ? "桌號: " + tableNum : "外帶" }}</span>
                 <div class="dropdown">
-                    <a class="btn btn-lg dropdown-toggle" href="#" 
-                    role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                    <font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></a>
+                    <a class="btn btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x" /></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
-                        <li v-if="tableNum"><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modifyNumModal">修改人數/桌號</button></li>
+                        <li v-if="tableNum"><button class="dropdown-item" data-bs-toggle="modal"
+                                data-bs-target="#modifyNumModal">修改人數/桌號</button></li>
                         <!-- 返回桌位 -->
-                        <li><a class="dropdown-item" href="#">取消此筆訂單</a></li> 
-                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#orderHistoryModal">送單紀錄</a></li>
+                        <li><a class="dropdown-item" href="#">取消此筆訂單</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#orderHistoryModal">送單紀錄</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -291,15 +293,16 @@ export default {
                 <div class="px-3 type">
                     <div v-for="type in types" :key="type" class="colume">
                         <input type="radio" v-model="selectedType" :value="type" :id="type">
-                        <label :for="type" :class="{active : selectedType === type}">{{type}}</label>
+                        <label :for="type" :class="{ active: selectedType === type }">{{ type }}</label>
                     </div>
                 </div>
                 <div class="arrow">
-                    <font-awesome-icon icon="fa-solid fa-chevron-right"/>
+                    <font-awesome-icon icon="fa-solid fa-chevron-right" />
                 </div>
             </div>
-            <div class="px-5 wrap" >
-                <div v-for="meal in menu" v-show="selectedType === meal.type" @click="addMealToList(meal)" :key="meal.type" class="meal">
+            <div class="px-5 wrap">
+                <div v-for="meal in menu" v-show="selectedType === meal.type" @click="addMealToList(meal)"
+                    :key="meal.type" class="meal">
                     <img :src="meal.img" alt="">
                     <div v-for="item in orderList" :key="item.meal_id">
                         <div v-if="item.meal_id === meal.meal_id" class="orderQty">
@@ -307,7 +310,7 @@ export default {
                         </div>
                     </div>
                     <div class="mealName mt-2">
-                        {{meal.name}}
+                        {{ meal.name }}
                     </div>
                 </div>
             </div>
@@ -337,13 +340,15 @@ export default {
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">修改</button>
-                                <button  type="button" @click="placeOrder()" class="btn placeOrder" data-bs-dismiss="modal" data-bs-toggle="modal">
-                                    確認無誤，送出</button> 
+                                <button type="button" @click="placeOrder()" class="btn placeOrder"
+                                    data-bs-dismiss="modal" data-bs-toggle="modal">
+                                    確認無誤，送出</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" data-bs-keyboard="false" id="secondModal" tabindex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
+                <div class="modal fade" data-bs-keyboard="false" id="secondModal" tabindex="-1"
+                    aria-labelledby="secondModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-sm">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -351,18 +356,19 @@ export default {
                             </div>
                             <div class="modal-body d-flex justify-content-evenly">
                                 <!-- 跳轉至桌位頁 -->
-                                <a class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
+                                <a class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a>
                                 <!-- 跳轉至結帳頁 -->
-                                <a class="btn btn-primary">立即結帳</a>
+                                <a class="btn btn-primary" data-bs-dismiss="modal" @click="navigateToBillPage()">立即結帳</a>
                             </div>
                         </div>
-                        
+
                     </div>
-                    </div>
+                </div>
                 <button @click="editMemo()" class="btn btn-nowrap">訂單備註</button>
             </div>
             <!-- 修改人數視窗 -->
-            <div class="modal fade" id="modifyNumModal" tabindex="-1" aria-labelledby="modifyNumModalLabel" aria-hidden="true">
+            <div class="modal fade" id="modifyNumModal" tabindex="-1" aria-labelledby="modifyNumModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -375,14 +381,15 @@ export default {
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn" data-bs-dismiss="modal" data-bs-toggle="modal">
-                                確認</button> 
+                                確認</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- 歷史訂單 -->
-            <div class="modal fade" id="orderHistoryModal" tabindex="-1" aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
+            <div class="modal fade" id="orderHistoryModal" tabindex="-1" aria-labelledby="orderHistoryModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -393,28 +400,32 @@ export default {
                             <div class="accordion" id="accordion">
                                 <div v-for="list in orderStore.order_info" :key="list.order_id" class="accordion-item">
                                     <h2 class="accordion-header" :id="`heading${list.order_id}`">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#collapse${list.order_id}`" aria-expanded="true" :aria-controls="`collapse${list.order_id}`">
-                                        <h5>單號:{{ list.order_id }}</h5>_ <small>時間:{{list.create_time}}</small>
-                                    </button>
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" :data-bs-target="`#collapse${list.order_id}`"
+                                            aria-expanded="true" :aria-controls="`collapse${list.order_id}`">
+                                            <h5>單號:{{ list.order_id }}</h5>_ <small>時間:{{ list.create_time }}</small>
+                                        </button>
                                     </h2>
-                                    <div :id="`collapse${list.order_id}`" class="accordion-collapse collapse" :aria-labelledby="`#collapse${list.order_id}`" data-bs-parent="#accordion">
+                                    <div :id="`collapse${list.order_id}`" class="accordion-collapse collapse"
+                                        :aria-labelledby="`#collapse${list.order_id}`" data-bs-parent="#accordion">
                                         <div class="accordion-body">
                                             <p><strong>人員:</strong> {{ list.staff_name }}</p>
                                             <p><strong>總金額:</strong> ${{ list.amount }}</p>
                                             <strong>明細: </strong>
                                             <p v-for="(item, i) in list.order_detail" :key="i">
-                                                {{item.meal_name}}x {{ item.quantities }}<br> 
-                                                <small>{{ item.custom_option==="null" ?  "" : item.custom_option }}</small>
+                                                {{ item.meal_name }}x {{ item.quantities }}<br>
+                                                <small>{{ item.custom_option === "null" ? "" : item.custom_option
+                                                    }}</small>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="modal-footer">
                             <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close">
-                                確認</button> 
+                                確認</button>
                         </div>
                     </div>
                 </div>
@@ -435,7 +446,7 @@ $secondary-color: #FFE2C3;
     justify-content: end;
     font-size: 18px;
     font-family: 'Chocolate Classical Sans', sans-serif;
-    border:1px solid #F9BF45;
+    border: 1px solid #F9BF45;
 }
 
 .container {
@@ -445,15 +456,17 @@ $secondary-color: #FFE2C3;
     position: relative;
     padding: 0;
 }
-.colume{
-    margin:2.5% 5%;
+
+.colume {
+    margin: 2.5% 5%;
     line-height: 2;
 }
 
-.left-side{
+.left-side {
     width: 45%;
     position: relative;
-    .header{
+
+    .header {
         height: 10vh;
         margin: 0;
 
@@ -576,6 +589,7 @@ $secondary-color: #FFE2C3;
     font-weight: 600;
     font-size: 20px;
     position: relative;
+
     &::-webkit-scrollbar {
         height: 5px;
     }
@@ -596,11 +610,13 @@ $secondary-color: #FFE2C3;
     padding: 10px 20px;
     border-radius: 10px;
 }
-.arrow{
+
+.arrow {
     padding: 5% 2%;
     background: rgb(240, 240, 240);
 }
-.meal{
+
+.meal {
     width: 10vw;
     height: 15vh;
     display: inline-block;
@@ -714,7 +730,7 @@ $secondary-color: #FFE2C3;
     .btn {
         border: none;
         align-items: center;
-        width: 30%;     
+        width: 30%;
         border-radius: 10px;
         box-shadow: 0 1px 2px rgba(128, 128, 128, 0.4);
         background: #c5c5c5;
@@ -730,10 +746,10 @@ $secondary-color: #FFE2C3;
         width: 60%;
         background: $main-color;
     }
-    .btn-primary{
+
+    .btn-primary {
         background: $main-color;
     }
 
 }
-
 </style>

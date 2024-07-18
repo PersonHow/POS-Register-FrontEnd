@@ -1,27 +1,53 @@
 <script>
 import { useBillstore } from '@/stores/BillStore'
+import { onMounted, ref, computed } from 'vue';
 import { mapState, mapActions } from 'pinia';
 import AllBill from '@/components/ChiaoLin/AllBillPageCompnents/AllBill.vue';
 import AllInvoice from '@/components/ChiaoLin/AllBillPageCompnents/AllInvoice.vue';
 
 export default {
-    data() {
-        return {
-            isLeftbarHidden: false,
-        }
-    },
     components: {
         AllBill,
         AllInvoice
     },
     setup() {
         const Billstore = useBillstore();
+        const visibleBillsCount = ref(5);
+        const hasMoreBills = ref(true);
         const updateChangeShow = (value) => {
             Billstore.changeStep(value);
         };
+
+        onMounted(async () => {
+            await Billstore.getAllBillsAndTodayBills()
+            await Billstore.getChargedOrders();
+
+            if (Billstore.todayCreateBillsOrderId.length <= 5) {
+                hasMoreBills.value = false;
+            }
+        });
+
+        const showMoreBills = () => {
+            if (visibleBillsCount.value >= Billstore.allbills.length) {
+                hasMoreBills.value = false; // 没有更多紀錄
+            } else {
+                visibleBillsCount.value += 5; // 每次點增加5個紀錄
+                if (visibleBillsCount.value >= Billstore.allbills.length) {
+                    hasMoreBills.value = false; // 更新成沒有更多紀錄
+                }
+            }
+        };
+
+        const visibleBills = computed(() => {
+            return Billstore.chargedTodayBills.slice(0, visibleBillsCount.value).reverse();
+        });
+
         return {
             Billstore,
             updateChangeShow,
+            showMoreBills,
+            visibleBills,
+            hasMoreBills,
             ...mapState(Billstore, ['showLeftNavArea', 'changeShow']),
             ...mapActions(Billstore, ['showInvoiceLeftNavArea', 'changeStep',]),
         };
@@ -30,7 +56,28 @@ export default {
         toggleSidebar() {
             this.isLeftbarHidden = !this.isLeftbarHidden;
         },
-    }
+
+    },
+    mounted() {
+        // fetch("http://localhost:8080/bill", {
+        //     method: "get",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(),
+        // })
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         console.log(data);
+        //         this.allbills = data;
+        //     })
+    },
+    data() {
+        return {
+            isLeftbarHidden: false,
+            billList: [],
+        }
+    },
 }
 </script>
 
@@ -56,6 +103,10 @@ export default {
                     </div>
                     <ul>
                         <li class="myMouse" @click="updateChangeShow('A')">帳務搜尋</li>
+
+                        <!-- <li class="myMouse" @click="updateChangeShow('C')">發票重開</li> -->
+                    </ul>
+                    <ul>
                         <li class="myMouse" @click="updateChangeShow('B')">發票搜尋</li>
                         <!-- <li class="myMouse" @click="updateChangeShow('C')">發票重開</li> -->
                     </ul>
@@ -150,6 +201,8 @@ export default {
                 }
 
                 ul {
+                    padding-left: 2dvw;
+
                     li {
                         list-style-type: none;
                         font-size: 2.5dvh;
@@ -166,6 +219,11 @@ export default {
                         padding: 0.5dvw;
                         color: white;
 
+                    }
+
+                    input {
+                        height: 5dvh;
+                        width: 13dvw;
                     }
                 }
             }

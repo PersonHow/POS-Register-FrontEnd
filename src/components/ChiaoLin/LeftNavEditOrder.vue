@@ -74,8 +74,8 @@ export default {
 
                         <span> {{ mealList.meal_name }}</span>
                         <p>數量：{{ mealList.quantities }}</p>
+                        <p>{{ mealList.custom_option }}</p>
                     </li>
-                    <li>{{ mealList.custom_option }}</li>
                 </ul>
             </li>
             <button class="myMouse">列印明細</button>
@@ -123,6 +123,7 @@ export default {
 
     ul {
         padding-left: 1dvw;
+        overflow: scroll;
 
         li {
             list-style-type: none;
