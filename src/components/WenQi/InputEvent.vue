@@ -166,11 +166,23 @@ export default {
       }else{
         this.formData.lastmodified_staff_id = this.staff.staff_id;
       }
+      if(this.formData.special_events && this.formData.isholiday){
+          Swal.fire({title:"非公休日值班跟公休日不得互換，請重新輸入！！",showConfirmButton:true,
+                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                      icon:'error',iconColor:"#00c5c8"})
+                      return;
+      }
+      if(!this.formData.special_events && !this.formData.isholiday){
+        Swal.fire({title:"非公休日值班跟公休日不得互換，請重新輸入！！",showConfirmButton:true,
+                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                      icon:'error',iconColor:"#00c5c8"})
+                      return;
+      }
       let data_json={};
-      data_json["isholiday"] = this.formData.isholiday;
       data_json["lastmodified_staff_id"] = this.staff.staff_id;
       data_json["calendar_date"] = this.formData.calendar_date;
       if(this.formData.isholiday){
+        data_json["isholiday"] =true;
         if(this.formData.calendar_id =="#"){
           try {
             const response = await fetch(`http://localhost:8080/calendar`,{
@@ -222,6 +234,7 @@ export default {
         }
         
       }else{
+        data_json["isholiday"] =false;
         data_json["staff_id"]= this.formData.staff_id;
         let staff = this.working_staff_list.filter((item)=>{return item.staff_id == this.formData.staff_id})[0];
         data_json["special_events"] = this.formData.special_events;

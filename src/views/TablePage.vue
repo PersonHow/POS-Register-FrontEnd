@@ -176,8 +176,8 @@ export default {
   <!-- body = 包住全部東西的最大div -->
   <div class="body">
     <div class="header">
-      <h2 style="margin-left: 40%;color:#00c5c8;font-size: 2rem;font-weight: bold;">{{this.selected_item}}</h2>
-      <ChangeTableArea style="margin-right:2rem" v-on:nav_item_list="Getnav_item_list"></ChangeTableArea>
+      <h2>{{this.selected_item}}</h2>
+      <ChangeTableArea class="areaBtn" v-on:nav_item_list="Getnav_item_list"></ChangeTableArea>
     </div>
     <!-- second Area = 中間桌子的區塊 -->
     <div class="second">
@@ -200,7 +200,7 @@ export default {
                 <Footer_bar_ChangeTable :selected_table="selected_table" :selected_target_table="selected_target_table"/>
                 <Footer_bar_Checkout :selected_table="selected_table" :selected_target_table="selected_target_table"/>
                 <button class="menu-item" @click="TakeTableHandler">帶位</button>
-                <button class="menu-item"@click="cleanTablesHander">清除狀態</button>
+                <button class="menu-item" @click="cleanTablesHander">清除狀態</button>
                 <Footer_bar_Order :selected_table="selected_table" :selected_target_table="selected_target_table"/>
               </div>
             </transition>
@@ -212,12 +212,6 @@ export default {
 </template>
 <style lang="scss" scoped>
 /* body = 包住全部內容的最大div */
-*{
-  box-sizing: border-box;
-  background-color: unset;
-  color:unset;
-  border:unset;
-}
 :active{
   background-color: unset;
   color:unset;
@@ -225,39 +219,41 @@ export default {
 }
 .body {
   width: 100%;
-  height: 80vh; 
-  height: 80vh; 
+  height: 90vh; 
   display: flex;
+  overflow-y: scroll;
+  overflow-x: hidden;
   flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;
+  padding: 0 2%
   /* align-items: center; */
 }
 .header {
-  margin-left: 2rem;
-  width: 95%;
-  height: 10%;
+  width: 100%;
+  height: 60px;
   border: 1px solid #00c5c8;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  border-radius: 10px;
+  padding-top: 10px;
+  position: relative;
   /* header的"訂位" */
   /* header的漢堡圖區塊 */
-  a{
-    display: block;
-    text-decoration: none;
-    h1 {
-    color: #00c5c8;
-    /* margin-right: 2%; */
+  h2{
+    color:#00c5c8;
+    text-align: center;
+    font-weight: bold;
   }
+  .areaBtn{
+    position:absolute;
+    right: 30px;
+    top: 12px;
   }
- 
 }
 /* 中間的桌子區塊 */
 .second {
-  width: 95%;
+  width: 100%;
   height: 80%;
+  
   // border: 1px solid black;
   // padding-top: 1%;
   .square {
@@ -269,6 +265,7 @@ export default {
     justify-content: center;
     align-items: center;
     margin: 10px;
+    
   }
 
   .container {
