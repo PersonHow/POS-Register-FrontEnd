@@ -44,7 +44,6 @@ export default {
       this.formData.isholiday = this.selected_calendar.isholiday;
       if(this.selected_calendar.booking_list){
           this.booking_list = this.selected_calendar.booking_list.split(";").map((item)=>{return parseInt(item)});
-          console.log(this.booking_list);
       }
       if(!this.selected_calendar.isholiday){
         this.formData.special_events = this.selected_calendar.special_events;
@@ -100,8 +99,20 @@ export default {
               throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            const data_lists =
-            data.reserveList.filter((item)=>{
+            let data_lists = [];
+            if(this.formData.calendar_date != ""){
+              data_lists =data.reserveList.filter((item)=>{
+              const TIME = 24*60*60*1000;
+              let duration= new Date(this.formData.calendar_date).getTime()-new Date(item.date).getTime();
+              if(duration<0){
+                return false;
+              }
+              if(duration>TIME-1){
+                return false;
+              }
+              return true;})
+            }else{
+              data_lists =data.reserveList.filter((item)=>{
               const TIME = 24*60*60*1000;
               let duration= new Date().getTime()-new Date(item.date).getTime();
               if(duration<0){
@@ -110,8 +121,9 @@ export default {
               if(duration>TIME){
                 return false;
               }
-              return true;
-            })
+              return true;})
+            }
+            
             this.booking_list_today = data_lists;
           } catch (error) {
             console.error("Error fetching table data:", error);
@@ -151,7 +163,6 @@ export default {
       }
     },
     async postCalendarHandler(){
-      
       if(!this.formData.calendar_date){
           Swal.fire({title:"活動日期為空，請重新輸入！",showConfirmButton:true,
                       confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
@@ -166,11 +177,29 @@ export default {
       }else{
         this.formData.lastmodified_staff_id = this.staff.staff_id;
       }
+      if(this.formData.special_events && this.formData.isholiday){
+          Swal.fire({title:"非公休日值班跟公休日不得互換，請重新輸入！！",showConfirmButton:true,
+                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                      icon:'error',iconColor:"#00c5c8"})
+                      return;
+      }
+      if(!this.formData.special_events && !this.formData.isholiday){
+        Swal.fire({title:"非公休日值班跟公休日不得互換，請重新輸入！！",showConfirmButton:true,
+                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                      icon:'error',iconColor:"#00c5c8"})
+                      return;
+      }
+      if(new Date(this.formData.calendar_date).getTime() != new Date(this.selected_calendar.calendar_date).getTime()){
+        Swal.fire({title:"非公休日值班不得換日期，請重新新增再輸入！！",showConfirmButton:true,
+                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+                      icon:'error',iconColor:"#00c5c8"})
+                      return;
+      }
       let data_json={};
-      data_json["isholiday"] = this.formData.isholiday;
       data_json["lastmodified_staff_id"] = this.staff.staff_id;
       data_json["calendar_date"] = this.formData.calendar_date;
       if(this.formData.isholiday){
+        data_json["isholiday"] =true;
         if(this.formData.calendar_id =="#"){
           try {
             const response = await fetch(`http://localhost:8080/calendar`,{
@@ -222,6 +251,7 @@ export default {
         }
         
       }else{
+        data_json["isholiday"] =false;
         data_json["staff_id"]= this.formData.staff_id;
         let staff = this.working_staff_list.filter((item)=>{return item.staff_id == this.formData.staff_id})[0];
         data_json["special_events"] = this.formData.special_events;
@@ -312,6 +342,9 @@ export default {
           }
         
       }
+    },
+    selected_calendar_dateHandler(){
+      this.getBookingsToday();
     }
   },
 };
@@ -331,6 +364,7 @@ export default {
               v-model="this.formData.calendar_date"
               type="date"
               :min="tomorrowDate"
+              @change="selected_calendar_dateHandler"
             />
           </div>
         </div>

@@ -30,6 +30,7 @@ const billStore = useBillstore();
     overflow: hidden;
 
     .headerArea {
+      transform: translateY(0%);
         height: 6dvh;
         transition: height 0.3s ease;
         overflow: hidden;
@@ -45,7 +46,7 @@ const billStore = useBillstore();
         height: 100%;
 
         &.expanded {
-            transform: translateY(-1dvh); // 向上移動 headerArea 的高度
+          // transform: translateY(-100%); // 向上移動 headerArea 的高度
         }
     }
 }

@@ -5,6 +5,7 @@ import { useOrderStore } from '@/stores/OrderStore'
 import 'bootstrap/dist/css/bootstrap.css'
 import * as bootstrap from 'bootstrap';
 import Swal from "sweetalert2"
+import { useBillstore } from '@/stores/BillStore'
 
 export default {
     data() {
@@ -33,7 +34,7 @@ export default {
                 price:0,
                 option:"",
                 quantities:1,
-                otherReq:""
+                other_request:""
             },
             editingIndex:null, //欲修改的餐點索引
             staff:null,
@@ -57,6 +58,7 @@ export default {
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱
         window.bootstrap = bootstrap
         this.orderStore.getOrderInfo() //取得最近五筆送單紀錄
+        this.useBillstore = useBillstore()
     },
     methods:{
         //取得菜單內餐點
@@ -96,7 +98,7 @@ export default {
                 meal_type:meal.type,
                 custom_option:null,
                 quantities:1,
-                other_request:null,
+                other_request:"",
                 description:meal.description,
                 working_area:meal.working_area,
                 img:meal.img ? meal.img:"https://shop.travel.org.tw/proudimage/0.jpg", //預設值
@@ -231,6 +233,7 @@ export default {
         <!-- orderList點餐明細 -->
         <div class="container left-side">
             <div class="header">
+                <button @click="useBillstore.closeTopbar()" class="close"><i class="fa-solid fa-house-chimney"></i></button>
                 <span>單號: {{oId}} </span>
                 <span>{{ tableInfo.table_id? "桌號: "+tableInfo.table_id:"外帶" }}</span>
                 <div class="dropdown">
@@ -358,8 +361,8 @@ export default {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <label for="guestNum">桌號</label><input type="text" v-model="tableInfo.table_id" id="guestNum">
-                            <label for="guestNum">用餐人數</label><input type="text" v-model="tableInfo.guest_num" id="guestNum">
+                            <p><label for="guestNum">桌號</label><input type="text" v-model="tableInfo.table_id" id="guestNum"></p>
+                            <p><label for="guestNum">用餐人數</label><input type="text" v-model="tableInfo.guest_num" id="guestNum"></p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn" data-bs-dismiss="modal" data-bs-toggle="modal">
@@ -426,7 +429,7 @@ $secondary-color: #FFE2C3;
     justify-content: end;
     font-size: 18px;
     font-family: 'Chocolate Classical Sans', sans-serif;
-    border:1px solid #F9BF45;
+    // border:1px solid #F9BF45;
 }
 .container{
     height: 100%;
@@ -696,6 +699,12 @@ $secondary-color: #FFE2C3;
     }
 
 }
-
+.close{
+    background: transparent;
+    border: none;
+    i{
+        color: #fff;
+    }
+}
 
 </style>
