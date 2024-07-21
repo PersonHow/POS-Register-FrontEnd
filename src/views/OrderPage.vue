@@ -262,7 +262,7 @@ export default {
                         <div class="item-id">{{i+1}}</div>
                         <div class="item">
                             <strong>{{item.meal_name}}</strong><br>
-                        <span v-for="(option,i) in item.custom_option" :key="option">{{option.split('+')[0]}} <span v-if="i < item.custom_option.length - 1">, </span></span><br>
+                        <span v-for="(option,i) in item.custom_option" :key="option" class="note">{{option.split('+')[0]}} <span v-if="i < item.custom_option.length - 1">, </span></span><br>
                         <span>{{item.quantities}} x {{item.price}}</span>
                         </div>
                         <div @click="editing(i)">
@@ -427,8 +427,9 @@ $secondary-color: #a8afc9;
     height: 100dvh;
     display: flex;
     justify-content: end;
-    font-size: 18px;
+    font-size: 1.5rem;
     font-family: 'Chocolate Classical Sans', sans-serif;
+
     // border:1px solid #F9BF45;
 }
 .container{
@@ -484,6 +485,7 @@ $secondary-color: #a8afc9;
 .dropdown-item{
     padding:2.5vh 3vw;
     text-align: center;
+    font-size: 1.2em;
 }
 .editMeal{
     width: 100%;
@@ -501,6 +503,9 @@ $secondary-color: #a8afc9;
     border-bottom: 1px solid rgba(128, 128, 128, 0.4);
     .item{
         width: 55%;
+        .note{
+            color: #888;
+        }
     }
 }
 .item-id{

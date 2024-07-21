@@ -95,8 +95,8 @@ export default {
                     </div>
                     <AddMenu>
                         <div class="d-flex justify-content-between">
-                            <button @click="MenuStore.deleteMeal(MenuStore.meal.meal_id)" class="btn btn-lg btn-danger" >刪除餐點</button>
                             <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認修改</button>
+                            <button @click="MenuStore.deleteMeal(MenuStore.meal.meal_id)" class="btn btn-lg btn-danger" >刪除餐點</button>
                         </div>
                     </AddMenu>
                 </div>
@@ -215,21 +215,21 @@ p{
     }
     &::-webkit-scrollbar-thumb {
         background: #c4c4c4;
-        border-radius: 5px;
+        border-radius: 10px;
     }
     .menu{
         width: 45%;
-        box-shadow:3px 3px 6px rgba(150, 150, 150, 0.5);
+        box-shadow:3px 3px 6px rgba(150, 150, 150, 0.7);
         height: 120px;
         display: flex;
         flex-wrap: wrap;
-        border-radius: 5px;
+        border-radius: 10px;
         background: #fff;
         img{
             height: 120px;
             width: 120px;
             object-fit: cover;
-            border-radius: 5px 0 0 5px;
+            border-radius: 10px 0 0 10px;
         }
         .text{
             flex-grow: 1;
@@ -249,7 +249,7 @@ p{
             background: $main-color;
             color: #fff;
             font-size: 24px;
-            border-radius: 0 5px 5px 0;
+            border-radius: 0 10px 10px 0;
             &:active{
                 opacity: 0.85;
             }
@@ -259,13 +259,14 @@ p{
 .edit{
     position: absolute;
     top: 5%;
-    left: 15%;
-    width: 70%;
+    left: 20%;
+    width: 60%;
     height: 90%;
     max-height: 90vh;
     overflow-y: auto;
     background: #efefef;
     z-index: 5;
+    border-radius: 10px;
 }
 
 
