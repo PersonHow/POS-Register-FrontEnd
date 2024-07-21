@@ -69,9 +69,9 @@ export default {
             this.changeArea = !this.changeArea;
             this.$router.push('/table')
         },
-        navigateToTablePage(){
-            this.$router.push('/table')
-        }
+        // navigateToTablePage(){
+        //     this.$router.push('/table')
+        // }
     },
     data() {
         return {
@@ -190,13 +190,13 @@ export default {
                 width: 83%;
                 height: 8dvh;
                 border: 1px solid rgb(213, 212, 212);
-                background: linear-gradient(white 80%, #00c1ca 20%);
+                background: linear-gradient(white 80%, #7b90da 20%);
                 color: black;
                 font-size: 3dvh;
                 border-radius: 5px;
 
                 &.active {
-                    background: linear-gradient(rgb(152, 152, 152) 70%, #009688 30%);
+                    background: linear-gradient(rgb(152, 152, 152) 70%, #7b90da 30%);
                 }
             }
         }
@@ -217,14 +217,14 @@ export default {
                 #butbackspace,
                 #butRevise {
                     width: 100%;
-                    background: #f29700;
+                    background: #B5495B;
                     color: white;
                 }
 
                 #butComfirm {
                     width: 100%;
                     height: 18dvh;
-                    background: linear-gradient(90deg, #00c1ca, #01e1c5);
+                    background:  #7b90da;
                     color: white;
                     border-radius: 5px;
                 }

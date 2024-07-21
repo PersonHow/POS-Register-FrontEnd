@@ -181,7 +181,7 @@ export default {
         <!-- 訊息輸入欄 -->
         <div class="bf-row">
           <div class="bf-col-12">
-            <p>訊息</p>
+            <p>備註</p>
             <textarea
               v-model="formData.message"
               name="message"
@@ -193,9 +193,9 @@ export default {
         </div>
 
         <!-- 提交按鈕 -->
-        <div class="bf-row">
-          <div class="bf-col-3">
-            <input type="submit" value="提交" />
+        <div class="bf-row" style="justify-content: center;">
+          <div class="bf-col-3" >
+            <input type="submit" value="提交"  />
           </div>
         </div>
       </form>
@@ -225,7 +225,7 @@ input,
 textarea,
 select {
   width: 100%; /* 元素寬度為父元素寬度的100% */
-  background-color: #f0f0f0; /* 淺灰色背景 */
+  background-color: rgba(116 , 140, 211,0.2); /* 淺灰色背景 */
   // border: 2px solid black; /* 2px 寬度的深藍色邊框 */
   // outline: none; /* 移除預設的外框 */
   padding: 10px; /* 內間距為10px */
@@ -234,6 +234,7 @@ select {
   resize: none; /* 禁止調整大小 */
   color: black; /* 文字顏色為深藍色 */
   transition: border-color 0.3s ease-in-out; /* 加入邊框顏色變化的過渡效果 */
+  border-radius: 5px;
 }
 
 
@@ -254,9 +255,10 @@ select {
 /* 表單頭部和尾部樣式 */
 .bf-head,
 .bf-footer {
-  background-color: #f0f0f0; /* 淺灰色背景 */
+  background-color: rgba(116 , 140, 211,0.1); /* 淺灰色背景 */
   padding: 20px 10px; /* 內間距為20px上下，10px左右 */
   text-align: center; /* 文字置中 */
+  border-radius: 5px
 }
 
 /* 整體表單容器樣式 */
@@ -270,8 +272,9 @@ select {
 
   /* 表單主體樣式 */
   .bf-body { /* 表單主體寬度為500px */
-    background-color: white; /* 白色背景 */
+    background-color: rgba(116 , 140, 211,0.1); /* 白色背景 */
     border-radius: 8px; /* 圓角為8px */
+
     /* 表單內容盒子樣式 */
     .bf-body-box {
       padding: 10px; /* 內間距為10px */

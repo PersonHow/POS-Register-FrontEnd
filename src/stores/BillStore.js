@@ -73,7 +73,7 @@ export const useBillstore = defineStore("Billstore", {
     // 計算機-未收
     notyetChargeAmount(state) {
       const totalAmount = parseFloat(this.totalAmount) || 0;
-      const realChargeAmount = this.realChargeAmount;
+      const realChargeAmount = this.realChargeAmount || 0;
       if (totalAmount > realChargeAmount) {
         return Math.round(totalAmount - realChargeAmount);
       } else {

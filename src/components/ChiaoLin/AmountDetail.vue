@@ -3,9 +3,11 @@ import { useBillstore } from '@/stores/BillStore'
 import { mapState, mapActions } from 'pinia';
 import MobileBarcodeArea from '@/components/ChiaoLin/MobileBarcodeArea.vue'
 import UniformNumArea from '@/components/ChiaoLin/UniformNumArea.vue'
+import { onMounted } from 'vue';
 export default {
     setup() {
         const Billstore = useBillstore();
+
         return {
             Billstore,
             ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
@@ -63,7 +65,7 @@ export default {
         closeUniformBox() {
             this.uniformBox = false;
         }
-    }
+    },
 }
 </script>
 
@@ -134,7 +136,7 @@ export default {
                                 <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                                 <div class="notyetChargeAreaAmount">
                                     <span id="notyetChargeAmount">{{ 
-                                        - Billstore.tothousendShowValue(Math.round(Billstore.notyetChargeAmount)) }}</span>
+                                        (-Math.round(Billstore.notyetChargeAmount)).toLocaleString('en-US')  }}</span>
                                 </div>
                             </div>
                         </div>
@@ -158,6 +160,7 @@ export default {
         display: flex;
         justify-content: space-between;
         padding-left: 1dvw;
+        line-height: 5dvh;
 
         .showInvoiceNumArea,
         .inputShowArea {
@@ -169,7 +172,7 @@ export default {
                 height: 6dvh;
                 margin: 0 1dvw;
                 margin-top: 2dvh;
-                background: #00c1ca;
+                background: #7b90da;
                 color: white;
                 font-family: "Chocolate Classical Sans", sans-serif;
                 font-size: 2dvh;
@@ -181,7 +184,7 @@ export default {
 
         .showInvoiceNumArea {
             padding-left: 1dvw;
-            line-height: 5dvh
+            line-height: 9dvh
         }
 
         p {

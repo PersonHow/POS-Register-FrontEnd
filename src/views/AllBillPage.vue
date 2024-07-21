@@ -108,9 +108,9 @@ export default {
                 <nav class="navArea" :class="{ active: Billstore.showLeftNavArea }">
                     <div class="noShowIcon">
 
-                        <button style="cursor: pointer;" @click="toggleSidebar">
+                        <!-- <button style="cursor: pointer;" @click="toggleSidebar">
                             <p><i class="fa-solid fa-xmark fa-2xl"></i></p>
-                        </button>
+                        </button> -->
 
                     </div>
                     <ul>
@@ -142,7 +142,7 @@ export default {
     .titleArea {
         height: 9dvh;
         // line-height: 9dvh;
-        background: linear-gradient(90deg, #00c1ca, #01e1c5);
+        background: linear-gradient(90deg, #7b90da, #a8afc9);
         border-radius: 5px;
         color: #fff;
         padding: 0 3dvw;
@@ -156,7 +156,7 @@ export default {
                 margin-right: 2dvw
             }
             p{
-                line-height: 9dvh;
+                line-height: 5dvh;
             }
         }
         .butArea {
@@ -193,7 +193,7 @@ export default {
                 font-family: "Chocolate Classical Sans", sans-serif;
                 height: 100%;
                 background: white;
-                border-right: 5px solid #00c1ca;
+                border-right: 5px solid #748cdd;
                 transition: 0.3s ease;
                 opacity: 90%;
 

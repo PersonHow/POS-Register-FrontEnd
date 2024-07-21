@@ -61,10 +61,10 @@ const router = createRouter({
         Swal.fire({
           title: "登出成功！",
           showConfirmButton: true,
-          confirmButtonColor: "#00c5c8",
+          confirmButtonColor: "#748cdd",
           confirmButtonText: "確定",
           icon: "success",
-          iconColor: "#00c5c8",
+          iconColor: "#748cdd",
         }).then((res) => {
           if (res.isConfirmed) {
             window.location.replace("/");

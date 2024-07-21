@@ -96,7 +96,7 @@ export default {
                 <!-- <RouterLink to="/InvoicePage"><button type="button" class="comeback myMouse">發票設定</button></RouterLink> -->
                 <RouterLink to="/AllBillPage"> <button type="button" class="comeback myMouse">帳務總覽</button></RouterLink>
                 <input type="checkbox" id="rightBar" v-model="Billstore.showRightNav">
-                <button @click="Billstore.closeTopbar"><i class="fa-solid fa-bars fa-xl"></i></button>
+                <button><i class="fa-solid fa-bars fa-xl"></i></button>
             </div>
         </div>
         <div v-if="Billstore.showHandInvArea">
@@ -121,10 +121,10 @@ export default {
 
         .functionButArea {
             display: flex;
-            width: 94%;
+            width: 96%;
             height: 7dvh;
             line-height: 7.5dvh;
-            background: linear-gradient(90deg, #00c1ca, #01e1c5);
+            background: linear-gradient(90deg, #7b90da, #a8afc9);
             color: #fff;
             border-radius: 10px;
             padding-left: 1dvw;

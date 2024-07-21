@@ -1,6 +1,7 @@
 <script>
 import { useBillstore } from '@/stores/BillStore'
-import { mapState, mapActions } from 'pinia';
+import { mapState } from 'pinia';
+
 export default {
     setup() {
         const Billstore = useBillstore();
@@ -8,9 +9,7 @@ export default {
         return {
             Billstore,
             ...mapState(Billstore, ['inputEvent']),
-            // ...mapActions(Billstore, ['showInvoiceLeftNavArea', 'changeStep',]),
         };
-
     },
     data() {
         return {
@@ -22,10 +21,10 @@ export default {
             },
             allbills: [],
             searchList: [],
-            isSearchActive: false,  // 增加狀態標誌來決定顯示內容
-            sortColumn: '',
+            isSearchActive: false,
+            focusColumn: '',
             sortOrder: 'asc',
-            isReinvoiced: false
+            searchResultList: []
         }
     },
     methods: {
@@ -39,36 +38,46 @@ export default {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data)
-                    this.searchList = data
-                    // 設置狀態標誌為 true
+                    console.log(data);
+                    this.searchList = data.reverse();
                     this.isSearchActive = true;
-
-                }).catch(error => {
-                    console.error("Error:", error);
                 })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
         },
-        paymentMethods(bill) {
-            return [`現金`, `信用卡`, `${bill.memo}`];
-        },
-        eachPaymentsAmount(bill) {
-            let otherPaymentAndAmount = []
-            if (bill.memo == null || bill.payment_other == 0) {
-                bill.memo = "";
-                bill.payment_other = "";
+        sortColumnWay(column) {
+            // if 點擊排序為此列
+            if (this.focusColumn === column) {
+                // 切換排序 asc => desc，desc => asc
+                this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.focusColumn = column;
+                this.sortOrder = 'asc';
             }
-            return [`現金：${bill.payment_cash}`, `信用卡：${bill.payment_credit}`, `${bill.memo}：${bill.payment_other}`];
         },
-        eachpayments(bill) {
-            return bill.memo.split(";")
+        sortClassWay(column) {
+            return {
+                asc: this.focusColumn === column && this.sortOrder === 'asc',
+                desc: this.focusColumn === column && this.sortOrder === 'desc'
+            };
         },
-        voidInvoice(bill) {
-            // 作廢發票的邏輯
-            bill.isReinvoiced = true;
+    },
+    computed: {
+        sortedBills() {
+            const bills = this.isSearchActive ? this.searchList : this.allbills;
+            return bills.slice().sort((a, b) => {
+                let modifier = 1;
+                if (this.sortOrder === 'desc') modifier = -1;
+                if (a[this.focusColumn] < b[this.focusColumn]) return -1 * modifier;
+                if (a[this.focusColumn] > b[this.focusColumn]) return 1 * modifier;
+                return 0;
+            });
         },
-        reopenInvoice(bill) {
-            // 重新開發票的邏輯
-            bill.isReinvoiced = false;
+        // 月曆選擇器早於start_date灰階不可選
+        minEndDate() {
+            const minDay = this.searchObj.createTime1;
+            return minDay;
         }
     },
     mounted() {
@@ -77,125 +86,93 @@ export default {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(),
         })
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
-                this.allbills = data;
-            })
-    },
-    computed: {
+                this.allbills = data.reverse();
+            });
     }
 }
 </script>
+
 
 <template>
     <div class="allBillArea">
         <div class="searchArea">
             <label for="orderSearch">點餐單號：</label>
-            <input type="text" id="orderSearch" v-model="this.searchObj.orderId">
-            <!-- <button class="searchBtn"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /></button> -->
+            <input type="text" id="orderSearch" v-model="searchObj.orderId">
             <p></p>
             <div class="inputDateArea">
                 <label for="startDate">起始日：</label>
                 <p></p>
-                <input type="date" id="startDate" v-model="this.searchObj.createTime1">
+                <input type="date" id="startDate" v-model="searchObj.createTime1">
                 <p></p>
                 <label for="endDate">結束日：</label>
                 <p></p>
-                <input type="date" id="endDate" v-model="this.searchObj.createTime2">
+                <input type="date" id="endDate" v-model="searchObj.createTime2" :min="minEndDate">
                 <p></p>
             </div>
-            <button @click="searchBill()"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /></button>
+            <button @click="searchBill()">
+                <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
+            </button>
         </div>
+
         <div class="serchResultArea">
-            <thead>
-                <tr>
-                    <th @click="sortTable('index')" :class="{ active: sortColumn === 'index' }">
-                        序號
-                        <!-- <span class="icon-arrow" :class="{
-                            asc: sortColumn === 'index' && sortOrder === 'asc',
-                            desc: sortColumn === 'index' && sortOrder === 'desc',
-                        }">
-                            &UpArrow;
-                        </span> -->
-                    </th>
-                    <th @click="sortTable('createTime')" :class="{ active: sortColumn === 'createTime' }">
-                        結帳時間
-                        <!-- <span class="icon-arrow" :class="{
-                            asc: sortColumn === 'createTime' && sortOrder === 'asc',
-                            desc: sortColumn === 'createTime' && sortOrder === 'desc',
-                        }">
-                            &UpArrow;
-                        </span> -->
-                    </th>
-                    <th @click="sortTable('orderId')" :class="{ active: sortColumn === 'orderId' }">
-                        點餐單號
-                        <!-- <span class="icon-arrow" :class="{
-                            asc: sortColumn === 'orderId' && sortOrder === 'asc',
-                            desc: sortColumn === 'orderId' && sortOrder === 'desc',
-                        }">
-                            &UpArrow;
-                        </span> -->
-                    </th>
-                    <th @click="sortTable('invoice')" :class="{ active: sortColumn === 'invoice' }">
-                        已開發票
-                        <!-- <span class="icon-arrow" :class="{
-                            asc: sortColumn === 'invoice' && sortOrder === 'asc',
-                            desc: sortColumn === 'invoice' && sortOrder === 'desc',
-                        }">
-                            &UpArrow;
-                        </span> -->
-                    </th>
-                    <th @click="sortTable('memo')" :class="{ active: sortColumn === 'memo' }">
-                        支付方式及金額
-                        <!-- <span class="icon-arrow" :class="{
-                            asc: sortColumn === 'memo' && sortOrder === 'asc',
-                            desc: sortColumn === 'memo' && sortOrder === 'desc',
-                        }">
-                            &UpArrow;
-                        </span> -->
-                    </th>
-                    <!-- <th @click="sortTable('payment_total')" :class="{ active: sortColumn === 'payment_total' }">
-                        支付金額 -->
-                    <!-- <span class="icon-arrow" :class="{
-                            asc: sortColumn === 'payment_total' && sortOrder === 'asc',
-                            desc: sortColumn === 'payment_total' && sortOrder === 'desc',
-                        }">
-                            &UpArrow;
-                        </span> -->
-                    <!-- </th> -->
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="content" v-for="(bill, index) in (isSearchActive ? searchList : allbills)" :key="index">
-                    <td>{{ index + 1 }}.</td>
-                    <td>{{ bill.createTime }}</td>
-                    <td>{{ bill.orderId }}</td>
-                    <td>{{ bill.invoice }}</td><button v-if="!bill.isReinvoiced"
-                        @click="voidInvoice(bill)">作廢發票</button>
-                    <button v-else @click="reopenInvoice(bill)">重開發票</button>
-                    <!-- <td v-for="(method, methodIndex) in paymentMethods(bill)" :key="methodIndex">{{ method }}</td> -->
-                    <td>
-                    <p v-for="(amount, amountIndex) in eachPaymentsAmount(bill)" :key="amountIndex">
-                        <span v-if="amount !== '：'">{{ amount }}</span>
-                    </p>
-                    </td>
-                </tr>
-            </tbody>
+            <table >
+                <thead >
+                    <tr>
+                        <th @click="sortColumnWay('index')" :class="{ active: focusColumn === 'index' }">
+                            序號
+                            <span class="icon-arrow" :class="sortClassWay('index')">&UpArrow;</span>
+                        </th>
+                        <th @click="sortColumnWay('createTime')" :class="{ active: focusColumn === 'createTime' }">
+                            結帳時間
+                            <span class="icon-arrow" :class="sortClassWay('createTime')">&UpArrow;</span>
+                        </th>
+                        <th @click="sortColumnWay('orderId')" :class="{ active: focusColumn === 'orderId' }">
+                            點餐單號
+                            <span class="icon-arrow" :class="sortClassWay('orderId')">&UpArrow;</span>
+                        </th>
+                        <th @click="sortColumnWay('invoice')" :class="{ active: focusColumn === 'invoice' }">
+                            已開發票
+                            <span class="icon-arrow" :class="sortClassWay('invoice')">&UpArrow;</span>
+                        </th>
+                        <th colspan="3">
+                            支付方式及金額
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="content" v-for="(bill, index) in sortedBills" :key="index">
+                        <td>{{ index + 1 }}.</td>
+                        <td>{{ bill.createTime }}</td>
+                        <td>{{ bill.orderId }}</td>
+                        <td>{{ bill.invoice }}</td>
+                        <td>現金：{{ bill.payment_cash }}</td>
+                        <td>信用卡：{{ bill.payment_credit }}</td>
+                        <td v-if="bill.memo !== null && bill.payment_other !== 0">{{ bill.memo }}：{{ bill.payment_other
+                            }}</td>
+                        <td v-else></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
 
+
 <style scoped lang="scss">
 .allBillArea {
     padding: 1dvw;
+    background-color: white;
 
     .searchArea {
         width: 100%;
         display: flex;
         font-size: 2dvh;
+        background-color: white;
+        margin: 2dvh 3dvh;
 
         label {
             margin: 0 1dvw;
@@ -210,7 +187,7 @@ export default {
         button {
             margin-left: 1dvw;
             width: 5dvw;
-            background: #00c1ca;
+            background: #748cdd;
             color: white;
             border-radius: 5px;
             border: none;
@@ -231,12 +208,20 @@ export default {
     .serchResultArea {
         width: 95%;
         max-height: calc(89% - 1.6rem);
-        background-color: #ffffff;
         margin: 0.8rem auto;
-        border-radius: 5px;
+        border-radius: 8px;
         border: none;
         overflow: auto;
         font-size: 1.8dvh;
+
+        thead {
+            border-top-right-radius: 8px;
+        }
+
+        tr {
+            background-color: rgba(116, 140, 211, 0.2);
+            height: 5dvh;
+        }
 
         td {
             text-align: center;
@@ -258,7 +243,7 @@ export default {
         }
 
         tbody tr:hover {
-            background-color: #f0f0f0;
+            background-color: rgba(116, 140, 211, 0.3);
         }
 
         button {

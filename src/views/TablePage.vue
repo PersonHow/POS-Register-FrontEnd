@@ -6,6 +6,7 @@ import Footer_bar_Checkout from "@/components/Kou/Footer_bar_Checkout .vue";
 import Footer_bar_Order from "@/components/Kou/Footer_bar_Order.vue";
 import Swal from "sweetalert2";
 import { jsx } from "vue/jsx-runtime";
+import { useBillstore } from '@/stores/BillStore'
 export default {
   data() {
     return {
@@ -159,6 +160,8 @@ export default {
     }
   },
   created() {
+    this.Billstore = useBillstore()
+    this.Billstore.isTopBarHidden = false // 預設隱藏header
     if (sessionStorage.getItem("token") == null) {
       this.$router.push({ name: 'home' });
       Swal.fire({
@@ -176,6 +179,7 @@ export default {
     if (sessionStorage.getItem("selected_item")) {
       this.selected_item = sessionStorage.getItem("selected_item");
     }
+
   },
   components: {
     Table,
@@ -216,6 +220,7 @@ export default {
                 <button class="menu-item" @click="TakeTableHandler">帶位</button>
                 <button class="menu-item" @click="cleanTablesHander">清除狀態</button>
                 <Footer_bar_Order :selected_table="selected_table" :selected_target_table="selected_target_table" />
+                <button @click="Billstore.closeTopbar()" style="color:white"><i class="fa-solid fa-house-chimney fa-xl"></i></button>
               </div>
             </transition>
           </div>
@@ -318,7 +323,7 @@ export default {
     height: 4rem;
     width: 4dvw;
     border-radius: 50%;
-    background:  rgb(123, 144, 218);
+    background: rgb(123, 144, 218);
   }
 
   .hamburgerArea {
@@ -337,7 +342,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     // background: linear-gradient(90deg, rgb(123, 144, 218), #a8afc9);
-    background:  rgb(123, 144, 218);
+    background: rgb(123, 144, 218);
     border-radius: 20px;
     padding: 10px 20px;
     z-index: 10;

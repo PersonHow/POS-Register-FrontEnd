@@ -372,7 +372,7 @@ export default {
     <form @submit.prevent="submitForm">
       <!-- 關閉彈出視窗按鈕 -->
       <font-awesome-icon :icon="['fas', 'x']" class="close-modal"
-        @click="closeModal"/>
+        @click="closeModal" />
       <!-- 模式標題 -->
       <h2>{{ modalMode === "view" ? "查看預訂資訊" : "編輯預訂資訊" }}</h2>
 
@@ -431,7 +431,7 @@ th,
 td {
   border-collapse: collapse;
   padding: 1rem;
-  text-align: left;
+  text-align: center;
 }
 
 main.table {
@@ -492,8 +492,8 @@ main.table {
 
 .table_body {
   width: 96%;
-  max-height: calc(89% - 1.6rem);
-  background-color: #ffffff;
+  max-height: calc(89% - 5.5rem);
+  background-color: rgba(116 , 140, 211,0.1);
   margin: 0.8rem auto;
   border-radius: 8px;
   // border:2px solid #000000;
@@ -570,9 +570,9 @@ table {
   text-transform: uppercase;
 
   &.delivered {
-    background-color: #7b90da;
-    color: white;
-    font-weight: 500;
+    background-color: rgb(116, 140, 221,0.3);
+    color: #6E75A4;
+    // font-weight: 500;
   }
 
   &.cancelled {
@@ -696,7 +696,7 @@ table {
       transition: border-color 0.3s ease;
 
       &:focus {
-        border-color: #4caf50;
+        border-color: #748cdd;
       }
     }
 
@@ -708,7 +708,7 @@ table {
 
     button {
       padding: 12px 25px;
-      background-color: #4caf50;
+      background-color: #748cdd;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -717,7 +717,7 @@ table {
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #45a049;
+        background-color: #748cdd;
       }
     }
   }

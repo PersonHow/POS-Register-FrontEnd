@@ -129,7 +129,7 @@ export default {
                 </div> -->
                 <div class="billdetail">
                     <p>訂單金額&nbsp;</p>
-                    <div class="inputAera"><input type="text" :value="this.OrderDB.amount" disabled>
+                    <div class="inputAera"><input type="text" :value="this.OrderDB.amount.toLocaleString('en-US')" disabled>
                     </div>
                     <p>折扣&nbsp;</p>
                     <div class="inputAera"><input type="text" :value="Billstore.discount"
@@ -188,7 +188,7 @@ export default {
     .showOrderId {
         display: flex;
         height: 9dvh;
-        background: linear-gradient(90deg, #00c1ca, #01e1c5);
+        background:  #7b90da;
         border-radius: 5px;
         color: white;
         line-height: 9dvh;

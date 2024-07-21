@@ -94,9 +94,10 @@ export default {
                     </p>
                 </div>
                 <div>
-                    <p>人數：{{ Billstore.OrderDB.guest_num }}</p>
+                    <p v-if="Billstore.OrderDB.guest_num !==0">人數：{{ Billstore.OrderDB.guest_num }}</p>
+                    <p v-else></p>
                 </div>
-                <div>用餐金額：{{ Billstore.OrderDB.amount }}</div>
+                <div>用餐金額：{{ (Billstore.OrderDB.amount).toLocaleString('en-US') }}</div>
 
                 <div>點餐內容：</div>
                 <ul v-for="(mealList, index) in Billstore.OrderDB.order_detail" :key="index">
@@ -114,7 +115,8 @@ export default {
                         </div>
                         <div class="optionArea" v-for="(option, optionIndex) in mealList.custom_option.split(';')"
                             :key="optionIndex">
-                            <p>{{ option }}</p>
+                            <p v-if="option !== 'null'">{{ option }}</p>
+                            <p v-else></p>
                             <button v-if="deleteOptionIcon" type="button" @click="deleteOption(mealList, option)"
                                 id="deleteOption">
                                 <i class="fa-solid fa-circle-minus fa-lg" style="color: #b00000;"></i>
@@ -149,7 +151,7 @@ export default {
     font-family: "Chocolate Classical Sans", sans-serif;
     height: 100%;
     background: white;
-    border-right: 5px solid #00c1ca;
+    border-right: 5px solid #7b90da;
     transition: 0.3s ease;
     opacity: 90%;
     padding-top: 0.5dvh;
@@ -233,7 +235,7 @@ export default {
                 height: 6dvh;
                 margin: 0 0.5dvw;
                 margin-top: 1dvh;
-                background: #00c1ca;
+                background: #7b90da;
                 color: white;
                 font-family: "Chocolate Classical Sans", sans-serif;
                 font-size: 2.25dvh;

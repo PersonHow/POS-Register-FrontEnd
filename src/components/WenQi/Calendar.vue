@@ -22,7 +22,7 @@
                   <div class="weth">
                     <p>{{ filteredWeatherData[0].WeatherElement.Weather }}</p>
 
-                    <i v-if="filteredWeatherData[0].WeatherElement.Weather === '陰'" class="fa-solid fa-cloud"></i>
+                    <!-- <i v-if="filteredWeatherData[0].WeatherElement.Weather === '陰'" class="fa-solid fa-cloud"></i> -->
 
 
                   </div>

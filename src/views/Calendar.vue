@@ -68,7 +68,7 @@ export default {
 .openBoxbut {
     padding: 0 1dvw;
     position: absolute;
-    top: 42%;
+    top: 45%;
     right: 51%;
     border: none;
     // border: 2px solid #7b90da;
