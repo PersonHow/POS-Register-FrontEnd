@@ -62,11 +62,11 @@ export default {
 </script>
 
 <template>
+
     <div class="container">
-        {{ customsVal }}
         <div class="col h3">{{MenuStore.meal.meal_id? "修改餐點":"新增餐點"}}</div>
         <figure class="figure preview">
-            <img :src="MenuStore.meal.img? MenuStore.meal.img : 'https://shop.travel.org.tw/proudimage/0.jpg'" class="figure-img img-fluid rounded" alt="預覽">
+            <img :src="MenuStore.meal.img? MenuStore.meal.img : 'https://shop.travel.org.tw/proudimage/0.jpg'" class="figure-img img-fluid" alt="預覽">
             <figcaption class="figure-caption">餐點圖片</figcaption>
         </figure>
         <div class="form-floating mb-4">
@@ -112,6 +112,12 @@ export default {
 <style scoped lang="scss">
 .preview{
     width: 25%;
+    img{
+        height: 200px;
+        width: 200px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
 }
 // .btn-main{
 //     background: linear-gradient(90deg, #00c1ca, #01e1c5);
