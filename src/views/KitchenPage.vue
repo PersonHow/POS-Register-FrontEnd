@@ -99,6 +99,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 
+
 const currentTime = ref('');
 const isCollapsed = ref([]);
 const modalVisible = ref(false);
@@ -467,6 +468,10 @@ const closeLargeModal = () => {
 </script>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
+*{
+    font-family: "Chocolate Classical Sans", sans-serif;
+}
 .tcontainer {
     display: flex;
     flex-direction: column;

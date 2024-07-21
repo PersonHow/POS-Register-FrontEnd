@@ -88,7 +88,7 @@ export default {
         </div>
         <div class="amountDetail">
             <div class="amountDetailShow">
-                <p>總計 NT.{{ Billstore.tothousendShowValue(Billstore.orderAmountfromPage) }} </p>
+                <p>點餐總計 NT.{{ Billstore.tothousendShowValue(Billstore.orderAmountfromPage) }} </p>
                 <p>* 折扣{{ Billstore.discount
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.discountAmount) }}) * 服務費{{ Billstore.serviceFee
                     }}%(NT.{{ Billstore.tothousendShowValue(Billstore.serviceAmount) }}) </p>
@@ -99,11 +99,11 @@ export default {
                 <div class="amountShowLeft">
                     <div class="amountShowLeftTotal">
                         <div class="totalAreaText">
-                            <span>總金額</span>
+                            <span>應收總額</span>
                         </div>
                         <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                         <div class="totalAreaAmount">
-                            <span id="totalAmount">{{ Billstore.tothousendShowValue(this.OrderDB.amount) }}</span>
+                            <span id="totalAmount">{{ Billstore.tothousendShowValue(Math.round(this.OrderDB.amount)) }}</span>
                         </div>
                     </div>
                     <div class="amountShowLeftChange" hidden>
@@ -112,7 +112,7 @@ export default {
                         </div>
                         <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                         <div class="changeAreaAmount">
-                            <span id="changeAmount">{{ Billstore.tothousendShowValue(Billstore.changeAmount) }}</span>
+                            <span id="changeAmount">{{ Billstore.tothousendShowValue(Math.round(Billstore.changeAmount)) }}</span>
                         </div>
                     </div>
                 </div>
@@ -123,7 +123,7 @@ export default {
                         </div>
                         <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                         <div class="realChargeAreaAmount">
-                            <span id="realChargeAmount">{{ Billstore.tothousendShowValue(Billstore.realChargeAmount)
+                            <span id="realChargeAmount">{{ Billstore.tothousendShowValue(Math.round(Billstore.realChargeAmount))
                                 }}</span>
                         </div>
                         <div class="amountShowRightNotyet">
@@ -133,8 +133,8 @@ export default {
                                 </div>
                                 <div class="ntTextAera"> <span id="ntText">NT.</span></div>
                                 <div class="notyetChargeAreaAmount">
-                                    <span id="notyetChargeAmount">{{ -
-                                        Billstore.tothousendShowValue(Billstore.notyetChargeAmount) }}</span>
+                                    <span id="notyetChargeAmount">{{ 
+                                        - Billstore.tothousendShowValue(Math.round(Billstore.notyetChargeAmount)) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -148,7 +148,6 @@ export default {
 <style scoped lang="scss">
 .AmountDetailArea {
     width: 100%;
-    padding-left: 0.5dvw;
 
     .showInvoiceNum {
         height: 9dvh;
@@ -157,8 +156,6 @@ export default {
         font-size: 2.25dvh;
         margin-bottom: 0.5dvh;
         display: flex;
-        justify-content: space-between;
-        padding-left: 1dvw;
         justify-content: space-between;
         padding-left: 1dvw;
 
@@ -171,7 +168,7 @@ export default {
                 width: 9.5dvw;
                 height: 6dvh;
                 margin: 0 1dvw;
-                margin-top: 2.5dvh;
+                margin-top: 2dvh;
                 background: #00c1ca;
                 color: white;
                 font-family: "Chocolate Classical Sans", sans-serif;
@@ -184,7 +181,7 @@ export default {
 
         .showInvoiceNumArea {
             padding-left: 1dvw;
-            line-height: 9dvh
+            line-height: 5dvh
         }
 
         p {
@@ -203,8 +200,7 @@ export default {
         border: 1px solid rgb(213, 212, 212);
         color: gray;
         font-weight: 600;
-        margin: 0 0.5dvw;
-        margin-right: 1.5dvw;
+        margin: 0 1dvw;
         border-radius: 5px;
 
         .amountDetailShow {
@@ -221,6 +217,13 @@ export default {
 
         .amountShow {
             display: flex;
+
+            .totalAreaText,
+            .changeAreaText,
+            .realChargeAreaText,
+            .notyetChargeAreaText {
+                font-size: 2dvh;
+            }
 
             .amountShowLeft {
                 width: 45%;

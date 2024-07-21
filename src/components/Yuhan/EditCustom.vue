@@ -22,7 +22,7 @@ export default{
         let notice = ref(false)
         // 將菜單中的餐點選項轉為multiselect可用的形式
         const mealOptions = MenuStore.menu.map(meal => ({ name: meal.name , id: meal.meal_id}))
-        
+        let isShow = ref(false)
         
         let newIds = computed (() => {
             if(updateCustom.value.custom_id){
@@ -95,7 +95,8 @@ export default{
             updateCustom,
             newIds,
             mealOptions,
-            notice
+            notice, //提醒未儲存
+            isShow //右側欄開關
         }
     },
     data(){
@@ -117,8 +118,7 @@ export default{
     <div class="searchArea d-flex mb-4">
         <input class="form-control short" list="datalistOptions" id="DataList" placeholder="輸入客製項目...">
         <button  class="searchBtn"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /></button>
-        <button @click="updateCustom = {}" type="button" class="btn btn-secondary ms-3">
-            新增項目</button>
+        
     </div>
     <datalist id="datalistOptions">
         <option v-for="option in custom_options" :key="option.custom_id" :value="option.option"></option>
@@ -130,7 +130,7 @@ export default{
         <div class="optionArea">
             <div v-for="detail in custom_options" :key="detail.custom_id" class="labels mb-3">
                 <div @click="MenuStore.removeFromList(detail)" class="removeBtn"><font-awesome-icon icon="fa-solid fa-trash" /></div>
-                <button @click="editUpdateCustom(detail)" type="button" class="btn btn-label" :class="{'btn-active': detail.custom_id === updateCustom.custom_id}">
+                <button @click="editUpdateCustom(detail),isShow = true" type="button" class="btn btn-label" :class="{'btn-active': detail.custom_id === updateCustom.custom_id}">
                     {{detail.custom_id+". "+detail.option}}</button>
             </div>
         </div>
@@ -139,11 +139,13 @@ export default{
         <!-- 編輯項目 -->
         <transition name="slide" mode="out-in">
             <div class="editItem">
-                <div class="d-flex justify-content-between align-item-center">
-                    <h5 class="modal-title">編輯項目</h5>
-                    <button @click="pushCustomToStore(updateCustom)" type="button" class="btn btn-secondary mb-3">完成</button>
+                <div v-show="isShow" class="d-flex justify-content-between align-item-center">
+                    <h5 class="modal-title">{{updateCustom? "新增":"修改"}}編輯項目</h5>
+                    <button @click="pushCustomToStore(updateCustom),isShow = true" type="button" class="btn btn-secondary ms-3">
+                        新增項目</button>
+                    <button @click="pushCustomToStore(updateCustom),isShow = false" type="button" class="btn btn-secondary">完成</button>
                 </div>
-                <div class="modal-body">
+                <div v-show="isShow" class="modal-body">
                     <form>
                     <div class="mb-3">
                         <label for="custom_options" class="col-form-label">客製選項:</label><br>

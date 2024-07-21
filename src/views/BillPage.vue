@@ -14,7 +14,7 @@ export default {
         const Billstore = useBillstore();
         return {
             Billstore,
-            ...mapState(Billstore,['isTopBarHidden']),
+            ...mapState(Billstore, ['isTopBarHidden']),
             ...mapActions(Billstore, ['closeTopbar'])
         };
         // const OrderStore = useOrderStore();
@@ -67,12 +67,14 @@ export default {
 
 <template>
     <div class="midArea">
+
         <!-- 用 v-bind -->
         <BillDetail :orderAmount="Billstore.OrderDB.amount" :discount="Billstore.discount"
             :serviceFee="Billstore.serviceFee" :entertain="Billstore.entertain" :allowance="Billstore.allowance"
             :inputEvent="Billstore.inputEvent" :newInputEvent="Billstore.newInputEvent"
             @set-focused-input="Billstore.setFocusedInput" @add-input-event="Billstore.addInputEvent"
             @remove-input-event="Billstore.removeInputEvent" @update="updateBillstore" />
+
         <div class="rightArea">
             <AmountDetails :orderAmount="Billstore.OrderDB.amount" :totalAmount="Billstore.totalAmount"
                 :changeAmount="Billstore.changeAmount" :realChargeAmount="Billstore.realChargeAmount"
@@ -104,24 +106,23 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
 
 .midArea {
+    width: 100dvw;
     display: flex;
     font-family: "Chocolate Classical Sans", sans-serif;
 
     .rightArea {
         width: 50%;
-        width: 50%;
 
         .functionButArea {
             display: flex;
-            width: 95%;
+            width: 94%;
             height: 7dvh;
             line-height: 7.5dvh;
             background: linear-gradient(90deg, #00c1ca, #01e1c5);
             color: #fff;
             border-radius: 10px;
             padding-left: 1dvw;
-            margin-top: 1dvh;
-            margin-left: 1.5dvh;
+            margin: 0 1dvw;
 
             button {
                 border: none;

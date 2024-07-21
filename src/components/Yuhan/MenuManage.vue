@@ -2,10 +2,14 @@
 import AddMenu from './EditMenu.vue'
 import UpdateCustom from './EditCustom.vue'
 import { useMenuStore } from '@/stores/MenuStore';
+import { useBillstore } from '@/stores/BillStore'
+
 export default {
     setup(){
+        const Billstore = useBillstore();
         const MenuStore = useMenuStore()
         return{
+            Billstore,
             MenuStore
         }
     },
@@ -58,7 +62,7 @@ export default {
     <div class="body">
         <div v-show="!MenuStore.toggleEdit" class="navi">
             <h2>
-                <button class="btn"><font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></button> 
+                <button @click="Billstore.closeTopbar()" class="icon"><i class="fa-solid fa-house-chimney"></i></button>
                 菜單管理
             </h2>
             <div v-for="page in pages" :key="page" class="changePage" :class="{'currentPage' : selectedPage === page}">
@@ -134,6 +138,13 @@ $secondary-color: #FFE2C3;
 }
 p{
     margin-bottom: 10px;
+}
+.icon{
+    background: transparent;
+    border: none;
+    i{
+        color: #fff;
+    }
 }
 .btn-main{
     background: $main-color;

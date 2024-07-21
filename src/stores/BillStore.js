@@ -46,6 +46,7 @@ export const useBillstore = defineStore("Billstore", {
     mobileBarcode: "",
     uniformNum: "",
     isTopBarHidden:false, // 伸縮topBar
+    isCalendarBoxOpen:false
   }),
   getters: {
     // ----取值區----
@@ -54,27 +55,27 @@ export const useBillstore = defineStore("Billstore", {
       const discountPersent = (100 - state.discount) / 100;
       const servicePersent = (100 + state.serviceFee) / 100;
       const orderAmount = state.orderAmountfromPage || 0;
-      return (
+      return Math.round(
         orderAmount * discountPersent * servicePersent -
         state.entertain -
         state.allowance
-      ).toFixed(2);
+      );
     },
     // 計算機-找零
     changeAmount(state) {
       const totalAmount = parseFloat(this.totalAmount) || 0;
-      return (state.realChargeAmount - totalAmount).toFixed(2);
+      return Math.round(state.realChargeAmount - totalAmount);
     },
     // 計算機-實收
     realChargeAmount(state) {
-      return state.inputEvent.reduce((total, event) => total + event.value, 0);
+      return Math.round(state.inputEvent.reduce((total, event) => total + event.value, 0));
     },
     // 計算機-未收
     notyetChargeAmount(state) {
       const totalAmount = parseFloat(this.totalAmount) || 0;
       const realChargeAmount = this.realChargeAmount;
       if (totalAmount > realChargeAmount) {
-        return (totalAmount - realChargeAmount).toFixed(2);
+        return Math.round(totalAmount - realChargeAmount);
       } else {
         return 0;
       }

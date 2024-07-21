@@ -121,8 +121,7 @@ export default {
   <div class="bf-container">
     <div class="bf-body">
       <div class="bf-head">
-        <h1>預約表單</h1>
-        <p>開始預約吧</p>
+        <h2>預約表單</h2>
       </div>
 
       <form class="bf-body-box" @submit.prevent="submitForm">
@@ -216,19 +215,19 @@ export default {
   color:unset;
   border:unset;
 }
-:active{
-  background-color: unset;
-  color:unset;
-  border:unset;
-}
+// :active{
+//   background-color: unset;
+//   color:unset;
+//   border:unset;
+// }
 /* 表單元素樣式設定 */
 input,
 textarea,
 select {
   width: 100%; /* 元素寬度為父元素寬度的100% */
   background-color: #f0f0f0; /* 淺灰色背景 */
-  border: 2px solid black; /* 2px 寬度的深藍色邊框 */
-  outline: none; /* 移除預設的外框 */
+  // border: 2px solid black; /* 2px 寬度的深藍色邊框 */
+  // outline: none; /* 移除預設的外框 */
   padding: 10px; /* 內間距為10px */
   font-family: "Arial", sans-serif; /* 字體為Arial或sans-serif */
   margin-top: 5px; /* 上邊距為5px */
@@ -237,12 +236,7 @@ select {
   transition: border-color 0.3s ease-in-out; /* 加入邊框顏色變化的過渡效果 */
 }
 
-input[type="text"]:hover,
-input[type="number"]:hover,
-input[type="date"]:hover,
-textarea:hover {
-  border-color: #ff8200; /* 滑鼠懸停時邊框顏色變為橘色 */
-}
+
 
 /* 表單欄位佈局 */
 .bf-col-12 {
@@ -268,7 +262,7 @@ textarea:hover {
 /* 整體表單容器樣式 */
 .bf-container {
   margin-top: 10vh;
-  border: 2px solid black;
+  // border: 2px solid black;
   display: flex; /* 使用Flex布局 */ /* 水平置中 */ /* 垂直置中 */
   align-items: center;
   justify-content: center;
@@ -297,6 +291,13 @@ textarea:hover {
       }
     }
   }
+}
+
+input[type="text"]:hover,
+input[type="number"]:hover,
+input[type="date"]:hover,
+textarea:hover {
+  border-color: #ff8200; /* 滑鼠懸停時邊框顏色變為橘色 */
 }
 
 /* 送出按鈕樣式 */

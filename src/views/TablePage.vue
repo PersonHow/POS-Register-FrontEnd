@@ -225,9 +225,10 @@ export default {
 }
 .body {
   width: 100%;
-  height: 80vh; 
-  height: 80vh; 
+  height: 90vh; 
   display: flex;
+  overflow-x: hidden;
+  overflow-y: scroll;
   flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;

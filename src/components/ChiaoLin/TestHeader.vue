@@ -18,7 +18,7 @@ export default {
 }
 </script>
 <template>
-  <div class="container">
+  <div class="headerArea">
     <h1 class="logo"></h1>
     <nav>
       <ul>
@@ -54,13 +54,13 @@ export default {
   border: unset;
 }
 
-div.container {
+div.headerArea {
   width: 100%;
-  max-width: 1360px;
+  // max-width: 1366px;
   font-family: "Chocolate Classical Sans", sans-serif;
   display: flex;
-  font-weight: 600;
-  background-color: white;
+  // font-weight: 600;
+  background-color: rgba(116 , 140, 211,0.2);
   line-height: 5dvh;
 
   ul {
@@ -75,7 +75,7 @@ div.container {
       position: relative;
 
       a {
-        color: #01e1c5;
+        color: #748cdd;
         text-decoration: none;
         text-transform: uppercase;
         font-size: 2.25dvh;
@@ -85,7 +85,7 @@ div.container {
         }
 
         &:hover {
-          color: #01e1c5;
+          color: #748cdd;
 
         }
 
@@ -98,7 +98,7 @@ div.container {
           display: block;
           vertical-align: middle;
           height: 5px;
-          background-color: #01e1c5;
+          background-color: #748cdd;
           position: absolute;
           top: 0;
           width: 0%;

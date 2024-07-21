@@ -369,29 +369,10 @@ export default {
 
   <!-- 彈出視窗區域，根據 modalOpen 變數控制顯示與隱藏 -->
   <div class="modal" :class="{ active: modalOpen }">
-    <!-- 關閉彈出視窗按鈕 -->
-    <svg
-      class="close-modal"
-      width="20"
-      height="20"
-      viewBox="0 0 29 29"
-      fill="none"
-      @click="closeModal"
-    >
-      <path
-        d="M3 3L26.5 26.5"
-        stroke="#333"
-        stroke-width="5"
-        stroke-linecap="round"
-      />
-      <path
-        d="M26.5 3L3 26.5"
-        stroke="#333"
-        stroke-width="5"
-        stroke-linecap="round"
-      />
-    </svg>
     <form @submit.prevent="submitForm">
+      <!-- 關閉彈出視窗按鈕 -->
+      <font-awesome-icon :icon="['fas', 'x']" class="close-modal"
+        @click="closeModal"/>
       <!-- 模式標題 -->
       <h2>{{ modalMode === "view" ? "查看預訂資訊" : "編輯預訂資訊" }}</h2>
 
@@ -510,12 +491,12 @@ main.table {
 }
 
 .table_body {
-  width: 95%;
+  width: 96%;
   max-height: calc(89% - 1.6rem);
   background-color: #ffffff;
   margin: 0.8rem auto;
   border-radius: 0.6rem;
-  border:2px solid #000000;
+  // border:2px solid #000000;
   overflow: auto;
 
   th {
@@ -741,9 +722,6 @@ table {
   }
 
   .close-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     cursor: pointer;
   }
 }

@@ -171,7 +171,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
 
 .allArea {
-    width: 50%;
+    width: 49%;
     font-family: "Chocolate Classical Sans", sans-serif;
 
     .titleArea {
@@ -191,7 +191,7 @@ export default {
         background: linear-gradient(90deg, #00c1ca, #01e1c5);
         border-radius: 5px;
         color: white;
-        line-height: 9.5dvh;
+        line-height: 9dvh;
         padding-left: 2dvw;
         font-size: 2.25dvh;
 

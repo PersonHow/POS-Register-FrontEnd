@@ -813,6 +813,7 @@
   </script>
   
   <style scoped lang="scss">
+
   .table {
     width: 136px;
     margin: 10px;
@@ -841,8 +842,10 @@
     max-height: 80vh;
     padding:1%;
     margin: 1rem;
-    border:2px solid #00c5c8;
+    border:2px solid #7b90da;
+    border-radius: 8px;
     overflow: scroll;
+    background-color: rgba(116 , 140, 211,0.1);
     .tableNum{
       width: 100%;
       font-size: 25px;
@@ -866,6 +869,10 @@
       width: 100%;
       display: flex;
       justify-content: start;
+      color: white;
+    }
+    button{
+      background: #7b90da;
       color: white;
     }
   }
@@ -908,8 +915,8 @@
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    color:#00c5c8;
-    border:2px solid #00c5c8;
+    color:#7b90da;
+    border:2px solid #7b90da;
     div{
       margin-top: 0.5rem;
       height: 8vh;

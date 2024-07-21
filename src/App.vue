@@ -4,6 +4,7 @@ import TestHeader from './components/ChiaoLin/TestHeader.vue';
 import { useBillstore } from '@/stores/BillStore';
 
 const billStore = useBillstore();
+
 </script>
 
 <template>
@@ -11,11 +12,11 @@ const billStore = useBillstore();
         <button v-if="billStore.isLoggedIn" style="cursor: pointer; font-size: 2.25dvh;" @click="billStore.closeTopbar">
             <i class="fa-solid fa-house-chimney"></i>
         </button>
-        
-            <div :class="['headerArea', { hidden: billStore.isTopBarHidden }]">
-                <TestHeader />
-            </div>
-        
+
+        <div :class="['headerArea', { hidden: billStore.isTopBarHidden }]">
+            <TestHeader />
+        </div>
+
         <div :class="['routerArea', { expanded: billStore.isTopBarHidden }]">
             <RouterView />
         </div>
@@ -23,13 +24,20 @@ const billStore = useBillstore();
 </template>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
+*{
+    margin: 0;
+
+}
 .allArea {
     display: flex;
     flex-direction: column;
     width: 100%;
     overflow: hidden;
+    font-family: "Chocolate Classical Sans", sans-serif;
 
     .headerArea {
+        transform: translateY(0%);
         height: 6dvh;
         transition: height 0.3s ease;
         overflow: hidden;
@@ -45,7 +53,7 @@ const billStore = useBillstore();
         height: 100%;
 
         &.expanded {
-            transform: translateY(-1dvh); // 向上移動 headerArea 的高度
+            // transform: translateY(-100%); // 向上移動 headerArea 的高度
         }
     }
 }

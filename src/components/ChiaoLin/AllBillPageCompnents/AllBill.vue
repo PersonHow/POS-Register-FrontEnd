@@ -7,7 +7,7 @@ export default {
 
         return {
             Billstore,
-            // ...mapState(Billstore, ['todayCreateBills', 'allbills']),
+            ...mapState(Billstore, ['inputEvent']),
             // ...mapActions(Billstore, ['showInvoiceLeftNavArea', 'changeStep',]),
         };
 
@@ -25,14 +25,11 @@ export default {
             isSearchActive: false,  // 增加狀態標誌來決定顯示內容
             sortColumn: '',
             sortOrder: 'asc',
+            isReinvoiced: false
         }
     },
     methods: {
         searchBill() {
-            if(this.searchObj.orderId !== null){
-                this.searchObj.createTime1 = "";
-                this.searchObj.createTime2 = "";
-            }
             fetch("http://localhost:8080/bill/search", {
                 method: "post",
                 headers: {
@@ -46,9 +43,32 @@ export default {
                     this.searchList = data
                     // 設置狀態標誌為 true
                     this.isSearchActive = true;
+
                 }).catch(error => {
                     console.error("Error:", error);
                 })
+        },
+        paymentMethods(bill) {
+            return [`現金`, `信用卡`, `${bill.memo}`];
+        },
+        eachPaymentsAmount(bill) {
+            let otherPaymentAndAmount = []
+            if (bill.memo == null || bill.payment_other == 0) {
+                bill.memo = "";
+                bill.payment_other = "";
+            }
+            return [`現金：${bill.payment_cash}`, `信用卡：${bill.payment_credit}`, `${bill.memo}：${bill.payment_other}`];
+        },
+        eachpayments(bill) {
+            return bill.memo.split(";")
+        },
+        voidInvoice(bill) {
+            // 作廢發票的邏輯
+            bill.isReinvoiced = true;
+        },
+        reopenInvoice(bill) {
+            // 重新開發票的邏輯
+            bill.isReinvoiced = false;
         }
     },
     mounted() {
@@ -65,8 +85,7 @@ export default {
                 this.allbills = data;
             })
     },
-    computed:{
-        
+    computed: {
     }
 }
 </script>
@@ -95,58 +114,58 @@ export default {
                 <tr>
                     <th @click="sortTable('index')" :class="{ active: sortColumn === 'index' }">
                         序號
-                        <span class="icon-arrow" :class="{
+                        <!-- <span class="icon-arrow" :class="{
                             asc: sortColumn === 'index' && sortOrder === 'asc',
                             desc: sortColumn === 'index' && sortOrder === 'desc',
                         }">
                             &UpArrow;
-                        </span>
+                        </span> -->
                     </th>
                     <th @click="sortTable('createTime')" :class="{ active: sortColumn === 'createTime' }">
                         結帳時間
-                        <span class="icon-arrow" :class="{
+                        <!-- <span class="icon-arrow" :class="{
                             asc: sortColumn === 'createTime' && sortOrder === 'asc',
                             desc: sortColumn === 'createTime' && sortOrder === 'desc',
                         }">
                             &UpArrow;
-                        </span>
+                        </span> -->
                     </th>
                     <th @click="sortTable('orderId')" :class="{ active: sortColumn === 'orderId' }">
                         點餐單號
-                        <span class="icon-arrow" :class="{
+                        <!-- <span class="icon-arrow" :class="{
                             asc: sortColumn === 'orderId' && sortOrder === 'asc',
                             desc: sortColumn === 'orderId' && sortOrder === 'desc',
                         }">
                             &UpArrow;
-                        </span>
+                        </span> -->
                     </th>
                     <th @click="sortTable('invoice')" :class="{ active: sortColumn === 'invoice' }">
                         已開發票
-                        <span class="icon-arrow" :class="{
+                        <!-- <span class="icon-arrow" :class="{
                             asc: sortColumn === 'invoice' && sortOrder === 'asc',
                             desc: sortColumn === 'invoice' && sortOrder === 'desc',
                         }">
                             &UpArrow;
-                        </span>
+                        </span> -->
                     </th>
                     <th @click="sortTable('memo')" :class="{ active: sortColumn === 'memo' }">
-                        支付方式
-                        <span class="icon-arrow" :class="{
+                        支付方式及金額
+                        <!-- <span class="icon-arrow" :class="{
                             asc: sortColumn === 'memo' && sortOrder === 'asc',
                             desc: sortColumn === 'memo' && sortOrder === 'desc',
                         }">
                             &UpArrow;
-                        </span>
+                        </span> -->
                     </th>
-                    <th @click="sortTable('payment_total')" :class="{ active: sortColumn === 'payment_total' }">
-                        支付金額
-                        <span class="icon-arrow" :class="{
+                    <!-- <th @click="sortTable('payment_total')" :class="{ active: sortColumn === 'payment_total' }">
+                        支付金額 -->
+                    <!-- <span class="icon-arrow" :class="{
                             asc: sortColumn === 'payment_total' && sortOrder === 'asc',
                             desc: sortColumn === 'payment_total' && sortOrder === 'desc',
                         }">
                             &UpArrow;
-                        </span>
-                    </th>
+                        </span> -->
+                    <!-- </th> -->
                 </tr>
             </thead>
             <tbody>
@@ -154,11 +173,14 @@ export default {
                     <td>{{ index + 1 }}.</td>
                     <td>{{ bill.createTime }}</td>
                     <td>{{ bill.orderId }}</td>
-                    <td>{{ bill.invoice }}</td>
-                    <td>{{ '現金；信用卡；' }}{{ bill.memo }}</td>
-                    <td>{{ bill.payment_cash }}；
-                        {{ bill.payment_credit }}；
-                        {{ bill.payment_other }}
+                    <td>{{ bill.invoice }}</td><button v-if="!bill.isReinvoiced"
+                        @click="voidInvoice(bill)">作廢發票</button>
+                    <button v-else @click="reopenInvoice(bill)">重開發票</button>
+                    <!-- <td v-for="(method, methodIndex) in paymentMethods(bill)" :key="methodIndex">{{ method }}</td> -->
+                    <td>
+                    <p v-for="(amount, amountIndex) in eachPaymentsAmount(bill)" :key="amountIndex">
+                        <span v-if="amount !== '：'">{{ amount }}</span>
+                    </p>
                     </td>
                 </tr>
             </tbody>
@@ -216,10 +238,11 @@ export default {
         overflow: auto;
         font-size: 1.8dvh;
 
-        td{
+        td {
             text-align: center;
             padding: 0 1dvw;
         }
+
         th {
             position: sticky;
             top: 0;
@@ -227,6 +250,7 @@ export default {
             color: black;
             padding: 1dvw;
             cursor: pointer;
+            text-align: center;
         }
 
         tbody tr:nth-child(even) {
