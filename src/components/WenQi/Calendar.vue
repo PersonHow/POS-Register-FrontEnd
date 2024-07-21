@@ -970,7 +970,7 @@ export default {
 .containerArea {
   display: flex;
   padding-left: 3dvw;
-  padding-top: 1dvh
+  padding-top: 3dvh
 }
 
 .grid {

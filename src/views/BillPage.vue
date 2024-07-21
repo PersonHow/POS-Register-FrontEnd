@@ -7,11 +7,17 @@ import { useBillstore } from '../stores/BillStore'
 import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
 import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
 import { mapState, mapActions } from 'pinia';
+import { onMounted } from 'vue';
 // import { useOrderStore } from '@/stores/OrderStore'
 
 export default {
     setup() {
         const Billstore = useBillstore();
+
+        onMounted(() => {
+            useBillstore.isTopBarHidden = true;
+        })
+
         return {
             Billstore,
             ...mapState(Billstore, ['isTopBarHidden']),

@@ -297,22 +297,23 @@ input[type="text"]:hover,
 input[type="number"]:hover,
 input[type="date"]:hover,
 textarea:hover {
-  border-color: #ff8200; /* 滑鼠懸停時邊框顏色變為橘色 */
+  border-color: #a8afc9; /* 滑鼠懸停時邊框顏色變為橘色 */
 }
 
 /* 送出按鈕樣式 */
 .bf-col-3 input[type="submit"] {
-  background-color: #00c5c8;/* 深藍色背景 */
+  background-color: #748cdd;/* 深藍色背景 */
   color: white; /* 文字顏色為白色 */
   border: none; /* 無邊框 */
   padding: 12px 20px; /* 內間距為12px上下，20px左右 */
   font-size: 16px; /* 字體大小為16px */
   cursor: pointer; /* 游標為手型 */
   transition: background-color 0.3s ease-in-out; /* 加入背景色變化的過渡效果 */
+  border-radius: 5px;
 }
 
 .bf-col-3 input[type="submit"]:hover {
-  background-color: #ff8200; /* 滑鼠懸停時背景色變為橘色 */
+  background-color: #a8afc9; /* 滑鼠懸停時背景色變為橘色 */
 }
 
 /* 標題和段落樣式 */
@@ -330,7 +331,7 @@ p {
 /* 連結樣式 */
 a {
   text-decoration: none; /* 移除下劃線 */
-  color: #ff8200; /* 文字顏色為橘色 */
+  color: #a8afc9; /* 文字顏色為橘色 */
 }
 
 a:hover {

@@ -52,9 +52,9 @@
       padding: 0.5rem 1rem;
       color: white;
       border-radius: 0.5rem;
-      background-color: #00c5c8;
+      background-color: #748cdd;
       &:hover{
-        background-color: #00a0a3;
+        background-color: #748cdd;
         cursor: pointer;
       }
     }
@@ -77,14 +77,15 @@
       color: white;
       background-color: unset;
       &:hover{
-        background-color: #00c5c8;
+        background-color: #a8afc9;
         cursor: pointer;
+        border-radius: 8px;
       }
     }
     div.dialog{
       display: flex;
       flex-direction: column;
-      color: #00c5c8;
+      color: #748cdd;
       h2{
         margin-left: 1rem;
         margin-bottom: 1rem;
@@ -97,7 +98,7 @@
         .tables_body{
           min-width: 80%;
           min-height: 50vh;
-          border: 2px solid #00c5c8;
+          border: 2px solid #748cdd;
           padding: 1rem;
           border-radius: 1rem;
           p{

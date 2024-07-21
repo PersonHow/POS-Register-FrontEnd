@@ -2,11 +2,12 @@
     <div class="mainArea">
         <Calendar v-on:key="getKey" />
         <button @click="toggleInputEvent" class="openBoxbut">
-            <p>行事曆活動管理</p>
+            <img src="../assets/add-OK.png" style="width: 3dvw;height: 4dvh;">
         </button>
         <div v-if="isOpen" class="showBox">
             <InputEvent :key="key" />
-            <button @click="toggleInputEvent" class="closeBoxbut">Close</button>
+            <button @click="toggleInputEvent" class="closeBoxbut" style="border: none;background: none;"><i
+                class="fa-solid fa-xmark fa-2xl" style="color: #7b90da;font-size: 4dvh;"></i></button>
         </div>
     </div>
 </template>
@@ -67,19 +68,20 @@ export default {
 .openBoxbut {
     padding: 0 1dvw;
     position: absolute;
-    top: 41%;
-    right:43%;
+    top: 42%;
+    right: 51%;
     border: none;
     // border: 2px solid #7b90da;
     color: white;
-    background:#7b90da;
+    background:none;
     cursor: pointer;
     border-radius: 5px;
     height: 5dvh;
-    line-height: 0.5dvh;
+    // line-height: 0.5dvh;
     font-size: 2dvh;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    // box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     padding-top: 1dvh
+    
 }
 
 .showBox {
@@ -96,11 +98,11 @@ export default {
 }
 
 .closeBoxbut {
-    position: absolute; 
+    position: absolute;
     top: 20dvh;
     right: 27.5dvw;
     padding: 10px 20px;
-    background-color:rgba(116 , 140, 211,0.1);
+    background-color: rgba(116, 140, 211, 0.1);
     border: 2px solid #7b90da;
     cursor: pointer;
     border-radius: 5px;
