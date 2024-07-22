@@ -11,6 +11,7 @@ export default {
             Billstore,
             OrderStore,
             ...mapState(Billstore, ['OrderDB']),
+            ...mapActions(Billstore, ['tothousendShowValue']),
         };
     },
     mounted() {
@@ -97,7 +98,7 @@ export default {
                     <p v-if="Billstore.OrderDB.guest_num !==0">人數：{{ Billstore.OrderDB.guest_num }}</p>
                     <p v-else></p>
                 </div>
-                <div>用餐金額：{{ (Billstore.OrderDB.amount).toLocaleString('en-US') }}</div>
+                <div>用餐金額：{{ Billstore.tothousendShowValue(Billstore.OrderDB.amount) }}</div>
 
                 <div>點餐內容：</div>
                 <ul v-for="(mealList, index) in Billstore.OrderDB.order_detail" :key="index">

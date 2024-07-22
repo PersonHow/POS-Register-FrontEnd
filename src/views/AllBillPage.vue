@@ -89,11 +89,13 @@ export default {
     <div class="allArea">
         <div class="titleArea">
             <div class="titleAndButArea">
-                <button style="cursor: pointer;" @click="toggleSidebar">
+                <!-- <button style="cursor: pointer;" @click="toggleSidebar">
                     <p v-if="!isLeftbarHidden"><i class="fa-solid fa-xmark fa-2xl"></i></p>
                     <p v-else> <i class="fa-solid fa-bars fa-2xl"></i></p>
-                </button>
+                </button> -->
                 <p class="myMouse">帳務總覽</p>
+                <!-- <p class="myMouse" @click="updateChangeShow('A')">帳務搜尋</p> -->
+                <!-- <p class="myMouse" @click="updateChangeShow('B')">發票搜尋</p> -->
             </div>
             <!-- <input id="showNav" type="checkbox" v-model="Billstore.showLeftNavArea">
             <label for="showNav" class=" myMouse"><span>導覽列</span></label> -->
@@ -114,7 +116,7 @@ export default {
 
                     </div>
                     <ul>
-                        <li class="myMouse" @click="updateChangeShow('A')">帳務搜尋</li>
+                        <!-- <li class="myMouse" @click="updateChangeShow('A')">帳務搜尋</li> -->
 
                         <!-- <li class="myMouse" @click="updateChangeShow('C')">發票重開</li> -->
                     </ul>
@@ -156,6 +158,7 @@ export default {
                 margin-right: 2dvw
             }
             p{
+                width: 5dvw;
                 line-height: 5dvh;
             }
         }

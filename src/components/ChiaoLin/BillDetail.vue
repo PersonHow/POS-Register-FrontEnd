@@ -42,7 +42,7 @@ export default {
             enterAddInputValue,
             ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'lastBill','isTopBarHidden']),
             ...mapState(OrderStore, ['order_info']),
-            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB', 'getAllBillsAndTodayBills','closeTopbar']),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB', 'getAllBillsAndTodayBills','closeTopbar','tothousendShowValue']),
         };
     },
     methods: {
@@ -56,7 +56,7 @@ export default {
             isLeftBarHidden: false,
         }
     },
-    created() {
+    beforeCreate() {
         // 判斷orderId是不是空
         if (this.$route.params.orderId !== "") {
             let orderId = this.$route.params.orderId
@@ -129,7 +129,7 @@ export default {
                 </div> -->
                 <div class="billdetail">
                     <p>訂單金額&nbsp;</p>
-                    <div class="inputAera"><input type="text" :value="this.OrderDB.amount.toLocaleString('en-US')" disabled>
+                    <div class="inputAera"><input type="text" :value="Billstore.tothousendShowValue(this.OrderDB.amount)" disabled>
                     </div>
                     <p>折扣&nbsp;</p>
                     <div class="inputAera"><input type="text" :value="Billstore.discount"

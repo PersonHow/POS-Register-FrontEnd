@@ -15,7 +15,8 @@ export default {
         return {
             paymentList: [],
             searchObj: {
-                orderId: "",
+                orderId: "", // 預設空字串
+                invoiceNum:"", // 預設空字串
                 createTime1: "",
                 createTime2: "",
             },
@@ -102,6 +103,8 @@ export default {
         <div class="searchArea">
             <label for="orderSearch">點餐單號：</label>
             <input type="text" id="orderSearch" v-model="searchObj.orderId">
+            <label for="invoiceSearch">發票號碼：</label>
+            <input type="text" id="invoiceSearch" v-model="searchObj.invoice">
             <p></p>
             <div class="inputDateArea">
                 <label for="startDate">起始日：</label>
@@ -122,21 +125,24 @@ export default {
             <table >
                 <thead >
                     <tr>
-                        <th @click="sortColumnWay('index')" :class="{ active: focusColumn === 'index' }">
+                        <th >
                             序號
-                            <span class="icon-arrow" :class="sortClassWay('index')">&UpArrow;</span>
+                            <!-- <span class="icon-arrow" :class="sortClassWay('index')">&UpArrow;</span> -->
+                            <!-- <span v-if="focusColumn === 'index' && sortOrder === 'desc'" class="icon-arrow" :class="sortClassWay('index')">&DownArrow;</span> -->
                         </th>
                         <th @click="sortColumnWay('createTime')" :class="{ active: focusColumn === 'createTime' }">
                             結帳時間
-                            <span class="icon-arrow" :class="sortClassWay('createTime')">&UpArrow;</span>
+                            <span v-if="focusColumn === 'createTime' && sortOrder === 'asc'" class="icon-arrow" :class="sortClassWay('createTime')">&UpArrow;</span>
+                            <span v-else="focusColumn === 'createTime' && sortOrder === 'desc'" class="icon-arrow" :class="sortClassWay('createTime')">&DownArrow;</span>
                         </th>
                         <th @click="sortColumnWay('orderId')" :class="{ active: focusColumn === 'orderId' }">
                             點餐單號
-                            <span class="icon-arrow" :class="sortClassWay('orderId')">&UpArrow;</span>
+                            <span v-if="focusColumn === 'orderId' && sortOrder === 'asc'" class="icon-arrow" :class="sortClassWay('orderId')">&UpArrow;</span>
+                            <span v-else="focusColumn === 'orderId' && sortOrder === 'desc'" class="icon-arrow" :class="sortClassWay('orderId')">&DownArrow;</span>
                         </th>
-                        <th @click="sortColumnWay('invoice')" :class="{ active: focusColumn === 'invoice' }">
+                        <th>
                             已開發票
-                            <span class="icon-arrow" :class="sortClassWay('invoice')">&UpArrow;</span>
+                            <!-- <span class="icon-arrow" :class="sortClassWay('invoice')">&UpArrow;</span> -->
                         </th>
                         <th colspan="3">
                             支付方式及金額
@@ -172,24 +178,30 @@ export default {
         display: flex;
         font-size: 2dvh;
         background-color: white;
-        margin: 2dvh 3dvh;
+        margin: 2dvh 0;
+        justify-content: center;
 
         label {
             margin: 0 1dvw;
+            line-height: 3.5dvh;
         }
 
         input {
             border: 1px solid rgb(152, 152, 152);
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 2dvh;
+        }
+        #orderSearch,
+        #invoiceSearch{
+            width: 15%;
         }
 
         button {
             margin-left: 1dvw;
-            width: 5dvw;
+            width: 3dvw;
             background: #748cdd;
             color: white;
-            border-radius: 5px;
+            border-radius: 50%;
             border: none;
         }
 
@@ -213,6 +225,8 @@ export default {
         border: none;
         overflow: auto;
         font-size: 1.8dvh;
+        display: flex;
+        justify-content: center;
 
         thead {
             border-top-right-radius: 8px;
@@ -239,11 +253,13 @@ export default {
         }
 
         tbody tr:nth-child(even) {
-            background-color: #f5f5f5;
+            background-color: white;
         }
 
         tbody tr:hover {
-            background-color: rgba(116, 140, 211, 0.3);
+            background-color: #a8afc9;
+            color: white;
+            border:1px solid gray;
         }
 
         button {
