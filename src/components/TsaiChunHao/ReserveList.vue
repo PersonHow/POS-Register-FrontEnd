@@ -76,11 +76,12 @@ export default {
         title: "確定刪除？",
         text: "此操作無法還原！",
         icon: "warning",
+        iconColor:"#7b90da",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
+        confirmButtonColor: "#7b90da",
         confirmButtonText: "確定",
         cancelButtonText: "取消",
+        cancelButtonColor:"#7b90da"
       }).then((result) => {
         if (result.isConfirmed) {
           fetch("http://localhost:8080/reserve/delete", {
@@ -540,24 +541,21 @@ main.table {
     }
   }
 }
-
-.table_body::-webkit-scrollbar {
-  width: 0.5rem;
-  height: 0.5rem;
+::-webkit-scrollbar {
+  width: 10px;
 }
-
-.table_body::-webkit-scrollbar-thumb {
-  border-radius: 0.5rem;
-  background-color: #ccc;
-  visibility: hidden;
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }
-
-.table_body:hover::-webkit-scrollbar-thumb {
-  border-radius: 0.5rem;
-  background-color: #ccc;
-  visibility: visible;
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: hsl(226, 100%, 87%);
 }
-
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(226, 100%, 87%);
+}
 table {
   width: 100%;
 }
@@ -571,12 +569,14 @@ table {
 
   &.delivered {
     background-color: #7b90da;
+    font-size: 1.2rem;
     color: white;
     font-weight: 500;
   }
 
   &.cancelled {
     background-color: #ffdfe2;
+    font-size: 1.2rem;
     color: #c86e7d;
   }
 }
@@ -708,7 +708,7 @@ table {
 
     button {
       padding: 12px 25px;
-      background-color: #4caf50;
+      background-color: #7b90da;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -717,7 +717,7 @@ table {
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #45a049;
+        background-color: #6778b7;
       }
     }
   }

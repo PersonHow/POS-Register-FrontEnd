@@ -225,6 +225,21 @@ export default {
 </template>
 <style lang="scss" scoped>
 /* body = 包住全部內容的最大div */
+::-webkit-scrollbar {
+  width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: hsl(226, 100%, 87%);
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(226, 100%, 87%);
+}
 :active {
   background-color: unset;
   color: unset;
@@ -296,7 +311,7 @@ export default {
 
 .footer {
   width: 95%;
-  height: 10%;
+  height: 10vh;
   /* border: 1px solid black; */
   display: flex;
   justify-content: right;
@@ -314,7 +329,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 4rem;
+    height: 4dvw;
     width: 4dvw;
     border-radius: 50%;
     background:  rgb(123, 144, 218);

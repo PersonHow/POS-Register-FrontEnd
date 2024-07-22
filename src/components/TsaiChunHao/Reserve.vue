@@ -87,14 +87,25 @@ export default {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data); // 確保從後端正確收到數據
+          if(data.statusCode == 500){
+              // 可以在這裡處理後端返回的數據，例如顯示成功提示等
+          Swal.fire({
+            icon: "error",
+            iconColor:"#7b90da",
+            title: "該手機號碼已有訂位紀錄",
+            text: "請重新輸入！",
+          });
+          return;
+          }
           // 可以在這裡處理後端返回的數據，例如顯示成功提示等
           Swal.fire({
             icon: "success",
+            iconColor:"#7b90da",
             title: "成功提交訂單",
             text: "訂單已成功提交！",
           });
-          this.resetForm(); // 提交成功後重設表單
+          this.resetForm();
+          window.location.reload(); // 提交成功後重設表單
         })
         .catch((error) => {
           console.error("錯誤:", error);
@@ -240,21 +251,33 @@ select {
 
 /* 表單欄位佈局 */
 .bf-col-12 {
+  input{
+    background-color: rgba(116 , 140, 211,0.1);
+  }
+  textArea{
+    background-color: rgba(116 , 140, 211,0.1);
+  }
   width: 100%; /* 寬度佔滿父元素的100% */
 }
 
 .bf-col-3 {
+  input{
+    background-color: rgba(116 , 140, 211,0.1);
+  }
   width: 30%; /* 寬度佔滿父元素的30% */
 }
 
 .bf-col-6 {
+  input{
+    background-color: rgba(116 , 140, 211,0.1);
+  }
   width: 48%; /* 寬度佔滿父元素的48% */
 }
 
 /* 表單頭部和尾部樣式 */
 .bf-head,
 .bf-footer {
-  background-color: #f0f0f0; /* 淺灰色背景 */
+  background-color: rgba(116 , 140, 211,0.1); /* 淺灰色背景 */
   padding: 20px 10px; /* 內間距為20px上下，10px左右 */
   text-align: center; /* 文字置中 */
 }

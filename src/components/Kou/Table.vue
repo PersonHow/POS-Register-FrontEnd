@@ -2,7 +2,7 @@
   <div style="display: flex;">
     <div id="tableTop">
       <div class="tableTopArea" style="display: flex; align-items: center;">
-        <button @click="toggleEdit" class="btn_not_adjust_table">調整桌位</button>
+        <!-- <button @click="toggleEdit" class="btn_not_adjust_table">調整桌位</button> -->
         <button @click="toggleTarget" class="btn_cancel_target_table">設定目標桌位</button>
         <button @click="cleanselectedTable" class="btn_clear_select_table">清除桌位</button>
         <p v-if="this.isTargetEditing"
@@ -365,77 +365,10 @@
       </form>
     </div>
   </div>
-  <div style="display: flex;align-items: center; justify-content: space-between;padding-right: 2dvw">
-    <h2 style="color:#748cdd;margin-left: 1rem;font-size: 1.5rem; ">你預計新增桌位如下：</h2>
+  <div style="display: flex;justify-content: end;margin-right: 1rem;margin-top: 1.5rem;">
     <a @click="addTableHandler"><i class="fa-solid fa-circle-plus fa-2xl"
         style="color: #7b90da;font-size: 4dvh;"></i></a>
   </div>
-  <div style="display: flex;align-items:start;justify-content: space-between;">
-    <div id="add_app">
-      <draggable v-if="this.isEditing" v-model="add_table_list" animation="300" @start="onStart" @end="onEnd"
-        style="display: flex;min-height: 200px;min-width: 200px;" class="list-group" tag="ul"
-        :group="group_add_table_list">
-        <!-- 顯示每張桌子的內容 -->
-        <template #item="{ element }">
-          <div>
-            <div :class="['table', element.status]" :id="'table-' + element.table_id" style="margin: 0.5rem;">
-              <!-- 根據桌子的狀態設置樣式 -->
-              <div class="tableNum">
-                <div class="Num">桌號: {{ element.table_id }}</div>
-              </div>
-              <div class="staffId">
-                <div>員工: {{ element.staff_name }}</div>
-              </div>
-              <div class="status">
-                <div>{{ element.table_status == 0 ? "空位" : element.table_status == 1 ? "使用中" : element.table_status == 2
-                  ? "已預約" : "帶位中" }}</div>
-              </div>
-              <div class="booking">
-                <div>預訂: {{ element.booking_num }}</div>
-              </div>
-              <div class="childSeat">
-                <div>兒童座: {{ element.has_priorityseat ? '是' : '否' }}</div>
-              </div>
-              <div class="Seat">
-                <div>用餐人數: {{ element.guest_num }}</div>
-              </div>
-            </div>
-          </div>
-        </template>
-      </draggable>
-      <div v-else class="noEditTableArea">
-        <!-- 當不處於編輯模式時，僅顯示桌子 -->
-        <div style="display: flex;">
-          <div v-for="table in add_table_list" :key="table.table_id" :class="['table', table.status]"
-            :id="'table-' + table.table_id" @click="() => {
-              selectTableHandler(table);
-            }">
-            <div class="tableNum">
-              <div class="Num">桌號: {{ table.table_id }}</div>
-            </div>
-            <div class="staffId">
-              <div>員工: {{ table.staff_name }}</div>
-            </div>
-            <div class="status">
-              <div>{{ table.table_status == 0 ? "空位" : table.table_status == 1 ? "使用中" : table.table_status == 2 ? "已預約"
-                : "帶位中" }}
-              </div>
-            </div>
-            <div class="booking">
-              <div>預訂: {{ table.booking_num }}</div>
-            </div>
-            <div class="childSeat">
-              <div>兒童座: {{ table.has_priorityseat ? '有' : '無' }}</div>
-            </div>
-            <div class="Seat">
-              <div>用餐人數: {{ table.guest_num }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </template>
 
 <script>
@@ -472,12 +405,6 @@ export default {
       select_table: { table_id: "#" },
       tables_list2: [],
       group_tables_list2: {
-        name: "site",
-        pull: true,
-        put: true
-      },
-      add_table_list: [],
-      group_add_table_list: {
         name: "site",
         pull: true,
         put: true
@@ -645,7 +572,7 @@ export default {
       add_table.lastmodified_staff_id = this.working_staff_list[0].staff_id;
       add_table.table_area = "一般區";
       add_table.table_id = 0;
-      this.add_table_list.push(add_table);
+      this.tables_list1.push(add_table);
     },
     openEditTable() {
 
@@ -661,7 +588,6 @@ export default {
     },
     toggleTarget(e) {
       this.isTargetEditing = !this.isTargetEditing;
-      console.log(this.isTargetEditing);
       if (this.isTargetEditing) {
         e.target.className = "btn_target_table";
       } else {
@@ -765,6 +691,22 @@ export default {
 </script>
 
 <style scoped lang="scss">
+::-webkit-scrollbar {
+  height: 15px;
+  width: 15px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: hsl(226, 100%, 87%);
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(226, 100%, 87%);
+}
 .table {
   width: 136px;
   margin: 10px;
@@ -934,7 +876,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 2;
 }
 
 .noEditTableArea {
@@ -1112,12 +1054,13 @@ export default {
 }
 
 .btn_target_table {
-  background-color: #e76f51;
+  
   border: none;
   border-radius: 5px;
   font-weight: bold;
   font-size: 18px;
   font-family: monospace;
+  background-color: #e76f51;
   color: white;
   padding: 10px;
   margin-left: 5px;
@@ -1137,10 +1080,5 @@ export default {
   margin-left: 5px;
   text-align: center;
   cursor: pointer;
-}
-
-.swal_selected_table {
-  color: #748cdd;
-  font-size: 5rem;
 }
 </style>
