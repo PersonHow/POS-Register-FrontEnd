@@ -91,19 +91,7 @@ export const useMenuStore = defineStore("menuStore",{
                 })
             })
         },
-        confirmModal(){
-            Swal.fire({
-                title: '確定要刪除?',
-                text: '此動作無法復原',
-                icon: 'warning',
-                confirmButtonColor: '#748cdd',
-                confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    
-                }
-            });
-        },
+
         // 先用meal_id來判斷餐點是否存在，存在就執行更新 或無則新增餐點
         setNewMenu(meal){
             let index = this.menu.findIndex(m => m.meal_id === meal.meal_id)
@@ -224,17 +212,44 @@ export const useMenuStore = defineStore("menuStore",{
                 return this.updateCustom.push(custom);
             }
         },
-        // 將選中的項目從列表移除 並加入待刪的陣列
+        // 將選中的項目從列表移除
         removeFromList(custom){
             let existingIndex = this.custom_options.findIndex(option => option.custom_id === custom.custom_id);
-            this.custom_options.splice(existingIndex,1)
-            if(custom.custom_id !== "new"){
-                this.removeCustom.push(custom.custom_id)
-            }else{
-                this.newCustom = this.newCustom.filter(option => option !== custom)
-            }
+            Swal.fire({
+                title: '確定要刪除?',
+                text: '此動作無法復原',
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                confirmButtonColor: '#748cdd',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.custom_options.splice(existingIndex,1)
+                    if(custom.custom_id == "new"){
+                        this.newCustom = this.newCustom.filter(option => option !== custom)
+                    }
+                    fetch("http://localhost:8080/custom",{
+                        method:'DELETE',
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        body:JSON.stringify([custom.custom_id])
+                    })
+                    .then(res => res.text())
+                    .then(data => {
+                        console.log(data)
+                        this.removeCustom = []
+                        Swal.fire({
+                            text: '刪除成功',
+                            icon: 'susses',
+                            confirmButtonText: 'OK'
+                        })
+                    })
+                }
+            });
         },
-        //新增、修改、刪除項目
+        //新增、修改
         saveCustoms(){
             //更新舊有項目
             this.updateCustom.map(item => {
@@ -273,21 +288,6 @@ export const useMenuStore = defineStore("menuStore",{
                 .then(data => {
                     console.log(data)
                     this.newCustom = []
-                })
-            }
-            let deleteCustom
-            if(this.removeCustom.length>0){
-                deleteCustom = fetch("http://localhost:8080/custom",{
-                    method:'DELETE',
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify(this.removeCustom)
-                })
-                .then(res => res.text())
-                .then(data => {
-                    console.log(data)
-                    this.removeCustom = []
                 })
             }
 

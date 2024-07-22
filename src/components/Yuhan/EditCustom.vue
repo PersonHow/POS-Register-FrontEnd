@@ -147,6 +147,7 @@ export default{
                         新增項目</button>
                     <button @click="pushCustomToStore(updateCustom),isShow = false" type="button" class="btn btn-secondary">完成</button>
                 </div>
+                <small>編輯完畢請按完成後再儲存</small>
                 <div v-show="isShow" class="modal-body">
                     <form>
                     <div class="mb-3">
@@ -166,8 +167,8 @@ export default{
                     <div class="mb-3">
                         <label class="typo__label">選擇套用餐點</label>
                         <div v-for="meal in mealOptions" :key="meal.id" >
-                            <input v-model="updateCustom.meal_id" type="checkbox" :value="meal.id" :id="meal.id">
-                            <label :for="meal.id">{{ meal.name }}</label>
+                            <input v-model="updateCustom.meal_id" type="checkbox" :value="meal.id" :id="meal.id" class="checkedMeal">
+                            <label :for="meal.id" class="p-2 mb-2 mealLabel">{{ meal.name }}</label>
                         </div>
                         
                         <!-- <Multiselect v-if="newIds" v-model="updateCustom.meal_id" :value="mealOptions.id" track-by="id" label="name" placeholder="選擇餐點"
@@ -192,7 +193,7 @@ $main-color: #7b90da;
 
 .optionArea,.editItem{
     width: 45%;
-    height: 65vh;
+    height: 80vh;
     max-height: 50%;
     overflow-y: auto;
     padding: 2%;
@@ -269,5 +270,17 @@ $main-color: #7b90da;
     background: #a8afc9;
     color: #fff;
     border-radius: 50%;
+}
+.checkedMeal{
+    display: none;
+}
+.mealLabel{
+    border: 1px solid $main-color;
+    box-shadow: 2px 1px 3px rgb(206, 206, 206);
+    border-radius: 10px;
+}
+.checkedMeal:checked ~label{
+    background: #a8afc9;
+    color: #fff;
 }
 </style>
