@@ -124,18 +124,15 @@ export default {
             </div>
             <div class="other">*{{item.other}}</div>
         </div>
-        <p class="mt-3">其他需求:</p>
-        <div class="form-floating">
-        <input type="text" v-model="other_request" class="form-control" placeholder="其他需求" id="floatingTextarea">
-        <label for="floatingTextarea">請填寫</label>
-        </div>
+        <label for="floatingTextarea">其他需求:</label>
+        <input type="text" v-model="other_request" class="form-control"  placeholder="請填寫" id="floatingTextarea">
         <div class="quantity">
             <button @click="reducedQuantity()" >
-                <font-awesome-icon icon="fa-solid fa-circle-minus" :class="{disable : quantity < 2}" class="fa-3x" />
+                <font-awesome-icon icon="fa-solid fa-circle-minus" :class="{disable : quantity < 2}" class="fa-2x" />
             </button>
             <span>{{quantity}}</span>
             <button @click="addQuantiy()">
-                <font-awesome-icon icon="fa-solid fa-circle-plus" class="fa-3x" />
+                <font-awesome-icon icon="fa-solid fa-circle-plus" class="fa-2x" />
             </button>
         </div>
         <div class="submit">
