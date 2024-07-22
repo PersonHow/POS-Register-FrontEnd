@@ -10,6 +10,7 @@ import { useBillstore } from '@/stores/BillStore'
 export default {
     data() {
         return{
+            ordertoTable:[],
             oId:"", //訂單編號
             menu:[], //所有菜單
             meal:{ //餐點物件
@@ -173,6 +174,7 @@ export default {
                 staff_name: this.staff.staff_name,
                 lastmodified_staff_id: this.staff.staff_id
             }
+            this.ordertoTable.push(order);
             this.orderList = [] //清空orderList 避免畫面不好看
             fetch("http://localhost:8080/order_info/create",{
                 method:'POST',
@@ -202,6 +204,7 @@ export default {
         },
         // 跳轉到桌位頁
         navigateToTablePage(){
+            sessionStorage.setItem("order",JSON.stringify(this.ordertoTable));
             this.$router.push('/table')
         }
     },

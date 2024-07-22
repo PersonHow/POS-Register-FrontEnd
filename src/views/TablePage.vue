@@ -7,6 +7,7 @@ import Footer_bar_Order from "@/components/Kou/Footer_bar_Order.vue";
 import Swal from "sweetalert2";
 import { jsx } from "vue/jsx-runtime";
 import { useBillstore } from '@/stores/BillStore'
+import { useOrderStore } from '@/stores/OrderStore'
 export default {
   data() {
     return {
@@ -17,6 +18,7 @@ export default {
       selectedtable_id: 0,
       nav_item_list: [],
       tables: []
+
     };
   },
   methods: {
@@ -81,7 +83,10 @@ export default {
         })
         return;
       } else {
-
+        let order = JSON.parse(sessionStorage.getItem("order")).filter((item)=>{
+          return item["table_num"] == this.selected_table.table_id;
+        })[0];
+        this.$router.push({name:'BillPage',params:{orderId: order["order_id"]}});
       }
     },
     toggleMenu() {
@@ -157,9 +162,10 @@ export default {
         })
         return;
       }
-    }
+    },
   },
   created() {
+    this.useOrderStore = useOrderStore()
     this.Billstore = useBillstore()
     this.Billstore.isTopBarHidden = false // 預設隱藏header
     if (sessionStorage.getItem("token") == null) {
@@ -186,7 +192,8 @@ export default {
     ChangeTableArea,
     Footer_bar_ChangeTable,
     Footer_bar_Checkout,
-    Footer_bar_Order
+    Footer_bar_Order,
+    
   },
 };
 </script>
