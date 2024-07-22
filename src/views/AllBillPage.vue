@@ -158,7 +158,7 @@ export default {
                 margin-right: 2dvw
             }
             p{
-                width: 5dvw;
+                width: 15dvw;
                 line-height: 5dvh;
             }
         }
