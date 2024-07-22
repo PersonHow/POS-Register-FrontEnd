@@ -100,12 +100,25 @@ export default{
     },
     data(){
         return{
+            searchCustom:""
         }
     },
     components: {
         Multiselect
     },
-    props:['staffId']
+    props:['staffId'],
+    computed:{
+        filteredOptions() {
+        if(this.searchCustom !== ""){
+            let customs = this.custom_options.filter(meal => {
+                return meal.option.includes(this.searchCustom);
+            })
+            return customs
+        }else{
+            return this.custom_options
+        }
+    }
+    },
 }
 </script>
 
@@ -115,7 +128,7 @@ export default{
     <!-- 搜尋項目 -->
     <small class="">請搜尋或點選欲編輯的項目</small>
     <div class="searchArea d-flex mb-4 justify-content-between">
-        <input class="form-control short" list="datalistOptions" id="DataList" placeholder="輸入客製項目...">
+        <input v-model="searchCustom" class="form-control short" list="datalistOptions" id="DataList" placeholder="輸入客製項目...">
         <button  class="searchBtn"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /></button>
         <div>
         <button @click="MenuStore.saveCustoms()" type="button" class="btn btn-main me-2">儲存所有變更</button>
@@ -130,7 +143,7 @@ export default{
     <div class="d-flex justify-content-between">
         <!-- 選項選單 -->
         <div class="optionArea">
-            <div v-for="detail in custom_options" :key="detail.custom_id" class="labels mb-3">
+            <div v-for="detail in filteredOptions" :key="detail.custom_id" class="labels mb-3">
                 <div @click="MenuStore.removeFromList(detail)" class="removeBtn"><font-awesome-icon icon="fa-solid fa-trash" /></div>
                 <button @click="editUpdateCustom(detail),isShow = true" type="button" class="btn btn-label" :class="{'btn-active': detail.custom_id === updateCustom.custom_id}">
                     {{detail.custom_id+". "+detail.option}}</button>

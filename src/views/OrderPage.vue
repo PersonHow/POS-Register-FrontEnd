@@ -173,6 +173,7 @@ export default {
                 staff_name: this.staff.staff_name,
                 lastmodified_staff_id: this.staff.staff_id
             }
+            this.orderList = [] //清空orderList 避免畫面不好看
             fetch("http://localhost:8080/order_info/create",{
                 method:'POST',
                 headers:{
@@ -187,12 +188,12 @@ export default {
                 return res.json();
             })
             .then(data => {
+
                 console.log(data)
                 this.orderStore.createOrder(order) //將訂餐存入orderStore
                 // 觸發 secondModal 選擇是否跳轉結帳頁
                 var secondModal = new bootstrap.Modal(document.getElementById('secondModal'),{backdrop: 'static'})
                 secondModal.show()
-                this.orderStore.getOrderInfo() //更新最近五筆送單紀錄
             })
         },
         // 將訂單編號作為參數傳給帳單頁
