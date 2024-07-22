@@ -15,7 +15,7 @@ export default {
         ...mapActions(useBillstore, ['saveBillfromP']),
         saveBill() {
             if (this.Billstore.notyetChargeAmount > 0) {
-                alert('未收不可小於0')
+                alert('應收總額不可小於實收')
                 return;
             }
             let pCash = 0, pCard = 0, pOther = 0;
@@ -36,13 +36,12 @@ export default {
             this.changeArea = !this.changeArea;
             this.needTochange = this.Billstore.changeAmount;
             // 若有手開發票
-            if(this.Billstore.handInvoiceInput !== ""){
+            if (this.Billstore.handInvoiceInput !== "") {
                 this.Billstore.invoiceNum = this.Billstore.handInvoiceInput;
                 this.Billstore.uniformNum = this.Billstore.handUniformNum;
             }
-            // 待連 lastmodified_staff_id: pId
+            // 存入pinia
             this.saveBillfromP("", this.OrderDB.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", staff.staff_id, "", pOtherName, this.Billstore.mobileBarcode, this.Billstore.uniformNum)
-            this.OrderDB.amount = 0;
             this.Billstore.orderAmountfromPage = 0;
             this.Billstore.discount = 0;
             this.Billstore.serviceFee = 0;
@@ -52,6 +51,7 @@ export default {
             this.Billstore.uniformNum = "";
             this.Billstore.handInvoiceInput = "";
             this.Billstore.handUniformNum = "";
+            this.OrderDB.amount = 0;
             this.Billstore.inputEvent.forEach(event => {
                 if (event.type === "現金") {
                     event.value = 0;
@@ -61,13 +61,16 @@ export default {
                     event.value = 0;
                 }
             })
-
         },
         closeShow() {
             this.$emit('close');
         },
         showChangeArea() {
             this.changeArea = !this.changeArea;
+            this.$router.push('/table')
+        },
+        navigateToTablePage(){
+            this.$router.push('/table')
         }
     },
     data() {
@@ -79,7 +82,7 @@ export default {
     created() {
         // 抓目前登入在操作的員工
         const staff = JSON.parse(sessionStorage.getItem("token"));
-        console.log(staff);
+        // console.log(staff);
         // 抓orderId from route
         if (this.$route.params.orderId !== "") {
             let orderId = this.$route.params.orderId
@@ -135,22 +138,23 @@ export default {
             <div class="otherButArea">
                 <div class="mathBut butbackspace"><input type="button" value="＜＜" @click="Billstore.backspace()"
                         id="butbackspace"></div>
-                <div class="mathBut butRevise"><input type="button" value="更正" @click="Billstore.clearDisplay()"
+                <div class="mathBut butRevise"><input type="button" value="更  正" @click="Billstore.clearDisplay()"
                         id="butRevise"></div>
                 <div class="mathBut butComfirm"><input type="button" value="完成結帳" @click="saveBill()" id="butComfirm">
                 </div>
             </div>
             <div v-if="changeArea == true">
-                <div class="showBack" @click="showChangeArea()">
+                <div class="showBack">
                     <div class="showBox" @click.stop>
                         <div class="titleArea">
                             <p>找&nbsp;&nbsp;&nbsp;&nbsp;零</p>
                         </div>
                         <div class="showInfoArea">
                             <span id="ntText">NT.</span>
-                            <span id="changeAmount">{{ Billstore.tothousendShowValue(this.needTochange) }}</span>
+                            <span id="changeAmount">{{ Billstore.tothousendShowValue(Math.round(this.needTochange))
+                                }}</span>
                         </div>
-                        <p>是否列印明細?</p>
+                        <p style="text-align: center;">是否列印明細?</p>
                         <div class="butArea">
                             <button id="closebutton" @click="showChangeArea()">是</button>
                             <button id="closebutton" @click="showChangeArea()">Close</button>
@@ -165,7 +169,7 @@ export default {
 <style scoped lang="scss">
 .calculatorArea {
     width: 100%;
-    padding: 0 1dvw;
+    margin: 0 1dvw;
 
     .calculator {
         width: 100%;
@@ -173,7 +177,7 @@ export default {
         padding-top: 1.5dvh;
 
         .mathbutArea {
-            width: 100%;
+            width: 95%;
             display: grid;
             grid-template-columns: 33% 33% 33%;
         }
@@ -181,15 +185,15 @@ export default {
         .mathBut {
             width: 100%;
             height: 10dvh;
-            padding-right: 1.5dvw;
 
             input {
-                width: 85%;
+                width: 83%;
                 height: 8dvh;
                 border: 1px solid rgb(213, 212, 212);
                 background: linear-gradient(white 80%, #00c1ca 20%);
                 color: black;
                 font-size: 3dvh;
+                border-radius: 5px;
 
                 &.active {
                     background: linear-gradient(rgb(152, 152, 152) 70%, #009688 30%);
@@ -199,15 +203,15 @@ export default {
 
         .otherButArea {
             width: 30%;
-            margin-right: 1dvw;
 
             .mathBut {
-                width: 95%;
+                width: 83%;
 
                 input {
                     width: 100%;
                     font-family: "Chocolate Classical Sans", sans-serif;
                     font-size: 2dvh;
+                    border-radius: 5px;
                 }
 
                 #butbackspace,
@@ -222,6 +226,7 @@ export default {
                     height: 18dvh;
                     background: linear-gradient(90deg, #00c1ca, #01e1c5);
                     color: white;
+                    border-radius: 5px;
                 }
             }
         }
@@ -242,6 +247,7 @@ export default {
     }
 
     .showBox {
+        width: 40%;
         background: white;
         padding: 20px;
         border-radius: 10px;
@@ -255,34 +261,40 @@ export default {
             height: 5dvh;
             color: black;
             margin: 0 1dvw;
+            padding-left: 1dvw;
         }
 
         .butArea {
             display: flex;
             line-height: 8dvh;
+            justify-content: space-between;
 
             button {
                 width: 9dvw;
-                height: 7dvh;
+                height: 6dvh;
                 margin: 0 1dvw;
                 margin-top: 1dvh;
-                background: none;
-                color: gray;
-                font-weight: 600;
+                background: #00c1ca;
+                color: white;
                 font-family: "Chocolate Classical Sans", sans-serif;
                 font-size: 2dvh;
-                border: 2px solid #00c1ca;
                 border-radius: 5px;
+                border: none;
+                line-height: 6dvh;
             }
         }
 
         .showInfoArea {
             width: 100%;
             margin: 1dvh 0;
-            padding-left: 1dvw;
+            text-align: center;
+
+            p {
+                text-align: center;
+            }
 
             span {
-                font-size: 3dvh;
+                font-size: 4dvh;
             }
         }
 

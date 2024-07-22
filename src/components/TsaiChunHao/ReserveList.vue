@@ -236,7 +236,7 @@ export default {
       <!-- 表格標題區域 -->
       <section class="table_header">
         <!-- 系統名稱 -->
-        <h1 style="color:#01e1c5;">預訂管理系統</h1>
+        <h1 style="color:#748cdd;">預訂管理系統</h1>
         <div class="box">
           <div class="search-box">
             <!-- 搜尋框 -->
@@ -369,29 +369,10 @@ export default {
 
   <!-- 彈出視窗區域，根據 modalOpen 變數控制顯示與隱藏 -->
   <div class="modal" :class="{ active: modalOpen }">
-    <!-- 關閉彈出視窗按鈕 -->
-    <svg
-      class="close-modal"
-      width="20"
-      height="20"
-      viewBox="0 0 29 29"
-      fill="none"
-      @click="closeModal"
-    >
-      <path
-        d="M3 3L26.5 26.5"
-        stroke="#333"
-        stroke-width="5"
-        stroke-linecap="round"
-      />
-      <path
-        d="M26.5 3L3 26.5"
-        stroke="#333"
-        stroke-width="5"
-        stroke-linecap="round"
-      />
-    </svg>
     <form @submit.prevent="submitForm">
+      <!-- 關閉彈出視窗按鈕 -->
+      <font-awesome-icon :icon="['fas', 'x']" class="close-modal"
+        @click="closeModal"/>
       <!-- 模式標題 -->
       <h2>{{ modalMode === "view" ? "查看預訂資訊" : "編輯預訂資訊" }}</h2>
 
@@ -488,7 +469,7 @@ main.table {
     transition: border-color 0.3s ease;
 
     &:focus {
-      border-color: #01e1c5;
+      border-color: #748cdd;
     }
   }
 
@@ -497,43 +478,43 @@ main.table {
     height: 100%;
     text-align: center;
     line-height: 50px;
-    background-color: #01e1c5;
+    background-color: #748cdd;
     color: #fff;
     border-radius: 25px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: #00af9b;
+      background-color: #748cdd;
     }
   }
 }
 
 .table_body {
-  width: 95%;
+  width: 96%;
   max-height: calc(89% - 1.6rem);
   background-color: #ffffff;
   margin: 0.8rem auto;
-  border-radius: 0.6rem;
-  border:2px solid #000000;
+  border-radius: 8px;
+  // border:2px solid #000000;
   overflow: auto;
 
   th {
     position: sticky;
     top: 0;
     left: 0;
-    background-color: #e0e0e0;
+    background-color: #e3e8f6;
     color: #333;
     padding: 1rem;
     cursor: pointer;
   }
 
   tbody tr:nth-child(even) {
-    background-color: #f5f5f5;
+    background-color: rgba(116 , 140, 211,0.1);
   }
 
   tbody tr:hover {
-    background-color: #f0f0f0;
+    background-color: rgba(116 , 140, 211,0.3);
   }
 
   button {
@@ -545,16 +526,16 @@ main.table {
     color: #ffffff;
 
     &:nth-child(1) {
-      background-color: #0298cf;
+      background-color: #748cdd;
     }
 
     &:nth-child(2) {
-      background-color: green;
+      background-color: #a8afc9;
       margin-left: 6px;
     }
 
     &:nth-child(3) {
-      background-color: #f80000;
+      background-color: #B5495B;
       margin-left: 6px;
     }
   }
@@ -589,13 +570,14 @@ table {
   text-transform: uppercase;
 
   &.delivered {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #7b90da;
+    color: white;
+    font-weight: 500;
   }
 
   &.cancelled {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #ffdfe2;
+    color: #c86e7d;
   }
 }
 
@@ -741,9 +723,6 @@ table {
   }
 
   .close-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     cursor: pointer;
   }
 }

@@ -1,97 +1,123 @@
 <script>
-import { RouterLink, RouterView } from 'vue-router'
+import { useBillstore } from '@/stores/BillStore'
+import { inject } from 'vue';
+import { RouterLink } from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 export default {
-  data(){
+  data() {
     return {
-      staff:null
+      staff: null,
     }
   },
-  created(){
-    this.staff  = JSON.parse(sessionStorage.getItem("token"));
+  created() {
+    this.staff = JSON.parse(sessionStorage.getItem("token"));
+  },
+  setup() {
+    const route = useRoute();
   }
 }
 </script>
 <template>
-    <div class="container">
-      <h1 class="logo"></h1>
-      <nav>
-        <ul>
-          <li><a><RouterLink to="/calendar">行事曆</RouterLink></a></li>
-          <li><a><RouterLink to="/table">桌位</RouterLink></a></li>
-          <li><a><RouterLink to="/OrderPage">點餐(外帶)</RouterLink></a></li>
-          <li><a><RouterLink to="/workingarea">工作台</RouterLink></a></li>
-          <li><a><RouterLink to="/reserve">訂位</RouterLink></a></li>
-          <li v-if="this.staff"><a><RouterLink to="/logout">登出</RouterLink></a></li>
-        </ul>
-      </nav>
-    </div>
-    <!-- <RouterLink to="/BillPage">BillPage</RouterLink> -->
+  <div class="headerArea">
+    <h1 class="logo"></h1>
+    <nav>
+      <ul>
+        <li><a><router-link to="/calendar" active-class="active">行事曆</router-link></a></li>
+        <li><a><router-link to="/table" active-class="active">桌位</router-link></a></li>
+        <li><a><router-link to="/OrderPage" active-class="active">點餐(外帶)</router-link></a></li>
+        <li><a><router-link to="/workingarea" active-class="active">工作台</router-link></a></li>
+        <li><a><router-link to="/reserve" active-class="active">訂位</router-link></a></li>
+        <li><a><router-link to="/AllBillPage" active-class="active">帳務</router-link></a></li>
+        <li><a><router-link to="/MenuManage" active-class="active">菜單</router-link></a></li>
+        <li v-if="this.staff"><a>
+            <RouterLink to="/logout">登出</RouterLink>
+          </a></li>
+      </ul>
+    </nav>
+
+  </div>
+  <!-- <RouterLink to="/BillPage">BillPage</RouterLink> -->
 </template>
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
-*{
+
+* {
   box-sizing: border-box;
   background-color: unset;
-  color:unset;
-  border:unset;
+  color: unset;
+  border: unset;
 }
-:active{
+
+:active {
   background-color: unset;
-  color:unset;
-  border:unset;
+  color: unset;
+  border: unset;
 }
-div.container {
+
+div.headerArea {
   width: 100%;
-  max-height: 3vh;
-	font-family: 'Work Sans', sans-serif;
+  // max-width: 1366px;
+  font-family: "Chocolate Classical Sans", sans-serif;
   display: flex;
-	font-weight: 800;
-  background-color: white;
-  ul{       
-  margin: 0;
-  padding: 0;
-  list-style: none; 
-  li{
+  // font-weight: 600;
+  background-color: rgba(116 , 140, 211,0.2);
+  line-height: 5dvh;
+
+  ul {
+    margin: 0;
+    padding: 0 3dvh;
+    list-style: none;
+
+    li {
       display: inline-block;
-      margin-left: 60px;
-      padding-top: 10px;
+      padding-top: 0.5dvh;
+      margin-right: 6dvw;
+      font-weight: bold;
       position: relative;
-        a{
-          color: #01e1c5;
-          text-decoration: none;
-          text-transform: uppercase;
-          font-size: 14px;
-          &:hover{
-            color: #01e1c5;
-          
-          }
-          &:hover::before{
-            width: 100%;
-          }
-          &::before{
-            content: '';
-            display: block;
-            vertical-align:middle;
-            height: 5px;
-            background-color: #01e1c5;
-            position: absolute;
-            top: 0;
-            width: 0%;
-            transition: all ease-in-out 250ms;
-          }
+
+      a {
+        color: #748cdd;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 2.25dvh;
+
+        &.active {
+          border-radius: 5px;
         }
-    }                
+
+        &:hover {
+          color: #748cdd;
+
+        }
+
+        &:hover::before {
+          width: 100%;
+        }
+
+        &::before {
+          content: '';
+          display: block;
+          vertical-align: middle;
+          height: 5px;
+          background-color: #748cdd;
+          position: absolute;
+          top: 0;
+          width: 0%;
+          transition: all ease-in-out 250ms;
+        }
+      }
+    }
   }
 }
+
 .logo {
   float: top;
   padding: 10px 0;
+
   nav {
-  float: top;
-  height: 5vh;
-        
+    float: top;
+    height: 5vh;
+
   }
 }
-
-
 </style>

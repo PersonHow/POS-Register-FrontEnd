@@ -25,7 +25,7 @@
                   </div>
                   <div v-else><p>桌號：尚未未選擇</p><p>請先選擇有桌號的座位</p></div>
                 </div>
-                <div class="tables_exchange"><img src="../../assets/exchange.png"></div>
+                <div class="tables_exchange"><i class="fa-solid fa-arrow-right-arrow-left fa-2xl" style="color: #7b90da;"></i></div>
                 <div class="tables_body"><h2>目標桌位</h2>
                   <div v-if='this.selected_target_table.table_id !== "#"'>
                     <p>桌號：{{this.selected_target_table.table_id}}</p>
@@ -65,9 +65,10 @@
     padding: 0.5rem 1rem;
     color: white;
     border-radius: 0.5rem;
-    background-color: #00c5c8;
+    background-color: #748cdd;
     &:hover{
-      background-color: #00a0a3;
+      background-color: #a8afc9;
+      border-radius: 8px;
       cursor: pointer;
     }
   }
@@ -80,8 +81,9 @@
     color: black;
     background-color: rgb(211, 211, 211);
     &:hover{
-      background-color: #e0e0e0;
+      background-color: #a8afc9;
       cursor: pointer;
+      border-radius: 8px;
     }
   }
   .template_dialog_btn{
@@ -90,14 +92,15 @@
     color: white;
     background-color: unset;
     &:hover{
-      background-color: #00c5c8;
+      background-color: #a8afc9;
       cursor: pointer;
+      border-radius: 8px;
     }
   }
   div.dialog{
     display: flex;
     flex-direction: column;
-    color: #00c5c8;
+    color: #748cdd;
     h2{
       margin-left: 1rem;
       margin-bottom: 1rem;
@@ -109,7 +112,7 @@
       .tables_body{
         min-width: 40%;
         min-height: 50vh;
-        border: 2px solid #00c5c8;
+        border: 2px solid #748cdd;
         padding: 1rem;
         border-radius: 1rem;
         p{
@@ -118,11 +121,8 @@
         }
       }
       .tables_exchange{
+        margin: 0 1dvw;
         text-align: center;
-       img{
-        width: 50%;
-        height: 50%;
-       }
       }
     }
   }

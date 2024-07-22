@@ -38,6 +38,41 @@ export default {
         }
 
     },
+    data() {
+        return {
+            mealDetailfromDB: [],
+            deleteOptionIcon: false,
+            printDetail: false
+        }
+    },
+    methods: {
+        deleteOption(mealList, option) {
+            const optionsArray = mealList.custom_option.split(';');
+            const optionIndex = optionsArray.indexOf(option);
+            if (optionIndex !== -1) {
+                optionsArray.splice(optionIndex, 1);
+                mealList.custom_option = optionsArray.join(';');
+            }
+        },
+        showDeleteOptionBut() {
+            this.deleteOptionIcon = !this.deleteOptionIcon
+        },
+        printDetailBut() {
+            this.printDetail = true;
+            this.autoClosePrintBox();
+        },
+        updateQuantity(mealList, change) {
+            const newQuantity = mealList.quantities + change;
+            if (newQuantity >= 0) {
+                mealList.quantities = newQuantity;
+            }
+        },
+        autoClosePrintBox(){
+            setTimeout(() => {
+                this.printDetail = false;
+            }, 1000); // 1秒後自動關閉
+        }
+    }
 }
 </script>
 
@@ -54,25 +89,55 @@ export default {
                     <p v-if="this.Billstore.OrderDB.table_num !== null">桌號：{{ Billstore.OrderDB.table_num }}</p>
                     <p v-else>
                     <p><span>
-                            <</span>外帶單></p>
+                            < <span>
+                        </span></span>外帶單 ></p>
                     </p>
-                    
                 </div>
-                <div><p>人數：{{ Billstore.OrderDB.guest_num }}</p></div>
+                <div>
+                    <p>人數：{{ Billstore.OrderDB.guest_num }}</p>
+                </div>
                 <div>用餐金額：{{ Billstore.OrderDB.amount }}</div>
 
                 <div>點餐內容：</div>
                 <ul v-for="(mealList, index) in Billstore.OrderDB.order_detail" :key="index">
-                    <li><span>({{ index + 1 }})</span>&nbsp;
-
-                        <span> {{ mealList.meal_name }}</span>
-                        <p>數量：{{ mealList.quantities }}</p>
+                    <li class="orderDetailArea">
+                        <span>({{ index + 1 }})</span>&nbsp;
+                        <span>{{ mealList.meal_name }}</span>
+                        <div class="countArea">
+                            <p>數量：{{ mealList.quantities }}</p>
+                            <button v-if="deleteOptionIcon" type="button" @click="updateQuantity(mealList, -1)">
+                                <i class="fa-solid fa-circle-minus fa-lg" style="color: #b00000;"></i>
+                            </button>
+                            <button v-if="deleteOptionIcon" type="button" @click="updateQuantity(mealList, 1)">
+                                <i class="fa-solid fa-circle-plus fa-lg"></i>
+                            </button>
+                        </div>
+                        <div class="optionArea" v-for="(option, optionIndex) in mealList.custom_option.split(';')"
+                            :key="optionIndex">
+                            <p>{{ option }}</p>
+                            <button v-if="deleteOptionIcon" type="button" @click="deleteOption(mealList, option)"
+                                id="deleteOption">
+                                <i class="fa-solid fa-circle-minus fa-lg" style="color: #b00000;"></i>
+                            </button>
+                        </div>
                     </li>
-                    <li v-if="mealList.custom_option === null"> {{ mealList.custom_option }}</li>
                 </ul>
             </li>
-            <button class="myMouse">列印明細</button>
-            <button class="myMouse">編&nbsp;&nbsp;&nbsp;輯</button>
+            <div class="butArea">
+                <button class="myMouse" @click=printDetailBut()>列印明細</button>
+                <!-- <button class="myMouse" v-if="deleteOptionIcon == false"
+                    @click="showDeleteOptionBut()">編&nbsp;&nbsp;&nbsp;輯</button>
+                <button class="myMouse" v-else @click="showDeleteOptionBut()">修改完成</button> -->
+            </div>
+            <div class="showPrintResultArea">
+                <div class="showBack" v-if="printDetail" >
+                    <div class="showBox" @click.stop>
+                        <div class="titleArea">
+                            <p>正在列印</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </ul>
     </nav>
 </template>
@@ -87,6 +152,7 @@ export default {
     border-right: 5px solid #00c1ca;
     transition: 0.3s ease;
     opacity: 90%;
+    padding-top: 0.5dvh;
 
 
     div {
@@ -114,7 +180,7 @@ export default {
     }
 
     ul {
-        padding-left: 1dvw;
+        padding: 0 1dvw;
 
         li {
             list-style-type: none;
@@ -123,32 +189,97 @@ export default {
             margin: 1dvh 0;
 
             div {
-                margin: 0.5dvh 0;
-                .tableAndGuestNum{
-                        overflow: hidden;
+                margin: 1dvh 0;
+
+                .tableAndGuestNum {
+                    overflow: hidden;
+
                 }
             }
 
             p {
                 margin: 0;
             }
+
+            button {
+                font-size: 2.5dvh;
+                background: none;
+                color: black;
+                width: 3dvw;
+                height: 3dvh;
+                padding: 0;
+                padding-top: 0.5dvh;
+                margin: 0;
+                border: none;
+            }
+
+            i {
+                font-size: 2.5dvh;
+            }
+
         }
 
-        button {
-            font-family: "Chocolate Classical Sans", sans-serif;
-            font-size: 2.25dvh;
-            margin: 0.5dvh 0.5dvw;
-            border: none;
-            cursor: pointer;
-            border-radius: 10px;
-            background: #00c1ca;
-            padding: 0.5dvw;
-            color: white;
-            transition: transform 0.3s;
-            &.active{
-                transform: scale(1.2);
+        .optionArea {
+            font-size: 2.5dvh;
+        }
+
+        .butArea {
+            justify-content: space-between;
+
+            button {
+                cursor: pointer;
+                padding: 0.5dvw;
+                width: 8.5dvw;
+                height: 6dvh;
+                margin: 0 0.5dvw;
+                margin-top: 1dvh;
+                background: #00c1ca;
+                color: white;
+                font-family: "Chocolate Classical Sans", sans-serif;
+                font-size: 2.25dvh;
+                border-radius: 5px;
+                border: none;
             }
         }
+
+        .showPrintResultArea {
+            .showBack {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                font-weight: 500;
+            }
+
+            .showBox {
+                width: 40%;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                z-index: 100;
+                font-size: 2.5dvh;
+                line-height: 5dvh;
+
+                .titleArea {
+                    width: 100%;
+                    color: black;
+                    margin: 0 1dvw;
+                    text-align: 3dvh;
+                }
+
+
+            }
+        }
+
+
+
     }
 }
 </style>

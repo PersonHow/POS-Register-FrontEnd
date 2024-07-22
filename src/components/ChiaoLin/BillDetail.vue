@@ -17,8 +17,6 @@ export default {
         const enterAddInputValue = (event) => {
             Billstore.newInputEvent = event.target.value;
         };
-
-
         // 避免切換分頁 inputEvent 刷新
         // 在 onMounted 生命週期時從 localStorage 中恢復 newInputEvent 的值
         onMounted(() => {
@@ -42,20 +40,20 @@ export default {
             OrderStore,
             updateValue,
             enterAddInputValue,
-            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent','theLastBill']),
+            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'lastBill','isTopBarHidden']),
             ...mapState(OrderStore, ['order_info']),
-            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB','getAllBillsAndTodayBills']),
+            ...mapActions(Billstore, ['setFocusedInput', 'addInputEvent', 'removeInputEvent', 'getOderId', 'getBillIdfromDB', 'getAllBillsAndTodayBills','closeTopbar']),
         };
     },
     methods: {
-        toggleSidebar() {
-            this.isLeftNavHidden = !this.isLeftNavHidden;
+        closeLeftbar() {
+            this.isLeftBarHidden = !this.isLeftBarHidden;
         },
     },
     data() {
         return {
             OrderDB: [],
-            isLeftNavHidden: false,
+            isLeftBarHidden: false,
         }
     },
     created() {
@@ -65,8 +63,8 @@ export default {
             let orderObj = {
                 order_id: orderId,
             }
-            console.log(orderId);
-            console.log(orderObj);
+            // console.log(orderId);
+            // console.log(orderObj);
             fetch("http://localhost:8080/order_info/ById", {
                 method: "post",
                 headers: {
@@ -95,11 +93,11 @@ export default {
             } else {
                 AorB = 'Other';
             }
-            this.showBillId = `${year}${month}${day}-${AorB}` + this.Billstore.bId;
+            this.showBillId = `${year}${month}${day}-${AorB}` + ((this.Billstore.chargedTodayBills.length) + 1);
         } else {
             console.error("Wrong oId!")
         };
-        
+
     },
     components: {
         LeftNavEditOrder,
@@ -112,24 +110,23 @@ export default {
     <div class="allArea">
         <div class="showOrderId">
             <div style="width: 20%;">結帳單號</div>
-            <div style="width: 40%;">{{ this.Billstore.theLastBill.bill_id+1 }}</div>
+            <div style="width: 35%;">{{ this.showBillId }}</div>
             <!-- 漢堡按鈕還沒做 -->
-            <input type="checkbox" id="noShowOrder" v-model="this.Billstore.showOrderArea">
-            <button style="cursor: pointer;" @click="toggleSidebar">
-                <p  v-if="!isLeftNavHidden">關閉左側明細</p>
-                <p  v-else>開啟左側明細</p>
+            <button style="cursor: pointer;font-size: 2.25dvh;" @click="closeLeftbar">
+                <p v-if="!isLeftBarHidden">關閉左側明細</p>
+                <p v-else>開啟左側明細</p>
             </button>
-            <label for="" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
+            <button @click="Billstore.closeTopbar"><i class="fa-solid fa-house-chimney fa-xl"></i></button>
         </div>
         <div class="billDetailArea">
-            <div :class="['billDetailLeftArea', { hidden: isLeftNavHidden }]">
-                
+            <div :class="['billDetailLeftArea', { hidden: isLeftBarHidden }]">
+
                 <LeftNavEditOrder></LeftNavEditOrder>
             </div>
-            <div :class="['billDetailRightArea', { expanded: isLeftNavHidden }]">
-                <div class="titleArea">
+            <div :class="['billDetailRightArea', { expanded: isLeftBarHidden }]">
+                <!-- <div class="titleArea">
                     <p>結帳明細</p>
-                </div>
+                </div> -->
                 <div class="billdetail">
                     <p>訂單金額&nbsp;</p>
                     <div class="inputAera"><input type="text" :value="this.OrderDB.amount" disabled>
@@ -172,8 +169,9 @@ export default {
 
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
+
 .allArea {
-    width: 50%;
+    width: 49%;
     font-family: "Chocolate Classical Sans", sans-serif;
 
     .titleArea {
@@ -189,11 +187,11 @@ export default {
 
     .showOrderId {
         display: flex;
-        height: 8dvh;
+        height: 9dvh;
         background: linear-gradient(90deg, #00c1ca, #01e1c5);
         border-radius: 5px;
         color: white;
-        line-height: 8dvh;
+        line-height: 9dvh;
         padding-left: 2dvw;
         font-size: 2.25dvh;
 
@@ -212,7 +210,7 @@ export default {
 
         label {
             // border: 1px solid black;
-            height: 8dvh;
+            height: 9dvh;
             width: 8dvw;
             cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
             transition: 0.3s ease;
@@ -222,8 +220,9 @@ export default {
 
             i {
                 z-index: 1;
-                line-height: 8dvh;
+                line-height: 9dvh;
             }
+
 
             span {
                 font-size: 2.25dvh;
@@ -256,6 +255,7 @@ export default {
 
             .billdetail {
                 padding: 0 1.5dvw;
+                padding-top: 2.25dvh;
 
                 input {
                     width: 90%;
@@ -263,13 +263,13 @@ export default {
                     border: none;
                     background-color: white;
                     text-align: right;
-                    font-size: 2dvh;
+                    font-size: 2.25dvh;
                 }
 
                 p {
                     height: 2.5dvh;
                     margin-left: 1dvw;
-                    font-size: 2dvh;
+                    font-size: 2.25dvh;
                     margin-top: 1dvh;
                 }
 
@@ -291,6 +291,10 @@ export default {
 
                 .inputEventArea {
                     border-bottom: 1px solid rgb(213, 212, 212);
+
+                    i{
+                        font-size: 2.5dvh;
+                    }
 
                     input {
                         text-align: right;

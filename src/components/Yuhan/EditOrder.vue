@@ -6,7 +6,7 @@ export default {
             mealDetail:{},
             optionList:[], //該餐點所有的客製選項 如:[ [ "加蔥+5", "不加蔥+0" ] ,["加蛋+15"]]
             selectOptions:[], //裝選取的選項
-            otherReq:"", //其他備註
+            other_request:"", //其他備註
             quantity:null, //數量
             price:null
         }
@@ -16,6 +16,7 @@ export default {
     created(){
         this.getCustomOption()
         this.quantity = this.meal_detail.quantities
+        this.other_request = this.meal_detail.other_request
         if(this.meal_detail.custom_option != null){
             this.selectOptions = this.meal_detail.custom_option
         }
@@ -46,7 +47,7 @@ export default {
             this.meal_detail.price = this.addition
             this.meal_detail.quantities = this.quantity
             this.meal_detail.custom_option = this.selectOptions
-            this.meal_detail.otherReq = this.otherReq
+            this.meal_detail.other_request = this.other_request
             this.$emit('update_meal_detail', this.meal_detail)
         },
         //加數量
@@ -114,7 +115,7 @@ export default {
         <div v-for="(item, index) in optionList" :key="item" 
         :class="{ 'warn': item.ismustfill && !isOptionSelected(item.options) }" class="colume">
             餐點選項{{index+1}} : <span v-if="item.ismustfill">(必填)</span>
-        <div class="d-flex">
+        <div class="d-flex flex-wrap">
                 <div v-for="option in item.options" :key="option" class="wrap mx-2">
                     <input type="checkbox" v-model="selectOptions" :id="option" :value="option"
                     :required="item.ismustfill">
@@ -125,7 +126,7 @@ export default {
         </div>
         <p class="mt-3">其他需求:</p>
         <div class="form-floating">
-        <textarea class="form-control" placeholder="其他需求" id="floatingTextarea"></textarea>
+        <input type="text" v-model="other_request" class="form-control" placeholder="其他需求" id="floatingTextarea">
         <label for="floatingTextarea">請填寫</label>
         </div>
         <div class="quantity">

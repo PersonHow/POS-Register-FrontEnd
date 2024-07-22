@@ -6,12 +6,23 @@ import HandInvoiceContent from '@/components/ChiaoLin/HandInvoiceContent.vue';
 import { useBillstore } from '../stores/BillStore'
 import LeftNavEditOrder from '@/components/ChiaoLin/LeftNavEditOrder.vue';
 import RightNavOtherFun from '@/components/ChiaoLin/RightNavOtherFun.vue';
+import { mapState, mapActions } from 'pinia';
+import { onMounted } from 'vue';
 // import { useOrderStore } from '@/stores/OrderStore'
 
 export default {
     setup() {
         const Billstore = useBillstore();
-        return { Billstore };
+
+        onMounted(() => {
+            useBillstore.isTopBarHidden = true;
+        })
+
+        return {
+            Billstore,
+            ...mapState(Billstore, ['isTopBarHidden']),
+            ...mapActions(Billstore, ['closeTopbar'])
+        };
         // const OrderStore = useOrderStore();
         // return { OrderStore };
     },
@@ -40,29 +51,36 @@ export default {
         updateBillstore(event) {
             Object.assign(this.Billstore, event);
         },
+        closeShow() {
+            this.$emit('close');
+        },
     },
-    created(){
-        if(sessionStorage.getItem("token") == null){
-        Swal.fire({title:"你還沒有登入，將轉向登入頁面！",showConfirmButton:true,
-            confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
-            icon:'error',iconColor:"#00c5c8"}).then((res)=>{
-              if(res.isConfirmed){
-                this.$router.push({name: 'home'});
-              }
+    created() {
+        if (sessionStorage.getItem("token") == null) {
+            Swal.fire({
+                title: "你還沒有登入，將轉向登入頁面！", showConfirmButton: true,
+                confirmButtonColor: "#00c5c8", confirmButtonText: "確定",
+                icon: 'error', iconColor: "#00c5c8"
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    this.$router.push({ name: 'home' });
+                }
             })
         }
-    }
+    },
 }
 </script>
 
 <template>
     <div class="midArea">
+
         <!-- 用 v-bind -->
         <BillDetail :orderAmount="Billstore.OrderDB.amount" :discount="Billstore.discount"
             :serviceFee="Billstore.serviceFee" :entertain="Billstore.entertain" :allowance="Billstore.allowance"
             :inputEvent="Billstore.inputEvent" :newInputEvent="Billstore.newInputEvent"
             @set-focused-input="Billstore.setFocusedInput" @add-input-event="Billstore.addInputEvent"
             @remove-input-event="Billstore.removeInputEvent" @update="updateBillstore" />
+
         <div class="rightArea">
             <AmountDetails :orderAmount="Billstore.OrderDB.amount" :totalAmount="Billstore.totalAmount"
                 :changeAmount="Billstore.changeAmount" :realChargeAmount="Billstore.realChargeAmount"
@@ -75,17 +93,18 @@ export default {
             <div class="functionButArea">
                 <RouterLink to="/OrderPage"><button type="button" class="comeback myMouse">取消</button></RouterLink>
                 <button type="button" class="manualInvoice myMouse" @click="Billstore.showHandInvoiceArea">手開發票</button>
-                <RouterLink to="/InvoicePage"><button type="button" class="comeback myMouse">發票設定</button></RouterLink>
-                <RouterLink to="/BillEditPage"><button type="button" class="comeback myMouse">帳務總覽</button></RouterLink>
+                <!-- <RouterLink to="/InvoicePage"><button type="button" class="comeback myMouse">發票設定</button></RouterLink> -->
+                <RouterLink to="/AllBillPage"> <button type="button" class="comeback myMouse">帳務總覽</button></RouterLink>
                 <input type="checkbox" id="rightBar" v-model="Billstore.showRightNav">
-                <label for="rightBar" class="myMouse"><i class="fa-solid fa-bars fa-xl"></i></label>
+                <button @click="Billstore.closeTopbar"><i class="fa-solid fa-bars fa-xl"></i></button>
             </div>
         </div>
         <div v-if="Billstore.showHandInvArea">
             <HandInvoiceContent @close="Billstore.showHandInvoiceArea" />
+
         </div>
         <!-- <LeftNavEditOrder /> -->
-        <RightNavOtherFun />
+        <!-- <RightNavOtherFun /> -->
     </div>
 </template>
 
@@ -93,6 +112,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
 
 .midArea {
+    width: 100dvw;
     display: flex;
     font-family: "Chocolate Classical Sans", sans-serif;
 
@@ -101,15 +121,14 @@ export default {
 
         .functionButArea {
             display: flex;
-            width: 95%;
+            width: 94%;
             height: 7dvh;
-            line-height: 7dvh;
+            line-height: 7.5dvh;
             background: linear-gradient(90deg, #00c1ca, #01e1c5);
             color: #fff;
             border-radius: 10px;
             padding-left: 1dvw;
-            margin-top: 1dvh;
-            margin-left: 1.5dvh;
+            margin: 0 1dvw;
 
             button {
                 border: none;
@@ -131,10 +150,11 @@ export default {
             label {
                 // border: 1px solid black;
                 height: 8dvh;
+                height: 8dvh;
                 width: 8dvw;
                 cursor: pointer; // 使滑鼠變更樣式，讓使用者知道可以點擊
                 transition: 0.3s ease;
-                z-index: 9999; // 使其圖層絕對在最上方
+                z-index: 1; // 使其圖層絕對在最上方
                 display: flex;
                 justify-content: center;
 

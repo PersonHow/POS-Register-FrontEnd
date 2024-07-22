@@ -32,12 +32,14 @@ export default {
   </div>
 </template>
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,600');
 /* body = 包住全部內容的最大div */
 *{
   box-sizing: border-box;
   background-color: unset;
   color:unset;
   border:unset;
+  font-family: "Chocolate Classical Sans", sans-serif;
 }
 :active{
   background-color: unset;
@@ -55,7 +57,7 @@ export default {
         display:flex;
         align-items: center;
         justify-content: center;
-        flex-wrap: wrap;
+        padding: 0 2dvw;
     }
 }
 </style>

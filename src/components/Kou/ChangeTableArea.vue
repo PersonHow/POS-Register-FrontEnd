@@ -33,11 +33,11 @@
   overflow: hidden;
 }
 .nav_header_btn{
-  background-color: #00c5c8;
+  background-color: #748cdd;
   border-radius: 10%;
   &:hover{
     cursor: pointer;
-    background-color: #00b5b8;
+    background-color: #748cdd;
   }
   img{
     width: 2vw;
@@ -51,8 +51,9 @@
   margin-top: 0;
   font-weight: bold;
   cursor: pointer;
-  color: #00c5c8;
-  border-bottom: 1px solid #00c5c8;
+  color: #748cdd;
+  border-bottom: 1px solid #748cdd;
+  border-radius: 8px;
   &:hover{
     background-color: rgb(236, 236, 236);
   }
