@@ -351,21 +351,17 @@
           </select>
         </div>
         <div style="display: flex; width: 100%; justify-content: space-between">
-          <a href="javascript: void(0)" class="boxBtn" @click="postTableHandler">
-            <div>
-              <span>提交</span>
-            </div>
+          <a class="boxBtn" @click="postTableHandler">
+            提交
           </a>
-          <a href="javascript: void(0)" class="boxBtn" @click="deleteTableHandler">
-            <div>
-              <span>刪除</span>
-            </div>
+          <a class="boxBtn" @click="deleteTableHandler">
+            刪除
           </a>
         </div>
       </form>
     </div>
   </div>
-  <div style="display: flex;justify-content: end;margin-right: 1rem;margin-top: 1.5rem;">
+  <div style="display: flex;justify-content: end;margin-right: 1rem;margin-top: 1rem;">
     <a @click="addTableHandler"><i class="fa-solid fa-circle-plus fa-2xl"
         style="color: #7b90da;font-size: 4dvh;"></i></a>
   </div>
@@ -832,7 +828,7 @@ export default {
 .input_add_table {
   max-height: 80vh;
   margin: 1rem;
-  width: 70%;
+  width: 60%;
   // overflow-y: scroll;
   padding: 1rem 2.5dvw;
   display: flex;
@@ -920,39 +916,20 @@ export default {
   background: #FFFFFF;
   border: 2px solid #7b90da;
   border-radius: 8px;
-  transform: translate3d(0px, 0%, 0px);
   font-size: 2.25dvh;
   // font-weight: bold;
   text-align: center;
   text-decoration: none;
-  transition-delay: 0.6s;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 6dvh;
-  padding-top: 1dvh;
-
-  &:before,
-  &:after {
-    content: '';
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    transition: all 0.6s ease;
+  transition: all 0.3s ease;
+  &:hover{
+    background-color: #7b90da;
+    color: white;
   }
-
-  &:before {
-    background: #7b90da;
-    border-radius: 50% 50% 0 0;
-    transform: translateY(100%) scaleY(0.5);
-  }
-
-  &:after {
-    background: #FFFFFF;
-    border-radius: 0;
-    transform: translateY(0) scaleY(1);
-  }
-
   div {
     position: relative;
     top: 0px;
@@ -961,45 +938,6 @@ export default {
     height: 32px;
     text-transform: uppercase;
     overflow: hidden;
-  }
-
-  span {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    z-index: 1;
-    text-align: center;
-    transition: transform 0.5s ease;
-
-    &:first-child {
-      color: #FFFFFF;
-      transform: translateY(24px);
-    }
-
-    &:last-child {
-      color: #7b90da;
-      transform: translateY(0);
-    }
-  }
-
-  &:hover {
-    background: #7b90da;
-    transition: #7b90da 0.2s linear;
-    transition-delay: 0.6s;
-    color: #FFFFFF;
-  }
-
-  &:hover::after {
-    border-radius: 0 0 50% 50%;
-    transform: translateY(-100%) scaleY(0.5);
-    transition-delay: 0;
-  }
-
-  &:hover:before {
-    border-radius: 0;
-    transform: translateY(0) scaleY(1);
-    transition-delay: 0;
   }
 }
 
