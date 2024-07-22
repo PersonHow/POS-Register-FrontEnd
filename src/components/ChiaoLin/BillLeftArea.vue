@@ -34,7 +34,7 @@ export default {
         <div class="showOrderId">
             <!-- order_id & 功能 -->
             <div>單號</div>
-            <div>{{ order_id }}</div>
+            <div>{{ OrderStore.order_info.order_id }}</div>
             <button class="spaceArea"></button>
             <button type="button" class="bars myMouse"><i class="fa-solid fa-bars fa-xl"></i></button>
         </div>
@@ -74,7 +74,7 @@ export default {
 
 
 
-<style scoped>
+<style lang="scss"scoped>
 .leftArea {
     width: 50%;
 
@@ -105,6 +105,7 @@ export default {
         p {
             color: gray;
             font-size: 2dvh;
+            z-index: 99;
         }
     }
 

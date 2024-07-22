@@ -64,40 +64,11 @@ export default {
             </label>
         </div>
         <ul>
-            <li>發票號碼設定</li>
-            <div class="invoiceHistoryFunArea">
-                <li>當天結帳紀錄</li>
-                <button @click="showMoreBills" v-if="hasMoreBills">查看更多</button>
-                <span v-if="!hasMoreBills">已到最底</span>
-            </div>
-            <div class="lastFiveBillArea">
-                <ul>
-                    <li id="eachBillInfo" v-for="bill in visibleBills" :key="bill.bill_id">
-                    <li id="inputLabelArea"><input type="checkbox" :id="'showBillDetail' + bill.bill_id"
-                            v-model="bill.showDetail">
-                        <label :for="'showBillDetail' + bill.bill_id"><span>其他內容</span></label>
-                    </li>
-                    <div id="idAndCreateTimeArea">
-                        <p>帳單ID：{{ bill.bill_id }}</p>
-                        <p>結帳時間：{{ bill.create_time }}</p>
-                    </div>
-                    <div>
-                        <p>點餐ID：{{ bill.order_id }}</p>
-                        <p>總金額：{{ getAmountForOrder(bill.order_id) }}</p>
-                    </div>
-                    <div>
-                        <p>發票號碼：{{ bill.invoice }}</p>
-                    </div>
-                    <template v-if="bill.showDetail">
-                        <div class="showDetailArea">
-                            <!-- <p>用餐桌號：{{ Billstore.eachOrderDetail.amount }}</p> -->
-                            <p>用餐人數：{{ "待接" }}</p>
-                        </div>
-                    </template>
-                    </li>
-                </ul>
-            </div>
-            <!-- <RouterLink to=""></RouterLink> -->
+            <li><a href="">發票號碼設定</a></li>
+            <li>查詢歷史結帳
+                <!-- <RouterLink to=""></RouterLink> -->
+            </li>
+            <li><a href=""></a></li>
         </ul>
     </nav>
 </template>
@@ -105,10 +76,10 @@ export default {
 <style scoped lang="scss">
 .navArea {
     position: fixed;
-    height: 85.3%;
+    height: 85%;
     top: 0;
-    width: 40%;
-    right: -42%;
+    width: 35%;
+    right: -37%;
     overflow: hidden;
     background: white;
     border-left: 5px solid #00c1ca;
@@ -116,9 +87,7 @@ export default {
     transition: 0.3s ease;
     opacity: 90%;
     z-index: 2;
-    padding: 2dvh 3dvw;
-    overflow: scroll;
-
+    padding: 2dvh 2dvw;
     &.active {
         right: 0;
     }
@@ -129,7 +98,7 @@ export default {
         padding-top: 1dvh;
 
         label {
-            width: 20%;
+            width: 30px;
             height: 30px;
             display: flex !important;
             align-items: center;

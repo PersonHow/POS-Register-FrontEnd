@@ -2,8 +2,6 @@
 import axios from 'axios'
 import EditMeal from '../components/Yuhan/EditOrder.vue'
 import { useOrderStore } from '@/stores/OrderStore' 
-import 'bootstrap/dist/css/bootstrap.css'
-import "bootstrap"
 export default {
     data() {
         return{
@@ -20,8 +18,7 @@ export default {
             types:[], //餐點所有種類 如:["排餐","炸物","飯類","披薩","義大利麵"]
             selectedType:"", //目前顯示的種類
             
-            tableNum:null, //桌號====>TODO
-            guestNum:"", //用餐人數==>TODO
+            tableInfo:{table_id:null, guest_num:null}, //桌位狀態
             memo:null, //備註
             showMemoInput:false,
             
@@ -32,22 +29,23 @@ export default {
                 price:0,
                 option:"",
                 quantities:1,
-                otherReq:""
+                other_request:""
             },
             editingIndex:null, //欲修改的餐點索引
+            staff:null,
         }
     },
     components:{
         EditMeal
     },
     created(){
-        if(sessionStorage.getItem("token")==null){
-            alert("你還沒有登入，將轉向登入頁面！")
-            this.$router.push({name: 'home'})
-        }
         this.getMenu()
         this.generateOrderNumber() //建立新訂單流水號
         this.orderStore = useOrderStore() //useOrderStore為store中定義的常數名稱
+        window.bootstrap = bootstrap
+        this.orderStore.getOrderInfo() //取得最近五筆送單紀錄
+        this.useBillstore = useBillstore()
+        this.useBillstore.isTopBarHidden = true // 預設隱藏header
     },
     onMounted(){
         if(!JSON.parse(sessionStorage.getItem("token"))){
@@ -93,7 +91,7 @@ export default {
                 meal_type:meal.type,
                 custom_option:null,
                 quantities:1,
-                other_request:null,
+                other_request:"",
                 description:meal.description,
                 working_area:meal.working_area,
                 img:meal.img ? meal.img:"https://shop.travel.org.tw/proudimage/0.jpg", //預設值
@@ -142,46 +140,9 @@ export default {
         editMemo(){
             this.showMemoInput = !this.showMemoInput
         },
-        //下單
-        placeOrder(){
-            // 將選項去除加價後以分號串接成字串
-            this.orderList.forEach(order => {
-                // 檢查該餐點有客製選項
-                if (order.custom_option) {
-                    // 判斷選項是否為複數 是則用;串接
-                    if (order.custom_option.length > 0) {
-                    order.custom_option = order.custom_option.map(option => {
-                        return option.split('+')[0]
-                    }).join(';')
-                    } else {
-                    order.custom_option = order.custom_option[0].split('+')[0]
-                    }
-                }
-            })
-            let order={
-                order_id: this.oId,
-                table_num: null,
-                guest_num: null,
-                order_detail: this.orderList,
-                amount: this.orderAmount,
-                memo: this.memo,
-                booking_num: null,
-                staff_name: "Andy",
-                lastmodified_staff_id: 1
-            }
-            fetch("http://localhost:8080/order_info/create",{
-                method:'POST',
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify(order)
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-                this.orderStore.createOrder(order) //將訂餐存入orderStore
-            })
-        },
+    },
+    components:{
+        EditMeal
     },
     computed:{
         //已點餐點個別數量
@@ -212,9 +173,8 @@ export default {
     <div class="bigArea">
         <!-- orderList點餐明細 -->
         <div class="container left-side">
-            <div class="header">
+            <div class="header col">
                 <span>單號: {{oId}} </span>
-                <span>{{ tableNum? "桌號: "+tableNum:"外帶" }}</span>
                 <span><font-awesome-icon icon="fa-solid fa-bars" class="icon fa-2x"/></span>
             </div>
             <!-- 點餐列表 -->
@@ -253,8 +213,8 @@ export default {
 
         <!-- menu菜單 -->
         <div class="container">
-            <div class="px-3 type">
-                <div v-for="type in types" :key="type" class="colume">
+            <div class="row type">
+                <div v-for="type in types" :key="type" class="col">
                     <input type="radio" v-model="selectedType" :value="type" :id="type">
                     <label :for="type" :class="{active : selectedType === type}">{{type}}</label>
                 </div>
@@ -280,41 +240,7 @@ export default {
                 <button @click.prevent="editMemo()" class="btn">完成</button>
             </form>
             <div class="bottom">
-                <button type="button" class="btn placeOrder" data-bs-toggle="modal" data-bs-target="#FirstModal">
-                    送出訂單
-                </button>
-
-                <!-- 彈出視窗 -->
-                <div class="modal fade" id="FirstModal" tabindex="-1" aria-labelledby="FirstModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <h4>送單前請務必與消費者核對<strong>餐點內容</strong>與<strong>金額</strong></h4>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">修改</button>
-                                <button  type="button" @click="placeOrder()" class="btn placeOrder" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#secondModal">
-                                    確認無誤，送出</button> 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="secondModal" tabindex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header"><h4><strong>送單完畢，是否前往結帳</strong></h4></div>
-                            <div class="modal-body d-flex justify-content-evenly">
-                                <!-- 跳轉至桌位頁 -->
-                                <a class="btn btn-secondary" data-bs-dismiss="modal">稍後再結</a> 
-                                <!-- 跳轉至結帳頁 -->
-                                <a class="btn btn-primary">立即結帳</a>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
+                <button @click="placeOrder()" class="btn placeOrder"><p>送出訂單</p></button>
                 <button @click="editMemo()" class="btn">訂單備註</button>
             </div>
         </div>
@@ -323,7 +249,7 @@ export default {
 
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
-$main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
+$main-color: linear-gradient(120deg,#f9b445 0%, #ff9b69 80%);
 $secondary-color: #FFE2C3;
 .bigArea{
     width: 100dvw;
@@ -332,20 +258,23 @@ $secondary-color: #FFE2C3;
     justify-content: end;
     font-size: 18px;
     font-family: 'Chocolate Classical Sans', sans-serif;
-    border:1px solid #F9BF45;
+    // border:1px solid #F9BF45;
 }
 .container{
     height: 100%;
     width: 55%;
     box-shadow: 0 0 5px rgba(128, 128, 128, 0.4);
     position: relative;
-    padding: 0;
 }
-.colume{
+.row{
+    padding: 0 5%;
+}
+.col{
     width: 100%;
-    margin:2.5% 5%;
+    margin:5%;
     line-height: 2;
 }
+
 .left-side{
     width: 45%;
     position: relative;
@@ -361,7 +290,9 @@ $secondary-color: #FFE2C3;
         align-items: center;
     }
     .icon{
-        padding-top: 25%;
+        position: absolute;
+        right: 5%;
+        top: 3%;
     }
 }
 .order-list{
@@ -378,6 +309,13 @@ $secondary-color: #FFE2C3;
     &::-webkit-scrollbar-thumb:hover {
         background: #888;
     }
+}
+.dropdown-toggle::after{
+    display: none;
+}
+.dropdown-item{
+    padding:2.5vh 3vw;
+    text-align: center;
 }
 .editMeal{
     width: 100%;
@@ -456,6 +394,7 @@ $secondary-color: #FFE2C3;
     background: rgb(240, 240, 240);
     font-weight: 600;
     font-size: 20px;
+    position: relative;
     &::-webkit-scrollbar {
         height: 5px;
     }
@@ -573,7 +512,7 @@ $secondary-color: #FFE2C3;
     .btn{
         border: none;
         align-items: center;
-        width: 20%;     
+        width: 30%;     
         border-radius: 10px;
         box-shadow: 0 1px 2px rgba(128, 128, 128, 0.4);
         background: #c5c5c5;
@@ -585,9 +524,6 @@ $secondary-color: #FFE2C3;
     }
     .placeOrder{
         width: 60%;
-        background: $main-color;
-    }
-    .btn-primary{
         background: $main-color;
     }
 }

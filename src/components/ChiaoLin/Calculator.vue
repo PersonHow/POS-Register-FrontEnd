@@ -6,14 +6,18 @@ export default {
         const Billstore = useBillstore();
         return {
             Billstore,
-            ...mapState(Billstore, ['order_amount', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
-                'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount']),
-            ...mapActions(Billstore, ['addToDisplay', 'clearDisplay', 'backspace', 'getOderId', 'getInvoiceNum']),
+            ...mapState(Billstore, ['orderAmountfromPage', 'discount', 'serviceFee', 'entertain', 'allowance', 'inputEvent', 'newInputEvent', 'showInvoiceComponent', 'showNav',
+                'focusedInput', 'totalAmount', 'changeAmount', 'realChargeAmount', 'notyetChargeAmount', 'discountAmount', 'serviceAmount', 'OrderDB']),
+            ...mapActions(Billstore, ['addToDisplay', 'clearDisplay', 'backspace', 'getOderId', 'getInvoiceNum', 'tothousendShowValue',]),
         };
     },
     methods: {
         ...mapActions(useBillstore, ['saveBillfromP']),
         saveBill() {
+            if (this.Billstore.notyetChargeAmount > 0) {
+                alert('應收總額不可小於實收')
+                return;
+            }
             let pCash = 0, pCard = 0, pOther = 0;
             this.Billstore.inputEvent.forEach(event => {
                 if (event.type === "現金") {
@@ -24,25 +28,9 @@ export default {
                     pOther += event.value;
                 }
             });
-            let paymentWays = this.Billstore.inputEvent.map(otherPayment => otherPayment.type);
-            let pOtherName = paymentWays.splice(2).join(',');
-            // 待連 lastmodified_staff_id: pId
-            this.saveBillfromP("", this.Billstore.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", "", "", pOtherName)
-            this.Billstore.order_amount = 0;
-            this.Billstore.discount = 0;
-            this.Billstore.serviceFee = 0;
-            this.Billstore.entertain = 0;
-            this.Billstore.allowance = 0;
-            this.Billstore.inputEvent.forEach(event => {
-                if (event.type === "現金") {
-                    event.value = 0;
-                } else if (event.type === "信用卡") {
-                    event.value = 0;
-                } else {
-                    event.value = 0;
-                }
-            })
-        },
+            this.saveBillfromP("", this.Billstore.order_id, pCash, pCard, pOther, this.Billstore.invoiceNum, "", 2, "")
+            console.log(this.saveBillfromP);
+        }
     }
 }
 </script>
@@ -67,12 +55,9 @@ export default {
             <div class="otherButArea">
                 <div class="mathBut butbackspace"><input type="button" value="＜＜" @click="Billstore.backspace()"
                         id="butbackspace"></div>
-                <div class="mathBut butRevise"><input type="button" value="更正" @click="Billstore.clearDisplay()"
+                <div class="mathBut butRevise"><input type="button" value="更  正" @click="Billstore.clearDisplay()"
                         id="butRevise"></div>
                 <div class="mathBut butComfirm"><input type="button" value="確定" @click="saveBill()" id="butComfirm">
-                    <!-- <div class="mathBut butComfirm"><input type="button" value="Test" @click="getOtherInputNameToMemo()"
-                            id="butComfirm">
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -82,46 +67,53 @@ export default {
 <style scoped lang="scss">
 .calculatorArea {
     width: 100%;
-    padding: 0 1dvw;
+    margin: 0 1dvw;
 
     .calculator {
         width: 100%;
         display: flex;
         padding-top: 3dvh;
+        justify-content: space-between;
         margin-left: 0.5dvw;
 
         .mathbutArea {
-            width: 80%;
+            width: 100%;
             display: flex;
             flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .mathBut {
-            width: 28%;
+            width: 100%;
             height: 10dvh;
-            margin-right: 2dvw;
 
             input {
-                width: 100%;
+                width: 83%;
                 height: 8dvh;
                 border: 1px solid rgb(213, 212, 212);
                 background: linear-gradient(white 80%, #00c1ca 20%);
                 color: black;
                 font-size: 3dvh;
+                border-radius: 5px;
+
+                &.active {
+                    background: linear-gradient(rgb(152, 152, 152) 70%, #009688 30%);
+                }
             }
         }
 
         .otherButArea {
-            width: 20%;
-            margin-right: 1dvw;
+            width: 30%;
 
             .mathBut {
-                width: 100%;
+                width: 83%;
 
                 input {
                     width: 100%;
                     font-family: "Chocolate Classical Sans", sans-serif;
                     font-size: 2dvh;
+                    border-radius: 5px;
                 }
 
                 #butbackspace,
@@ -136,9 +128,78 @@ export default {
                     height: 18dvh;
                     background: linear-gradient(90deg, #00c1ca, #01e1c5);
                     color: white;
+                    border-radius: 5px;
                 }
             }
         }
+    }
+
+    .showBack {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        font-weight: 500;
+    }
+
+    .showBox {
+        width: 40%;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        font-size: 3dvh;
+        line-height: 5dvh;
+
+        .titleArea {
+            width: 100%;
+            height: 5dvh;
+            color: black;
+            margin: 0 1dvw;
+            padding-left: 1dvw;
+        }
+
+        .butArea {
+            display: flex;
+            line-height: 8dvh;
+            justify-content: space-between;
+
+            button {
+                width: 9dvw;
+                height: 6dvh;
+                margin: 0 1dvw;
+                margin-top: 1dvh;
+                background: #00c1ca;
+                color: white;
+                font-family: "Chocolate Classical Sans", sans-serif;
+                font-size: 2dvh;
+                border-radius: 5px;
+                border: none;
+                line-height: 6dvh;
+            }
+        }
+
+        .showInfoArea {
+            width: 100%;
+            margin: 1dvh 0;
+            text-align: center;
+
+            p {
+                text-align: center;
+            }
+
+            span {
+                font-size: 4dvh;
+            }
+        }
+
     }
 }
 </style>
