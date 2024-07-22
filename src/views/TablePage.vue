@@ -316,6 +316,7 @@ export default {
   display: flex;
   justify-content: right;
   align-items: center;
+  justify-content: center;
 
   /* 最底下的漢堡圖區塊 */
   #app {
@@ -323,12 +324,12 @@ export default {
   }
 
   .menuBar {
-    position: fixed;
-    bottom: 1%;
+    bottom: 2%;
     right: 1%;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: fixed;
     height: 4dvw;
     width: 4dvw;
     border-radius: 50%;
@@ -345,7 +346,6 @@ export default {
     position: absolute;
     height: 42px;
     width: 1605%;
-    top: 0px;
     right: 68px;
     display: flex;
     justify-content: space-between;
