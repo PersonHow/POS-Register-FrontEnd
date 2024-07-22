@@ -170,6 +170,7 @@ export default {
             <p>人數<span class="required">(必填)</span></p>
             <input
               v-model="formData.number"
+              min="1"
               type="number"
               name="number"
               id="number"

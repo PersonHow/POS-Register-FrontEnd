@@ -30,17 +30,17 @@ export default {
         if (res.isConfirmed) {
           for (let i = 0; i < this.tables.length; i++) {
             let table_json = {};
-            table_json["max_guest_num"] = this.tables[i]["max_guest_num"];
+            table_json["max_guest_num"] = 4;
             table_json["staff_id"] = this.tables[i]["staff_id"];
             table_json["table_id"] = this.tables[i]["table_id"];
             table_json["lastmodified_staff_id"] = this.tables[i]["lastmodified_staff_id"]
-            table_json["booking_num"] = this.tables[i]["booking_num"];
-            table_json["has_priorityseat"] = this.tables[i]["has_priorityseat"];
+            table_json["booking_num"] = 0;
+            table_json["has_priorityseat"] = false;
             table_json["table_status"] = 0;
             table_json["table_area"] = this.tables[i]["table_area"];
-            table_json["guest_name"] = this.tables[i]["guest_name"];
-            table_json["guest_phone"] = this.tables[i]["guest_phone"];
-            table_json["guest_num"] = this.tables[i]["guest_num"];
+            table_json["guest_name"] = "";
+            table_json["guest_phone"] = "";
+            table_json["guest_num"] = 1;
             try {
               const response = await fetch(`http://localhost:8080/table`, {
                 method: "PUT",
@@ -208,13 +208,13 @@ export default {
             <transition name="slide">
               <div v-if="menuOpen" class="menu-content">
                 <button class="menu-item" href="#">開錢櫃</button>
-                <button class="menu-item" @click="TakeBillHandler">結帳</button>
+                <!-- <button class="menu-item" @click="TakeBillHandler">結帳</button> -->
                 <Footer_bar_ChangeTable :selected_table="selected_table"
                   :selected_target_table="selected_target_table" />
                 <Footer_bar_Checkout :selected_table="selected_table" :selected_target_table="selected_target_table" />
                 <button class="menu-item" @click="TakeTableHandler">帶位</button>
                 <button class="menu-item" @click="cleanTablesHander">清除狀態</button>
-                <Footer_bar_Order :selected_table="selected_table" :selected_target_table="selected_target_table" />
+                <!-- <Footer_bar_Order :selected_table="selected_table" :selected_target_table="selected_target_table" /> -->
               </div>
             </transition>
           </div>
@@ -314,9 +314,8 @@ export default {
   height: 10vh;
   /* border: 1px solid black; */
   display: flex;
-  justify-content: right;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 
   /* 最底下的漢堡圖區塊 */
   #app {
@@ -325,13 +324,14 @@ export default {
 
   .menuBar {
     bottom: 2%;
-    right: 1%;
+    right: 7%;
     display: flex;
     justify-content: center;
     align-items: center;
     position: fixed;
     height: 4dvw;
     width: 4dvw;
+    padding: 2px;
     border-radius: 50%;
     background:  rgb(123, 144, 218);
   }

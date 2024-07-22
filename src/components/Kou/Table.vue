@@ -354,6 +354,9 @@
           <a class="boxBtn" @click="postTableHandler">
             提交
           </a>
+          <a class="boxBtn" @click="cleanTableHandler">
+            清除
+          </a>
           <a class="boxBtn" @click="deleteTableHandler">
             刪除
           </a>
@@ -420,6 +423,43 @@ export default {
     };
   },
   methods: {
+    async cleanTableHandler(){
+            let table_json = {};
+            table_json["max_guest_num"] = 4;
+            table_json["staff_id"] = this.input_table["staff_id"];
+            table_json["table_id"] = this.input_table["table_id"];
+            table_json["lastmodified_staff_id"] = this.input_table["lastmodified_staff_id"]
+            table_json["booking_num"] = 0;
+            table_json["has_priorityseat"] = false;
+            table_json["table_status"] = 0;
+            table_json["table_area"] = this.input_table["table_area"];
+            table_json["guest_name"] = "";
+            table_json["guest_phone"] = "";
+            table_json["guest_num"] = 1;
+            try {
+              const response = await fetch(`http://localhost:8080/table`, {
+                method: "PUT",
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(table_json)
+              });
+              if (response.status != 200) {
+                throw new Error("Network response was not ok");
+              }
+            } catch (error) {
+              console.error("Error fetching table data:", error);
+            }
+            Swal.fire({
+            title: "清除桌位狀態成功！", showConfirmButton: true,
+            confirmButtonColor: "#748cdd", confirmButtonText: "確定",
+            icon: 'success', iconColor: "#748cdd"
+          }).then((res) => {
+            if (res.isConfirmed) {
+              window.location.reload();
+            }
+          })
+    },
     cleanselectedTable() {
       this.select_table = { table_id: "#" };
       this.input_table = { table_id: "#" };
@@ -569,9 +609,6 @@ export default {
       add_table.table_area = "一般區";
       add_table.table_id = 0;
       this.tables_list1.push(add_table);
-    },
-    openEditTable() {
-
     },
     toggleEdit(e) {
       this.isEditing = !this.isEditing;
