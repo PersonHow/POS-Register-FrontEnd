@@ -268,7 +268,7 @@ export default {
         box-shadow: 0 1px 2px rgba(128, 128, 128, 0.4);
     }
     .primary{
-        background: linear-gradient(90deg, #00c1ca, #01e1c5);
+        background: #7b90da;
         color: #fff;
     }
 }
@@ -281,13 +281,13 @@ export default {
 }
 
 .warn{
-    background: #ffb8a99a;
+    background: #DFEBFA;
     border-radius: 10px;
     span{
         color: #f96c45;
     }
     .other{
-        color: #ffffff;
+        color: #9AB3BF;
     }
 }
 </style>

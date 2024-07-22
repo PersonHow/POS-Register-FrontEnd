@@ -75,12 +75,11 @@ export default{
                     icon:"warning",
                     showDenyButton: true,
                     confirmButtonText: "儲存",
-                    confirmButtonColor:'#00c1ca',
+                    confirmButtonColor:'#748cdd',
                     denyButtonText: "不儲存"
                 }).then((result) => {
                     if (result.isConfirmed) {
                         MenuStore.saveCustoms()
-                        Swal.fire("儲存完畢!", "", "success");
                     }
                 });
             }
@@ -115,15 +114,18 @@ export default{
     
     <!-- 搜尋項目 -->
     <small class="">請搜尋或點選欲編輯的項目</small>
-    <div class="searchArea d-flex mb-4">
+    <div class="searchArea d-flex mb-4 justify-content-between">
         <input class="form-control short" list="datalistOptions" id="DataList" placeholder="輸入客製項目...">
         <button  class="searchBtn"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /></button>
-        
+        <div>
+        <button @click="MenuStore.saveCustoms()" type="button" class="btn btn-main me-2">儲存所有變更</button>
+        <small v-show="notice">*尚有變更未儲存</small>
+    </div>
     </div>
     <datalist id="datalistOptions">
         <option v-for="option in custom_options" :key="option.custom_id" :value="option.option"></option>
     </datalist>
-
+    
 
     <div class="d-flex justify-content-between">
         <!-- 選項選單 -->
@@ -177,14 +179,11 @@ export default{
             </div>
         </transition>
     </div>
-    <div class="mt-2">
-        <button @click="MenuStore.saveCustoms()" type="button" class="btn btn-main me-2">儲存所有變更</button>
-        <small v-show="notice">*尚有變更未儲存</small>
-    </div>
+    
 </template>
 
 <style lang="scss" scoped>
-$main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
+$main-color: #7b90da;
 
 .btn-main{
     background: $main-color;
@@ -199,11 +198,12 @@ $main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
     padding: 2%;
     border: 1px solid gray;
     border-radius: 5px;
+    background: #fff;
     &::-webkit-scrollbar {
         width: 5px;
     }
     &::-webkit-scrollbar-thumb {
-        background: #c4c4c4;
+        background: #a8afc9;
         border-radius: 10px;
     }
 }
@@ -266,7 +266,7 @@ $main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
     top: -10px;
     scale: .65;
     padding: 15px 20px;
-    background: #00c1ca;
+    background: #a8afc9;
     color: #fff;
     border-radius: 50%;
 }

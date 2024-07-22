@@ -26,32 +26,6 @@ export default {
         this.MenuStore.getCustomOption()
         this.selectedType = "all" //預設顯示為全部餐點
     },
-
-    mounted() {
-    // 建立一個新的 ResizeObserver 實例
-    this.resizeObserver = new ResizeObserver(entries => {
-        // 處理尺寸變化
-        for (let entry of entries) {
-            let wrapWidth = entry.contentRect.width;
-            if (wrapWidth > 550) {
-                this.$refs.wrap.style.gridTemplateColumns = 'repeat(2, 1fr)';
-            } else {
-                this.$refs.wrap.style.gridTemplateColumns = 'auto';
-            }
-        }
-    });
-
-    // 開始監聽元素的尺寸變化
-    this.resizeObserver.observe(this.$refs.wrap);
-    },
-    beforeDestroy() {
-        // 停止監聽元素的尺寸變化
-        this.resizeObserver.unobserve(this.$refs.wrap);
-        this.resizeObserver = null;
-    },
-    methods:{
-
-    },
     components:{
         AddMenu,UpdateCustom
     },
@@ -60,10 +34,10 @@ export default {
 
 <template>
     <div class="body">
-        <div v-show="!MenuStore.toggleEdit" class="navi">
+        <div class="navi">
             <h2>
-                <button @click="Billstore.closeTopbar()" class="icon"><i class="fa-solid fa-house-chimney"></i></button>
-                菜單管理
+                <button @click="Billstore.closeTopbar()" class="icon mb-3"><i class="fa-solid fa-house-chimney"></i></button>
+                <h1>菜單管理</h1>
             </h2>
             <div v-for="page in pages" :key="page" class="changePage" :class="{'currentPage' : selectedPage === page}">
                 <input type="radio" v-model="selectedPage" :value="page" :id="page" >
@@ -73,15 +47,15 @@ export default {
         <div class="rightView">
             <div v-show="selectedPage === pages[0]" class="c-container">
                 <!-- menu菜單頁 -->
-                <div class="type">
-                    <div class="colume">
+                <div class="typeSelect">
+                    <div class="column">
                         <p>餐點種類</p>
                         <select name="" id="type" v-model="selectedType">
                             <option value="all">全部</option>
                             <option v-for="(type,i) in MenuStore.types" :key="i" :value="type">{{type}}</option>
                         </select>
                     </div>
-                    <div class="colume">
+                    <div class="column">
                         <p>工作台種類</p>
                         <select name="" id="workingArea" v-model="selectedType">
                             <option value="all">全部</option>
@@ -89,10 +63,10 @@ export default {
                         </select>
                     </div>
                 </div>
-                <div class="c-row wrap" ref="wrap">
-                    <div v-for="meal in MenuStore.getItemsByType(selectedType)"  :key="meal" class="coluem menu">
+                <div class="menuArea">
+                    <div v-for="meal in MenuStore.getItemsByType(selectedType)"  :key="meal" class="menu">
                         <img :src="meal.img" alt="">
-                        <div class="meal">
+                        <div class="col text">
                             <p>{{meal.meal_id+". "+meal.name}}</p>
                             NT. {{meal.price}}<br>
                             {{meal.description}}<br>
@@ -101,21 +75,11 @@ export default {
                     </div>
                 </div>
             </div>
-            <div v-if="MenuStore.toggleEdit" class="edit p-5">
-                <div v-if="MenuStore.meal.meal_id" class="col mb-3">
-                    <button @click="MenuStore.cancelEditing()" type="button" class="btn-close" aria-label="Close"></button>
-                </div>
-                <AddMenu>
-                    <div class="d-flex justify-content-between">
-                        <button @click="MenuStore.deleteMeal(MenuStore.meal.meal_id)" class="btn btn-lg btn-danger" >刪除餐點</button>
-                        <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認修改</button>
-                    </div>
-                </AddMenu>
-            </div>
+            
+            <div v-show="MenuStore.toggleEdit" class="bg"></div>
             <div v-if="selectedPage === pages[1]" class="c-container">
                 <AddMenu>
                     <div class="d-flex justify-content-end">
-                        <button class="btn btn-lg mx-3">儲存草稿</button>
                         <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認新增</button>
                     </div>
                 </AddMenu>
@@ -124,17 +88,32 @@ export default {
                 <UpdateCustom />
             </div>
         </div>
+        <transition name="jump">
+                <div v-if="MenuStore.toggleEdit" class="edit p-5">
+                    <div v-if="MenuStore.meal.meal_id" class="col mb-3">
+                        <button @click="MenuStore.cancelEditing()" type="button" class="btn-close" aria-label="Close"></button>
+                    </div>
+                    <AddMenu>
+                        <div class="d-flex justify-content-between">
+                            <button @click="MenuStore.setNewMenu(MenuStore.meal)" class="btn btn-lg btn-main">確認修改</button>
+                            <button @click="MenuStore.deleteMeal(MenuStore.meal.meal_id)" class="btn btn-lg btn-danger" >刪除餐點</button>
+                        </div>
+                    </AddMenu>
+                </div>
+            </transition>
     </div>
     
 </template>
 
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
-// $main-color: linear-gradient(120deg,#f9b445 0%, #ff9b69 80%);
-$main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
-$secondary-color: #FFE2C3;
+$main-color: #7b90da;
+// $main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
+$secondary-color: #a8afc9;
 .body{
     display: flex;
+    justify-content: space-between;
+    background: #f1f3fb;
 }
 p{
     margin-bottom: 10px;
@@ -160,29 +139,29 @@ p{
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: linear-gradient(0deg, #01e1c5, #00c1ca);
+    background: linear-gradient(360deg, #a8afc9 0%, #7b90da 80%);
     color: #fff;
     font-size: large;
     
     h2{
-        margin: 50px 0;
+        margin: 20px 0;
     }
     input{
         display: none;
     }
     .changePage{
         align-content: center;
-        height: 150px;
+        height: 80px;
     }
     .currentPage{
         margin-left: 50%;
         width: 120%;
-        background: #fff;
+        background: #f1f3fb;
         color: black;
         border-radius: 25em;
         position: relative;
         label{
-            padding: 10%;
+            padding: 5% 10%;
         }
         &::before {
         content: "";
@@ -192,133 +171,130 @@ p{
         height: 25px;
         width: 50px;
         border-top-right-radius: 25px;
-        box-shadow: 25px 0  0 0 #fff;
-        z-index: 5;
+        box-shadow: 25px 0  0 0 #f1f3fb;
         }
     }
 }
-.edit{
-    width: 100%;
-    height: 100vh;
-    max-height: 100vh;
-    overflow-y: auto;
-    background: #efefef;
+.rightView{
+    position: relative;
 }
+
 .c-container{
     width: 80dvw;
     height: 100dvh;
     overflow-y: auto;
     font-size: 18px;
-    padding: 2% 5%;
+    padding: 2% 3%;
     font-family: 'Chocolate Classical Sans', sans-serif;
     position: relative;
 }
-.c-row{
-    max-height: 85%;
-    overflow-y: auto;
-    padding-right: 25px;
-    &::-webkit-scrollbar {
-        width: 5px;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #c4c4c4;
-        border-radius: 5px;
-    }
-}
-.colume{
-    width: 100%;
-    margin:2% 0;
-    // line-height: 1.5;
-}
-
-.type{
+.typeSelect{
     width: 60%;
     height: 15%;
-    // padding: 0 5%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
     select{
         width: 95%;
         height: 50px;
         border-radius: 10px;
         font-size: 20px;
     }
-}
-.active{
-    background: $main-color;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 10px;
-}
-.createMenu{
-    position: absolute;
-    top: 10%;
-    right: 5%;
-    border-radius: 10px;
-    width: 15vw;
-    border: none; 
-    box-shadow:0 1px 2px rgba(128, 128, 128, 0.4);
-    background: $main-color;
-    color: #fff;
-    font-size: 24px;
-    &:active{
-        opacity: 0.85;
-    }
-}
-.menu{
+    .column{
     width: 100%;
-    height: 15vh;
-    box-shadow: 1px 0 5px rgba(128, 128, 128, 0.4);
-    cursor: pointer;
+    margin:2% 0;
+}
+}
+.menuArea{
+    max-height: 80%;
+    overflow-y: auto;
     display: flex;
-    
-    img{
-        width: 35%;
-        height: 100%;
-        object-fit: cover;
+    flex-wrap: wrap;
+    gap: 30px;
+    &::-webkit-scrollbar {
+        width: 5px;
     }
-    .meal{
-        width: 50%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        padding: 10px;
-        p{
+    &::-webkit-scrollbar-thumb {
+        background: #c4c4c4;
+        border-radius: 10px;
+    }
+    .menu{
+        width: 45%;
+        box-shadow:3px 3px 6px rgba(150, 150, 150, 0.7);
+        height: 120px;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 10px;
+        background: #fff;
+        img{
+            height: 120px;
+            width: 120px;
+            object-fit: cover;
+            border-radius: 10px 0 0 10px;
+        }
+        .text{
+            flex-grow: 1;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
-            font-weight: 600;
+            padding: 10px;
+            p{
+                font-weight: 600;
+            }
+        }
+        .c-btn{
+            cursor: pointer;
+            width: 15%;
+            border: none; 
+
+            background: $main-color;
+            color: #fff;
+            font-size: 24px;
+            border-radius: 0 10px 10px 0;
+            &:active{
+                opacity: 0.85;
+            }
         }
     }
-    .c-btn{
-        width: 15%;
-        border: none; 
-        box-shadow:0 1px 2px rgba(128, 128, 128, 0.4);
-        background: $main-color;
-        color: #fff;
-        font-size: 24px;
-        &:active{
-            opacity: 0.85;
-        }
-    }
 }
-
-.wrap{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 25px;
-    position: relative;
-}
-
-.price{
-    font-size: 30px;
-}
-.disable{
-    color: gray;
+.edit{
+    position: absolute;
+    top: 5%;
+    left: 20%;
+    width: 60%;
+    height: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #efefef;
+    z-index: 5;
+    border-radius: 10px;
 }
 
 
 
+.jump-enter-active,
+.jump-leave-active {
+  transition: all .3s ;
+  transform: scale(1);
+}
 
+.jump-enter-from,
+.jump-leave-to {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.jump-enter-to,
+.jump-leave-from {
+  opacity: 1;
+
+}
+
+.bg{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200vw;
+    height: 200vh;
+    backdrop-filter: brightness(70%);
+}
 </style>

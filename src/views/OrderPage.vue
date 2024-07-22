@@ -263,7 +263,7 @@ export default {
                         <div class="item-id">{{i+1}}</div>
                         <div class="item">
                             <strong>{{item.meal_name}}</strong><br>
-                        <span v-for="(option,i) in item.custom_option" :key="option">{{option.split('+')[0]}} <span v-if="i < item.custom_option.length - 1">, </span></span><br>
+                        <span v-for="(option,i) in item.custom_option" :key="option" class="note">{{option.split('+')[0]}} <span v-if="i < item.custom_option.length - 1">, </span></span><br>
                         <span>{{item.quantities}} x {{item.price}}</span>
                         </div>
                         <div @click="editing(i)">
@@ -421,15 +421,16 @@ export default {
 </template>
 
 <style scoped lang="scss">
-$main-color: linear-gradient(90deg, #00c1ca, #01e1c5);
-$secondary-color: #FFE2C3;
+$main-color: #7b90da;
+$secondary-color: #a8afc9;
 .bigArea{
     width: 100dvw;
     height: 100dvh;
     display: flex;
     justify-content: end;
-    font-size: 18px;
+    font-size: 1.5rem;
     font-family: 'Chocolate Classical Sans', sans-serif;
+
     // border:1px solid #F9BF45;
 }
 .container{
@@ -485,6 +486,7 @@ $secondary-color: #FFE2C3;
 .dropdown-item{
     padding:2.5vh 3vw;
     text-align: center;
+    font-size: 1.2em;
 }
 .editMeal{
     width: 100%;
@@ -502,6 +504,9 @@ $secondary-color: #FFE2C3;
     border-bottom: 1px solid rgba(128, 128, 128, 0.4);
     .item{
         width: 55%;
+        .note{
+            color: #888;
+        }
     }
 }
 .item-id{
@@ -560,7 +565,7 @@ $secondary-color: #FFE2C3;
     white-space: nowrap;
     display: flex;
     align-items: center;
-    background: rgb(240, 240, 240);
+    background: rgba(116 , 140, 211,0.1);
     font-weight: 600;
     font-size: 20px;
     position: relative;
@@ -582,12 +587,11 @@ $secondary-color: #FFE2C3;
     border-radius: 10px;
 }
 .meal{
-    width: 10vw;
-    height: 15vh;
+    width: 150px;
+    height: 180px;
     display: inline-block;
     box-shadow: 1px 0 5px rgba(128, 128, 128, 0.4);
-    border-top: 10px solid $secondary-color;
-    border-image-slice: 1;
+    border-top: 20px solid $secondary-color;
     cursor: pointer;
     position: relative;
     p{
@@ -597,8 +601,8 @@ $secondary-color: #FFE2C3;
         right: 5px;
     }
     img{
-        width: 100%;
-        height: 60%;
+        width: 150px;
+        height: 120px;
         object-fit: cover;;
         padding: 0;
     }
@@ -614,7 +618,7 @@ $secondary-color: #FFE2C3;
 .wrap{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 10px;
     margin: 5% 0;
 }
 .price{
@@ -626,12 +630,12 @@ $secondary-color: #FFE2C3;
 .orderQty{
     clip-path: circle(30%);
     position: absolute;
-    top: -30px;
+    top: -40px;
     right: -10%;
     background: #f96c45;
     color: white;
     border-radius: 50%;
-    padding: 10px 15px;
+    padding: 15px;
     font-size: 24px;
     
 }
@@ -673,7 +677,7 @@ $secondary-color: #FFE2C3;
 }
 .bottom{
     width: 100%;
-    height: 60px;
+    height: 50px;
     display: flex;
     justify-content: space-evenly;
     position: absolute;

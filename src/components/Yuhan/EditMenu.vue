@@ -62,21 +62,38 @@ export default {
 </script>
 
 <template>
+
     <div class="container">
-        {{ customsVal }}
         <div class="col h3">{{MenuStore.meal.meal_id? "修改餐點":"新增餐點"}}</div>
         <figure class="figure preview">
-            <img :src="MenuStore.meal.img? MenuStore.meal.img : 'https://shop.travel.org.tw/proudimage/0.jpg'" class="figure-img img-fluid rounded" alt="預覽">
+            <img :src="MenuStore.meal.img? MenuStore.meal.img : 'https://shop.travel.org.tw/proudimage/0.jpg'" class="figure-img img-fluid" alt="預覽">
             <figcaption class="figure-caption">餐點圖片</figcaption>
         </figure>
         <div class="form-floating mb-4">
             <input type="text" v-model="MenuStore.meal.img" id="img" class="form-control" placeholder="請貼上圖片網址">
             <label for="img">貼上圖片網址(格式: png, jpg, jpeg)</label>
         </div>
-        <div class="form-floating mb-4">
-            <input v-model="MenuStore.meal.name" type="text" id="name" class="form-control" placeholder="輸入餐點名稱">
-            <label for="name">輸入餐點名稱</label>
+        <div class="row">
+            <div class="form-floating mb-4 col-5">
+                <input v-model="MenuStore.meal.name" type="text" id="name" class="form-control" placeholder="輸入餐點名稱">
+                <label for="name" class="ms-2">輸入餐點名稱</label>
+            </div>
+            <div class="type-select mb-3 col-auto">
+                <label class="typo__label">選擇餐點種類</label>
+                <Multiselect v-model="typeVal" track-by="name" label="name"
+                    placeholder="選一個種類或新增種類" :options="types" :taggable="true" @tag="addTypeOption" :allow-empty="false">
+                    <template v-slot:singleLabel="{ option }"><strong>{{ option.name }}</strong></template>
+                </multiselect>
+            </div>
+            <div class="type-select mb-3 col-auto">
+                <label class="typo__label">選擇工作台</label>
+                <Multiselect v-model="areaVal"  track-by="name" label="name"
+                    placeholder="選擇餐點製作區域" :options="areas" :allow-empty="false">
+                    <template v-slot:singleLabel="{ option }"><strong>{{ option.name }}</strong></template>
+                </multiselect>
+            </div>
         </div>
+        
         <div class="form-floating mb-4">
             <textarea v-model="MenuStore.meal.description" id="description" class="form-control" placeholder="輸入餐點描述"></textarea>
             <label for="description">輸入餐點描述</label>
@@ -85,20 +102,7 @@ export default {
             <input v-model="MenuStore.meal.price" type="number" class="form-control" placeholder="設定餐點價格" min="0" id="name">
         <label for="name">設定餐點價格</label>
         </div>
-        <div class="type-select mb-3">
-            <label class="typo__label">選擇餐點種類</label>
-            <Multiselect v-model="typeVal" track-by="name" label="name"
-                placeholder="選一個種類或新增種類" :options="types" :taggable="true" @tag="addTypeOption" :allow-empty="false">
-                <template v-slot:singleLabel="{ option }"><strong>{{ option.name }}</strong></template>
-            </multiselect>
-        </div>
-        <div class="type-select mb-3">
-            <label class="typo__label">選擇工作台</label>
-            <Multiselect v-model="areaVal"  track-by="name" label="name"
-                placeholder="選擇餐點製作區域" :options="areas" :allow-empty="false">
-                <template v-slot:singleLabel="{ option }"><strong>{{ option.name }}</strong></template>
-            </multiselect>
-        </div>
+        
         <div v-show="customsVal" class="mb-3">
             <label class="typo__label">已關聯的客製化項目</label>
             <multiselect v-model="customsVal" track-by="name" 
@@ -111,7 +115,13 @@ export default {
 
 <style scoped lang="scss">
 .preview{
-    width: 25%;
+    width: 100%;
+    img{
+        height: 200px;
+        width: 200px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
 }
 // .btn-main{
 //     background: linear-gradient(90deg, #00c1ca, #01e1c5);

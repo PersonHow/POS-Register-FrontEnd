@@ -96,7 +96,7 @@ export const useMenuStore = defineStore("menuStore",{
                 title: '確定要刪除?',
                 text: '此動作無法復原',
                 icon: 'warning',
-                confirmButtonColor: '#00c1ca',
+                confirmButtonColor: '#748cdd',
                 confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -132,7 +132,7 @@ export const useMenuStore = defineStore("menuStore",{
                     Swal.fire({
                         title: '新增成功',
                         icon: 'success',
-                        confirmButtonColor: '#00c1ca',
+                        confirmButtonColor: '#748cdd',
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -155,7 +155,7 @@ export const useMenuStore = defineStore("menuStore",{
                     Swal.fire({
                         title: '修改成功',
                         icon: 'success',
-                        confirmButtonColor: '#00c1ca',
+                        confirmButtonColor: '#748cdd',
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -189,7 +189,7 @@ export const useMenuStore = defineStore("menuStore",{
                 text: '此動作無法復原',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#00c1ca',
+                confirmButtonColor: '#748cdd',
                 confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -203,7 +203,7 @@ export const useMenuStore = defineStore("menuStore",{
                             title: '已刪除',
                             icon: 'success',
                             showCancelButton: true,
-                            confirmButtonColor: '#00c1ca',
+                            confirmButtonColor: '#748cdd',
                             cancelButtonColor: '#d33',
                             confirmButtonText: 'OK'
                         }).then((result) => {
@@ -292,11 +292,11 @@ export const useMenuStore = defineStore("menuStore",{
             }
 
             //兩個非同步方法執行完畢後跳成功提醒
-            Promise.all([updateOld, addNew, deleteCustom]).then(() => {
+            Promise.all([updateOld, addNew]).then(() => {
                 Swal.fire({
                     title: '修改成功',
                     icon: 'success',
-                    confirmButtonColor: '#00c1ca',
+                    confirmButtonColor: '#748cdd',
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {

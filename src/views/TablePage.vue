@@ -231,7 +231,7 @@ export default {
 </template>
 <style lang="scss" scoped>
 /* body = 包住全部內容的最大div */
-:active {
+:active{
   background-color: unset;
   color: unset;
   border: unset;
@@ -241,8 +241,6 @@ export default {
   width: 100%;
   height: 90vh;
   display: flex;
-  overflow-y: scroll;
-  overflow-x: hidden;
   flex-direction: column;
   justify-content: center;
   flex-wrap: wrap;
@@ -277,9 +275,9 @@ export default {
 
 /* 中間的桌子區塊 */
 .second {
-  width: 100%;
+  width: 95%;
   height: 80%;
-
+  
   // border: 1px solid black;
   // padding-top: 1%;
   .square {
@@ -291,7 +289,7 @@ export default {
     justify-content: center;
     align-items: center;
     margin: 10px;
-
+    
   }
 
   .container {
