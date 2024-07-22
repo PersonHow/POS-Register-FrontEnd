@@ -11,7 +11,9 @@
                             </button>
                         </div>
                         <div class="column-header-middle">
-                            <span class="table_num">{{ column.table_num || '外帶' }}</span>
+                            <span class="table_num">
+                                {{ column.table_num ? `一般桌位:${column.table_num}` : '外帶' }}
+                            </span>
                             <div class="elapsed-time">{{ elapsedTime(column.create_time) }}</div>
                         </div>
                         <div class="column-header-right">
@@ -27,7 +29,12 @@
                                 <div class="square"></div>
                             </button>
                             <span class="quantity">{{ item.quantities }}</span>
-                            <span class="name">{{ item.order_detail }}</span>
+
+                            <div class="orderdetail">
+                                <span class="name">{{ item.order_name }}</span>
+                                <span class="detail">{{ item.order_detail }}</span>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -36,21 +43,49 @@
 
         <div class="footer">
             <button class="footer-button">{{ currentTime }}</button>
-            <button class="footer-button">{{ selectedStation }}</button>
+            <div class="station">{{ selectedStation }}</div>
             <button class="footer-button" @click="toggleMenu">切換站台</button>
             <div class="off-canvas-menu" :class="{ open: isMenuOpen }">
                 <div class="menu-header">
                     <button class="close-button" @click="toggleMenu">×</button>
                 </div>
+
                 <ul class="menu-list">
-                    <li class="menu-item" v-for="station in stations" :key="station" @click="selectStation(station)">{{
-                        station }}</li>
-                    <li class="menu-item" @click="selectAllStations">所有廚台</li>
+                    <li class="menu-item" :class="{ 'selected': selectedStation === '所有廚台' }"
+                        @click="selectAllStations">
+                        <img src="../assets/chef.png" alt="所有廚台" class="menu-icon"> 所有廚台
+                    </li>
+                    <li class="menu-item" :class="{ 'selected': selectedStation === '煎台' }"
+                        @click="selectStation('煎台')">
+                        <img src="../assets/frying-pan.png" alt="煎台" class="menu-icon"> 煎 台
+                    </li>
+                    <li class="menu-item" :class="{ 'selected': selectedStation === '油炸台' }"
+                        @click="selectStation('油炸台')">
+                        <img src="../assets/deep-fryer.png" alt="油炸台" class="menu-icon"> 油炸台
+                    </li>
+                    <li class="menu-item" :class="{ 'selected': selectedStation === '煮制台' }"
+                        @click="selectStation('煮制台')">
+                        <img src="../assets/cooking.png" alt="煮制台" class="menu-icon"> 煮制台
+                    </li>
+                    <li class="menu-item" :class="{ 'selected': selectedStation === '飲料台' }"
+                        @click="selectStation('飲料台')">
+                        <img src="../assets/poinsettia.png" alt="飲料台" class="menu-icon"> 飲料台
+                    </li>
+                    <li class="menu-item" :class="{ 'selected': selectedStation === '烤爐台' }"
+                        @click="selectStation('烤爐台')">
+                        <img src="../assets/stone-oven.png" alt="烤爐台" class="menu-icon"> 烤爐台
+                    </li>
+                    <li class="menu-item" :class="{ 'selected': selectedStation === '冷盤台' }"
+                        @click="selectStation('冷盤台')">
+                        <img src="../assets/salad.png" alt="冷盤台" class="menu-icon"> 冷盤台
+                    </li>
                 </ul>
+
+
             </div>
             <button class="footer-button" @click="showLargeModal">已出料理</button>
             <button class="footer-button" @click="refreshOrders">立即刷新</button>
-            <button class="menu-icon">≡</button>
+            <button @click="Billstore.closeTopbar"><i class="fa-solid fa-house-chimney fa-xl"></i></button>
         </div>
         <div v-if="modalVisible" class="modal-overlay" @click="closeModal">
             <div class="modal-content" @click.stop>
@@ -74,6 +109,7 @@
                                 <th>序號</th>
                                 <th>出菜</th>
                                 <th>餐點名稱</th>
+                                <th>餐點明細</th>
                                 <th>數量</th>
                                 <th>桌號</th>
                                 <th>訂單ID</th>
@@ -84,8 +120,9 @@
                                 <td>{{ index + 1 }}</td>
                                 <td><button class="obutton" @click="restoreOrder(index)">還原</button></td>
                                 <td>{{ order.mealName }}</td>
+                                <td>{{ order.mealDetail }}</td>
                                 <td>{{ order.quantity }}</td>
-                                <td>{{ order.tableNum }}</td>
+                                <td>{{ order.tableNum ? `一般桌位:${order.tableNum}` : '外帶' }}</td>
                                 <td>#{{ order.orderId }}</td>
                             </tr>
                         </tbody>
@@ -98,6 +135,10 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useBillstore } from '@/stores/BillStore';
+import { mapActions } from 'pinia';
+
+const Billstore = useBillstore();
 
 const currentTime = ref('');
 const isCollapsed = ref([]);
@@ -105,13 +146,23 @@ const modalVisible = ref(false);
 const modalOrderId = ref(null);
 const isMenuOpen = ref(false);
 const selectedStation = ref('所有廚台');
-const stations = ["煎台", "油炸台", "煮制台", "飲料台", "烤爐台", "冷盤台"];
 const largeModalVisible = ref(false);
 const orderDetails = ref([]);
 const columns = ref([]);
 const working_area_list = new Set();
 const rows = ref([]);
 
+//...省略其他代码
+
+const backgroundStyle = computed(() => {
+    const imageUrl = stationImages[selectedStation.value];
+    return {
+        backgroundImage: imageUrl ? `url(${imageUrl})` : '',
+        backgroundSize: '400px 400px', // 調整圖片大小，這裡設置為400px x 400px
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+    };
+});
 
 const elapsedTime = (createTime) => {
     const start = new Date(createTime).getTime();
@@ -163,7 +214,8 @@ const decreaseQuantity = (columnId, itemId) => {
             if (item.quantities === 0) {
                 const completedOrder = {
                     orderId: column.id.slice(-4),  // Include order_id here
-                    mealName: item.order_detail,
+                    mealName: item.order_name,
+                    mealDetail: item.order_detail,
                     quantity: 1,
                     tableNum: column.table_num || '外帶'
                 };
@@ -184,9 +236,10 @@ const confirmIsFill = (orderId) => {
     if (column) {
         const orderDetailsToAdd = column.items.map(item => ({
             orderId: item.id.slice(-6, -2), // Extracting the substring from the ID
-            mealName: item.order_detail,
+            mealName: item.order_name,
+            mealDetail: item.order_detail,
             quantity: item.quantities,
-            tableNum: column.table_num || '外帶',
+            tableNum: column.table_num,
         }));
 
         orderDetails.value = [...orderDetails.value, ...orderDetailsToAdd];
@@ -318,9 +371,10 @@ const fetchOrders = async () => {
                         return {
                             id: `${order.order_id}-${index}`,
                             quantities: detail.quantities,
-                            order_detail: `${detail.meal_name}
-                  ${processedCustomOption !== 'null' ? '•' + processedCustomOption.replace(/;/g, ' • ') : ''}
-                  ${(processedCustomOption !== 'null' && detail.other_request !== 'null') ? '•' : ''}
+                            order_name: detail.meal_name,
+                            order_detail: `
+                  ${processedCustomOption !== 'null' ? ' • ' + processedCustomOption.replace(/;/g, ' • ') : ''}
+                  ${(processedCustomOption !== 'null' && detail.other_request !== 'null') ? '  ' : ''}
                   ${detail.other_request !== 'null' ? detail.other_request : ''}`,
                             dining_out: false,
                             working_area: detail.working_area
@@ -445,15 +499,6 @@ const resetDiningOutState = () => {
     });
 };
 
-const backgroundStyle = computed(() => {
-    const imageUrl = stationImages[selectedStation.value];
-    return {
-        backgroundImage: imageUrl ? `url(${imageUrl})` : '',
-        backgroundSize: '400px 400px', // 調整圖片大小，這裡設置為200px x 200px
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-    };
-});
 
 const showLargeModal = () => {
     largeModalVisible.value = true;
@@ -472,6 +517,14 @@ const closeLargeModal = () => {
     flex-direction: column;
     height: 77vh;
     overflow: hidden;
+    position: fixed;
+    top: 83px;
+    width: 100%;
+    box-sizing: content-box;
+
+    * {
+        box-sizing: content-box;
+    }
 }
 
 .order-list {
@@ -483,7 +536,12 @@ const closeLargeModal = () => {
     flex: 1;
     padding: 2%;
     -ms-overflow-style: none;
+
     // scrollbar-width: none;
+    * {
+        box-sizing: content-box;
+        font-family: "Chocolate Classical Sans", sans-serif;
+    }
 
     &::-webkit-scrollbar {
         width: 0;
@@ -496,6 +554,7 @@ const closeLargeModal = () => {
     flex-direction: row;
     flex-wrap: nowrap;
     margin-bottom: 10px;
+    margin-right: 61px;
 }
 
 .order-column {
@@ -528,14 +587,17 @@ const closeLargeModal = () => {
 }
 
 .column-header {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(90deg, #00c1ca, #01e1c5);
+    background: linear-gradient(90deg, #7b90da, #a8afc9);
     color: #fff;
     padding: 20px;
     font-size: 30px;
     border: 1px solid #ccc;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 
     .column-header-left,
     .column-header-middle,
@@ -548,12 +610,12 @@ const closeLargeModal = () => {
         justify-content: flex-start;
 
         .icon-button {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 48px;
             background-color: white;
             border-radius: 50%;
             display: inline-block;
-            color: #00c3c3;
+            color: #7b90da;
             text-align: center;
             line-height: 45px;
             position: relative;
@@ -561,12 +623,12 @@ const closeLargeModal = () => {
             cursor: pointer;
 
             .square {
-                width: 30px;
+                width: 38px;
                 height: 5px;
-                background-color: #00c3c3;
-                position: absolute;
-                left: 10%;
-                top: 43%;
+                background-color: #7b90da;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
         }
     }
@@ -605,11 +667,12 @@ const closeLargeModal = () => {
             font-size: 50px;
         }
 
+
         .dropdown-menu {
             position: absolute;
             top: 100%;
             right: 0;
-            background-color: #00c3c3;
+            background-color: #7b90da;
             color: white;
             border: none;
             cursor: pointer;
@@ -624,33 +687,35 @@ const closeLargeModal = () => {
 .oi {
     overflow-y: auto;
     height: 86%;
+    border: 2px solid #cccccc92;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
     .order-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 20px;
-        border: 1px solid #cccccc92;
+        border-bottom: 1px solid rgba(204, 204, 204, 0.5725490196);
         font-size: 23px;
 
         .icon {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 48px;
             color: #fff;
-            background: linear-gradient(90deg, #00c1ca, #01e1c5);
+            background: linear-gradient(90deg, #7b90da, #a8afc9);
             border-radius: 50%;
+            border: none;
             display: inline-block;
             text-align: center;
-            line-height: 45px;
             position: relative;
 
             .square {
-                width: 30px;
+                width: 38px;
                 height: 5px;
                 background-color: white;
-                position: absolute;
-                left: 10%;
-                top: 43%;
+                text-align: center;
             }
         }
 
@@ -658,8 +723,20 @@ const closeLargeModal = () => {
             width: 10%;
         }
 
-        .name {
+
+        .orderdetail {
             width: 66%;
+            display: flex;
+            flex-direction: column;
+
+            .name {
+                font-size: 25px;
+            }
+
+            .detail {
+                font-size: 19px;
+                color: rgb(173, 173, 173);
+            }
         }
     }
 }
@@ -669,30 +746,41 @@ const closeLargeModal = () => {
     width: 70%;
     display: flex;
     justify-content: space-around;
-    background: linear-gradient(90deg, #00c1ca, #01e1c5);
+    align-items: center;
+    /* 垂直置中 */
+    background: linear-gradient(90deg, #7b90da, #a8afc9);
     color: #fff;
     padding: 10px;
     border-radius: 20px;
     position: fixed;
     bottom: 50px;
     right: 50px;
+}
 
-    .footer-button {
-        background-color: transparent;
-        border: none;
-        color: white;
-        cursor: pointer;
-        font-size: 20px;
-    }
+.station {
+    font-size: 20px;
+}
 
-    .menu-icon {
+.footer-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+
+    font-family: "Chocolate Classical Sans", sans-serif
+}
+
+button {
+    background: none;
+    border: none;
+
+    .fa-xl {
+        font-size: 2em;
         cursor: pointer;
-        color: white;
-        background-color: transparent;
-        border: none;
-        font-size: 30px;
     }
 }
+
 
 .modal-overlay {
     position: fixed;
@@ -704,6 +792,10 @@ const closeLargeModal = () => {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    * {
+        font-family: "Chocolate Classical Sans", sans-serif
+    }
 }
 
 .modal-content {
@@ -723,27 +815,25 @@ const closeLargeModal = () => {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    background-color: #00c1ca;
+    background-color: #7b90da;
     color: white;
 }
-
-
 
 .off-canvas-menu {
     position: fixed;
     top: 0;
     left: 0;
-    width: 15%;
+    width: 20%;
     height: 100vh;
-    background: linear-gradient(90deg, #00c1ca, #01e1c5);
+    background: linear-gradient(90deg, #7b90da, #a8afc9);
     color: white;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    padding: 20px;
+    align-items: left;
+    padding: 0 20px;
     z-index: 10;
 
     &.open {
@@ -762,21 +852,43 @@ const closeLargeModal = () => {
         color: white;
         font-size: 30px;
         cursor: pointer;
+
     }
 
     .menu-list {
         list-style: none;
         padding: 0;
+        margin: 0;
     }
 
-    .menu-item {
-        padding: 15px 0;
+    .menu-item,
+    .selected {
+        padding: 15px 20px;
+        /* 相同的 padding */
         cursor: pointer;
-        font-size: 20px;
-        width: 100%;
-        text-align: center;
+        font-size: 28px;
+        width: calc(100% - 40px);
+        /* 确保宽度一致 */
+        text-align: left;
+        color: black;
+        height: 6dvh;
+        display: flex;
+        align-items: center;
+    }
+
+    .selected {
+        background-color: rgb(206 216 253 / 21%);
+        color: black;
+        border-radius: 13px;
+    }
+
+    .menu-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 40px;
     }
 }
+
 
 .large-modal-overlay {
     position: fixed;
@@ -789,6 +901,10 @@ const closeLargeModal = () => {
     justify-content: center;
     align-items: center;
     z-index: 20;
+
+    * {
+        font-family: "Chocolate Classical Sans", sans-serif
+    }
 
     .large-modal-content {
         background: white;
@@ -804,7 +920,7 @@ const closeLargeModal = () => {
     .mh {
         height: 10%;
         width: 100%;
-        background: linear-gradient(90deg, #00c1ca, #01e1c5);
+        background: linear-gradient(90deg, #7b90da, #a8afc9);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -818,14 +934,17 @@ const closeLargeModal = () => {
     }
 
     .large-modal-content .close-button {
-        position: absolute;
-        top: -3px;
-        right: 5px;
+        // position: absolute;
+        // top: -3px;
+        // right: 5px;
         background: transparent;
         border: none;
         // color: black;
         font-size: 30px;
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .close-button-m {
@@ -835,7 +954,7 @@ const closeLargeModal = () => {
         border-radius: 50%;
         width: 40px;
         height: 40px;
-        color: linear-gradient(90deg, #00c1ca, #01e1c5);
+        color: linear-gradient(90deg, #7b90da, #a8afc9);
         background: #fff;
         display: flex;
         justify-content: center;

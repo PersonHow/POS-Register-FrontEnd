@@ -163,12 +163,12 @@ export default {
       }
     },
     async postCalendarHandler(){
-      if(!this.formData.calendar_date){
-          Swal.fire({title:"活動日期為空，請重新輸入！",showConfirmButton:true,
-                      confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
-                      icon:'error',iconColor:"#00c5c8"})
-                      return;
-      }
+      // if(!this.formData.calendar_date){
+      //     Swal.fire({title:"活動日期為空，請重新輸入！",showConfirmButton:true,
+      //                 confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
+      //                 icon:'error',iconColor:"#00c5c8"})
+      //                 return;
+      // }
       if(!this.formData.isholiday && this.formData.staff_id=="#"){
         Swal.fire({title:"非公休日必須選擇值班員工，請重新輸入！",showConfirmButton:true,
                       confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
@@ -355,7 +355,7 @@ export default {
     <div class="bf-body">
       <div class="bf-body-box">
         <h1>行事曆活動管理</h1>
-        <p>行事曆編號：{{this.formData.calendar_id == "#"? "未選擇":this.formData.calendar_id}}</p>
+        <!-- <p>行事曆編號：{{this.formData.calendar_id == "#"? "未選擇":this.formData.calendar_id}}</p> -->
         <!-- 活動日期輸入欄 -->
         <div class="bf-row">
           <div class="bf-col-12">
@@ -443,8 +443,8 @@ input,
 textarea,
 select {
   width: 100%; /* 元素寬度為父元素寬度的100% */
-  background-color: #f0f0f0; /* 淺灰色背景 */
-  border: 2px solid black; /* 2px 寬度的深藍色邊框 */
+  background-color: rgba(116 , 140, 211,0.3); 
+  border: none;
   outline: none; /* 移除預設的外框 */
   padding: 10px; /* 內間距為10px */
   font-family: "Arial", sans-serif; /* 字體為Arial或sans-serif *//* 上邊距為5px */
@@ -452,13 +452,14 @@ select {
   font-size: 1rem;
   color: black; /* 文字顏色為深藍色 */
   transition: border-color 0.3s ease-in-out; /* 加入邊框顏色變化的過渡效果 */
+  border-radius: 5px
 }
 
 input[type="text"]:hover,
 input[type="number"]:hover,
 input[type="date"]:hover,
 textarea:hover {
-  border-color: #00c5c8; /* 滑鼠懸停時邊框顏色變為橘色 */
+  border-color: #748cdd; /* 滑鼠懸停時邊框顏色變為橘色 */
 }
 
 /* 表單欄位佈局 */
@@ -496,12 +497,13 @@ textarea:hover {
     border-radius: 8px; /* 圓角為8px */
     /* 表單內容盒子樣式 */
     .bf-body-box {
-      width: 28vw;
-      max-height: 70vh;
+      width: 50vw;
+      max-height: 75vh;
       overflow-y: auto;
       padding: 2rem;
       display:flex;
       flex-direction: column;
+      background-color:  rgba(116 , 140, 211,0.1);
 
       /* 表單行樣式 */
       .bf-row {
@@ -522,7 +524,7 @@ textarea:hover {
 
 /* 送出按鈕樣式 */
 .bf-col-3 input[type="submit"] {
-  background-color: #00c5c8;/* 深藍色背景 */
+  background-color: #7b90da;
   color: white; /* 文字顏色為白色 */
   border: none; /* 無邊框 */
   padding: 12px 20px; /* 內間距為12px上下，20px左右 */
@@ -532,7 +534,7 @@ textarea:hover {
 }
 
 .bf-col-3 input[type="submit"]:hover {
-  background-color: #00aeb1;
+  background-color: #748cdd;
 }
 
 /* 標題和段落樣式 */
@@ -540,6 +542,7 @@ h1 {
   font-size: 40px; /* 標題字體大小為40px */
   color: black; /* 文字顏色為深藍色 */
   margin-bottom: 10px; /* 下邊距為10px */
+  margin-top: 0
 }
 
 p {

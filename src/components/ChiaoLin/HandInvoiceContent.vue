@@ -2,9 +2,9 @@
 import { useBillstore } from '@/stores/BillStore';
 import { mapState, mapActions } from 'pinia';
 export default {
-    setup(){
+    setup() {
         const Billstore = useBillstore();
-        return {Billstore}
+        return { Billstore }
     },
     data() {
         return {
@@ -34,7 +34,7 @@ export default {
             </div>
             <div class="butArea">
                 <button @click="closeShow">確&nbsp;&nbsp;&nbsp;認</button>
-                <button @click="closeShow">Close</button>
+                <button id="cancelButton" @click="closeShow">Close</button>
             </div>
         </div>
     </div>
@@ -42,9 +42,11 @@ export default {
 
 <style scoped lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
-*{
+
+* {
     font-family: "Chocolate Classical Sans", sans-serif;
 }
+
 .showBack {
     position: fixed;
     top: 0;
@@ -87,29 +89,35 @@ export default {
             height: 6dvh;
             margin: 0 1dvw;
             margin-top: 1dvh;
-            background: #00c1ca;
+            background: #748cdd;
             color: white;
             font-family: "Chocolate Classical Sans", sans-serif;
             font-size: 2.25dvh;
             border-radius: 5px;
             border: none;
+            line-height: 2.5dvh;
+        }
+
+        #cancelButton {
+            background: #a8afc9;
         }
     }
 
     .inputArea {
         width: 100%;
         margin: 1dvh 0;
-        P{
+
+        P {
             line-height: 3dvh;
             padding-left: 1dvw;
         }
 
         input {
-            width: 89%;
+            width: 95%;
             height: 6dvh;
             margin: 1dvh 1dvw;
             padding: 0 1dvw;
-            border-radius: 5px;
+            border-radius: 8px;
             border: 2px solid gray;
             font-size: 2.25dvh;
         }
@@ -117,4 +125,3 @@ export default {
 
 }
 </style>
-

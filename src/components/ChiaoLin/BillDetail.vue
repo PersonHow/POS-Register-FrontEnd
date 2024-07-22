@@ -129,7 +129,7 @@ export default {
                 </div> -->
                 <div class="billdetail">
                     <p>訂單金額&nbsp;</p>
-                    <div class="inputAera"><input type="text" :value="this.OrderDB.amount" disabled>
+                    <div class="inputAera"><input type="text" :value="this.OrderDB.amount.toLocaleString('en-US')" disabled>
                     </div>
                     <p>折扣&nbsp;</p>
                     <div class="inputAera"><input type="text" :value="Billstore.discount"
@@ -171,7 +171,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Chocolate+Classical+Sans&family=Noto+Sans+TC:wght@100..900&display=swap');
 
 .allArea {
-    width: 50%;
+    width: 49%;
     font-family: "Chocolate Classical Sans", sans-serif;
 
     .titleArea {
@@ -188,10 +188,10 @@ export default {
     .showOrderId {
         display: flex;
         height: 9dvh;
-        background: linear-gradient(90deg, #00c1ca, #01e1c5);
+        background:  #7b90da;
         border-radius: 5px;
         color: white;
-        line-height: 9.5dvh;
+        line-height: 9dvh;
         padding-left: 2dvw;
         font-size: 2.25dvh;
 

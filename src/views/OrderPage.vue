@@ -59,6 +59,7 @@ export default {
         window.bootstrap = bootstrap
         this.orderStore.getOrderInfo() //取得最近五筆送單紀錄
         this.useBillstore = useBillstore()
+        this.useBillstore.isTopBarHidden = true // 預設隱藏header
     },
     methods:{
         //取得菜單內餐點

@@ -181,7 +181,7 @@ export default {
         <!-- 訊息輸入欄 -->
         <div class="bf-row">
           <div class="bf-col-12">
-            <p>訊息</p>
+            <p>備註</p>
             <textarea
               v-model="formData.message"
               name="message"
@@ -193,9 +193,9 @@ export default {
         </div>
 
         <!-- 提交按鈕 -->
-        <div class="bf-row">
-          <div class="bf-col-3">
-            <input type="submit" value="提交" />
+        <div class="bf-row" style="justify-content: center;">
+          <div class="bf-col-3" >
+            <input type="submit" value="提交"  />
           </div>
         </div>
       </form>
@@ -225,7 +225,7 @@ input,
 textarea,
 select {
   width: 100%; /* 元素寬度為父元素寬度的100% */
-  background-color: #f0f0f0; /* 淺灰色背景 */
+  background-color: rgba(116 , 140, 211,0.2); /* 淺灰色背景 */
   // border: 2px solid black; /* 2px 寬度的深藍色邊框 */
   // outline: none; /* 移除預設的外框 */
   padding: 10px; /* 內間距為10px */
@@ -234,6 +234,7 @@ select {
   resize: none; /* 禁止調整大小 */
   color: black; /* 文字顏色為深藍色 */
   transition: border-color 0.3s ease-in-out; /* 加入邊框顏色變化的過渡效果 */
+  border-radius: 5px;
 }
 
 
@@ -254,9 +255,10 @@ select {
 /* 表單頭部和尾部樣式 */
 .bf-head,
 .bf-footer {
-  background-color: #f0f0f0; /* 淺灰色背景 */
+  background-color: rgba(116 , 140, 211,0.1); /* 淺灰色背景 */
   padding: 20px 10px; /* 內間距為20px上下，10px左右 */
   text-align: center; /* 文字置中 */
+  border-radius: 5px
 }
 
 /* 整體表單容器樣式 */
@@ -270,8 +272,9 @@ select {
 
   /* 表單主體樣式 */
   .bf-body { /* 表單主體寬度為500px */
-    background-color: white; /* 白色背景 */
+    background-color: rgba(116 , 140, 211,0.1); /* 白色背景 */
     border-radius: 8px; /* 圓角為8px */
+
     /* 表單內容盒子樣式 */
     .bf-body-box {
       padding: 10px; /* 內間距為10px */
@@ -297,22 +300,23 @@ input[type="text"]:hover,
 input[type="number"]:hover,
 input[type="date"]:hover,
 textarea:hover {
-  border-color: #ff8200; /* 滑鼠懸停時邊框顏色變為橘色 */
+  border-color: #a8afc9; /* 滑鼠懸停時邊框顏色變為橘色 */
 }
 
 /* 送出按鈕樣式 */
 .bf-col-3 input[type="submit"] {
-  background-color: #00c5c8;/* 深藍色背景 */
+  background-color: #748cdd;/* 深藍色背景 */
   color: white; /* 文字顏色為白色 */
   border: none; /* 無邊框 */
   padding: 12px 20px; /* 內間距為12px上下，20px左右 */
   font-size: 16px; /* 字體大小為16px */
   cursor: pointer; /* 游標為手型 */
   transition: background-color 0.3s ease-in-out; /* 加入背景色變化的過渡效果 */
+  border-radius: 5px;
 }
 
 .bf-col-3 input[type="submit"]:hover {
-  background-color: #ff8200; /* 滑鼠懸停時背景色變為橘色 */
+  background-color: #a8afc9; /* 滑鼠懸停時背景色變為橘色 */
 }
 
 /* 標題和段落樣式 */
@@ -330,7 +334,7 @@ p {
 /* 連結樣式 */
 a {
   text-decoration: none; /* 移除下劃線 */
-  color: #ff8200; /* 文字顏色為橘色 */
+  color: #a8afc9; /* 文字顏色為橘色 */
 }
 
 a:hover {

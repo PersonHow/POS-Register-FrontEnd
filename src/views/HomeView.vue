@@ -30,15 +30,15 @@ export default{
             let login_json = {email:this.email,password:this.password};
             let response = await axios.post("http://localhost:8080/staff/login",login_json).catch((e)=>{
                 Swal.fire({title:"你輸入的員工帳號、密碼不存在，請重新輸入！",showConfirmButton:true,
-                confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
-                icon:'error',iconColor:"#00c5c8"})
+                confirmButtonColor:"#7b90da",confirmButtonText:"確定",
+                icon:'error',iconColor:"#748cdd"})
                 return;
             })
             if(response.status == 200){
                 sessionStorage.setItem("token",JSON.stringify(response.data));
                 Swal.fire({title:"登入成功！",showConfirmButton:true,
-                confirmButtonColor:"#00c5c8",confirmButtonText:"確定",
-                icon:'success',iconColor:"#00c5c8"}).then((res)=>{
+                confirmButtonColor:"#7b90da",confirmButtonText:"確定",
+                icon:'success',iconColor:"#748cdd"}).then((res)=>{
                     if(res.isConfirmed){
                         this.Billstore.isTopBarHidden = false;
                         window.location.replace("/calendar");
@@ -107,7 +107,7 @@ export default{
 </template>
 <style lang="scss" scoped>
     body {
-        font-family: 'Ubuntu', sans-serif;
+        font-family: "Chocolate Classical Sans", sans-serif;
     }
     
     .main {
@@ -192,7 +192,7 @@ export default{
         div.position{
                 display: flex; width: 70%;align-items: center;justify-content: center;
                 p{
-                    color: #01e1c5;
+                    color: #748cdd;
                     font-weight: bold;
                     padding-top: 1.6rem;
                     font-size: 1.2rem;
@@ -239,7 +239,7 @@ export default{
         }
     .sign {
         padding-top: 40px;
-        color: #01e1c5;
+        color: #7b90da;
         font-family: 'Ubuntu', sans-serif;
         font-weight: bold;
         font-size: 23px;
@@ -252,7 +252,7 @@ export default{
     .submit {
         cursor: pointer;
         border-radius: 5em;
-        background: linear-gradient(90deg, #00c1ca, #01e1c5);
+        background: linear-gradient(90deg, #7b90da, #a8afc9);
         color: #fff;
         border: 0;
         padding-left: 40px;
@@ -270,7 +270,7 @@ export default{
     
     .forgot {
         text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
-        color: #01e1c5;
+        color: #748cdd;
         padding-top: 15px;
     }
     

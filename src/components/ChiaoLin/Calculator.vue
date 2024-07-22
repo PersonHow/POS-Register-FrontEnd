@@ -15,7 +15,7 @@ export default {
         ...mapActions(useBillstore, ['saveBillfromP']),
         saveBill() {
             if (this.Billstore.notyetChargeAmount > 0) {
-                alert('未收不可小於0')
+                alert('應收總額不可小於實收')
                 return;
             }
             let pCash = 0, pCard = 0, pOther = 0;
@@ -61,14 +61,17 @@ export default {
                     event.value = 0;
                 }
             })
-
         },
         closeShow() {
             this.$emit('close');
         },
         showChangeArea() {
             this.changeArea = !this.changeArea;
-        }
+            this.$router.push('/table')
+        },
+        // navigateToTablePage(){
+        //     this.$router.push('/table')
+        // }
     },
     data() {
         return {
@@ -148,7 +151,8 @@ export default {
                         </div>
                         <div class="showInfoArea">
                             <span id="ntText">NT.</span>
-                            <span id="changeAmount">{{ Billstore.tothousendShowValue(this.needTochange) }}</span>
+                            <span id="changeAmount">{{ Billstore.tothousendShowValue(Math.round(this.needTochange))
+                                }}</span>
                         </div>
                         <p style="text-align: center;">是否列印明細?</p>
                         <div class="butArea">
@@ -165,7 +169,7 @@ export default {
 <style scoped lang="scss">
 .calculatorArea {
     width: 100%;
-    padding: 0 1dvw;
+    margin: 0 1dvw;
 
     .calculator {
         width: 100%;
@@ -173,7 +177,7 @@ export default {
         padding-top: 1.5dvh;
 
         .mathbutArea {
-            width: 100%;
+            width: 95%;
             display: grid;
             grid-template-columns: 33% 33% 33%;
         }
@@ -183,16 +187,16 @@ export default {
             height: 10dvh;
 
             input {
-                width: 85%;
+                width: 83%;
                 height: 8dvh;
                 border: 1px solid rgb(213, 212, 212);
-                background: linear-gradient(white 80%, #00c1ca 20%);
+                background: linear-gradient(white 80%, #7b90da 20%);
                 color: black;
                 font-size: 3dvh;
                 border-radius: 5px;
 
                 &.active {
-                    background: linear-gradient(rgb(152, 152, 152) 70%, #009688 30%);
+                    background: linear-gradient(rgb(152, 152, 152) 70%, #7b90da 30%);
                 }
             }
         }
@@ -201,7 +205,7 @@ export default {
             width: 30%;
 
             .mathBut {
-                width: 95%;
+                width: 83%;
 
                 input {
                     width: 100%;
@@ -213,14 +217,14 @@ export default {
                 #butbackspace,
                 #butRevise {
                     width: 100%;
-                    background: #f29700;
+                    background: #B5495B;
                     color: white;
                 }
 
                 #butComfirm {
                     width: 100%;
                     height: 18dvh;
-                    background: linear-gradient(90deg, #00c1ca, #01e1c5);
+                    background:  #7b90da;
                     color: white;
                     border-radius: 5px;
                 }
@@ -276,6 +280,7 @@ export default {
                 font-size: 2dvh;
                 border-radius: 5px;
                 border: none;
+                line-height: 6dvh;
             }
         }
 
@@ -283,7 +288,8 @@ export default {
             width: 100%;
             margin: 1dvh 0;
             text-align: center;
-            p{
+
+            p {
                 text-align: center;
             }
 

@@ -236,7 +236,7 @@ export default {
       <!-- 表格標題區域 -->
       <section class="table_header">
         <!-- 系統名稱 -->
-        <h1 style="color:#01e1c5;">預訂管理系統</h1>
+        <h1 style="color:#748cdd;">預訂管理系統</h1>
         <div class="box">
           <div class="search-box">
             <!-- 搜尋框 -->
@@ -372,7 +372,7 @@ export default {
     <form @submit.prevent="submitForm">
       <!-- 關閉彈出視窗按鈕 -->
       <font-awesome-icon :icon="['fas', 'x']" class="close-modal"
-        @click="closeModal"/>
+        @click="closeModal" />
       <!-- 模式標題 -->
       <h2>{{ modalMode === "view" ? "查看預訂資訊" : "編輯預訂資訊" }}</h2>
 
@@ -431,7 +431,7 @@ th,
 td {
   border-collapse: collapse;
   padding: 1rem;
-  text-align: left;
+  text-align: center;
 }
 
 main.table {
@@ -469,7 +469,7 @@ main.table {
     transition: border-color 0.3s ease;
 
     &:focus {
-      border-color: #01e1c5;
+      border-color: #748cdd;
     }
   }
 
@@ -478,24 +478,24 @@ main.table {
     height: 100%;
     text-align: center;
     line-height: 50px;
-    background-color: #01e1c5;
+    background-color: #748cdd;
     color: #fff;
     border-radius: 25px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: #00af9b;
+      background-color: #748cdd;
     }
   }
 }
 
 .table_body {
-  width: 95%;
-  max-height: calc(89% - 1.6rem);
-  background-color: #ffffff;
+  width: 96%;
+  max-height: calc(89% - 5.5rem);
+  background-color: rgba(116 , 140, 211,0.1);
   margin: 0.8rem auto;
-  border-radius: 0.6rem;
+  border-radius: 8px;
   // border:2px solid #000000;
   overflow: auto;
 
@@ -503,18 +503,18 @@ main.table {
     position: sticky;
     top: 0;
     left: 0;
-    background-color: #e0e0e0;
+    background-color: #e3e8f6;
     color: #333;
     padding: 1rem;
     cursor: pointer;
   }
 
   tbody tr:nth-child(even) {
-    background-color: #f5f5f5;
+    background-color: rgba(116 , 140, 211,0.1);
   }
 
   tbody tr:hover {
-    background-color: #f0f0f0;
+    background-color: rgba(116 , 140, 211,0.3);
   }
 
   button {
@@ -526,16 +526,16 @@ main.table {
     color: #ffffff;
 
     &:nth-child(1) {
-      background-color: #0298cf;
+      background-color: #748cdd;
     }
 
     &:nth-child(2) {
-      background-color: green;
+      background-color: #a8afc9;
       margin-left: 6px;
     }
 
     &:nth-child(3) {
-      background-color: #f80000;
+      background-color: #B5495B;
       margin-left: 6px;
     }
   }
@@ -570,13 +570,14 @@ table {
   text-transform: uppercase;
 
   &.delivered {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: rgb(116, 140, 221,0.3);
+    color: #6E75A4;
+    // font-weight: 500;
   }
 
   &.cancelled {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #ffdfe2;
+    color: #c86e7d;
   }
 }
 
@@ -695,7 +696,7 @@ table {
       transition: border-color 0.3s ease;
 
       &:focus {
-        border-color: #4caf50;
+        border-color: #748cdd;
       }
     }
 
@@ -707,7 +708,7 @@ table {
 
     button {
       padding: 12px 25px;
-      background-color: #4caf50;
+      background-color: #748cdd;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -716,7 +717,7 @@ table {
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #45a049;
+        background-color: #748cdd;
       }
     }
   }

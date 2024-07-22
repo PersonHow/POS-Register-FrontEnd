@@ -33,7 +33,7 @@ export default {
             </div>
             <div class="butArea">
                 <button @click="closeShow()">確&nbsp;&nbsp;&nbsp;認</button>
-                <button @click="closeShow()">關&nbsp;&nbsp;&nbsp;閉</button>
+                <button id="cancelButton" @click="closeShow()">關&nbsp;&nbsp;&nbsp;閉</button>
             </div>
         </div>
     </div>
@@ -85,12 +85,16 @@ export default {
             height: 6dvh;
             margin: 0 1dvw;
             margin-top: 1dvh;
-            background: #00c1ca;
+            background: #748cdd;
             color: white;
             font-family: "Chocolate Classical Sans", sans-serif;
             font-size: 2.25dvh;
             border-radius: 5px;
             border: none;
+            line-height: 2.5dvh;
+        }
+        #cancelButton {
+            background: #a8afc9;
         }
     }
 
@@ -102,11 +106,11 @@ export default {
         }
 
         input {
-            width: 89%;
+            width: 95%;
             height: 6dvh;
             margin: 1dvh 1dvw;
             padding: 0 1dvw;
-            border-radius: 5px;
+            border-radius: 8px;
             border: 2px solid gray;
             font-size: 2.25dvh;
         }

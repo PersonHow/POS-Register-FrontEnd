@@ -27,6 +27,10 @@ export default {
             }
         });
 
+        onMounted(() => {
+            Billstore.isTopBarHidden = true;
+        })
+
         const showMoreBills = () => {
             if (visibleBillsCount.value >= Billstore.allbills.length) {
                 hasMoreBills.value = false; // 没有更多紀錄
@@ -49,7 +53,7 @@ export default {
             visibleBills,
             hasMoreBills,
             ...mapState(Billstore, ['showLeftNavArea', 'changeShow']),
-            ...mapActions(Billstore, ['showInvoiceLeftNavArea', 'changeStep',]),
+            ...mapActions(Billstore, ['showInvoiceLeftNavArea', 'changeStep', 'closeTopbar',]),
         };
     },
     methods: {
@@ -74,7 +78,7 @@ export default {
     },
     data() {
         return {
-            isLeftbarHidden: false,
+            isLeftbarHidden: true,
             billList: [],
         }
     },
@@ -84,22 +88,30 @@ export default {
 <template>
     <div class="allArea">
         <div class="titleArea">
-            <p class="myMouse">帳務總覽</p>
+            <div class="titleAndButArea">
+                <button style="cursor: pointer;" @click="toggleSidebar">
+                    <p v-if="!isLeftbarHidden"><i class="fa-solid fa-xmark fa-2xl"></i></p>
+                    <p v-else> <i class="fa-solid fa-bars fa-2xl"></i></p>
+                </button>
+                <p class="myMouse">帳務總覽</p>
+            </div>
             <!-- <input id="showNav" type="checkbox" v-model="Billstore.showLeftNavArea">
             <label for="showNav" class=" myMouse"><span>導覽列</span></label> -->
-            <button style="cursor: pointer;" @click="toggleSidebar">
-                <p v-if="!isLeftbarHidden"><i class="fa-solid fa-xmark fa-2xl"></i></p>
-                <p v-else> <i class="fa-solid fa-bars fa-2xl"></i></p>
-            </button>
+            <div class="butArea">
+
+                <button @click="Billstore.closeTopbar"><i class="fa-solid fa-house-chimney fa-xl"></i></button>
+            </div>
         </div>
         <div class="midArea">
 
             <div :class="['leftArea', { hidden: isLeftbarHidden }]">
                 <nav class="navArea" :class="{ active: Billstore.showLeftNavArea }">
                     <div class="noShowIcon">
-                        <button style="cursor: pointer;" @click="toggleSidebar">
+
+                        <!-- <button style="cursor: pointer;" @click="toggleSidebar">
                             <p><i class="fa-solid fa-xmark fa-2xl"></i></p>
-                        </button>
+                        </button> -->
+
                     </div>
                     <ul>
                         <li class="myMouse" @click="updateChangeShow('A')">帳務搜尋</li>
@@ -107,7 +119,7 @@ export default {
                         <!-- <li class="myMouse" @click="updateChangeShow('C')">發票重開</li> -->
                     </ul>
                     <ul>
-                        <li class="myMouse" @click="updateChangeShow('B')">發票搜尋</li>
+                        <!-- <li class="myMouse" @click="updateChangeShow('B')">發票搜尋</li> -->
                         <!-- <li class="myMouse" @click="updateChangeShow('C')">發票重開</li> -->
                     </ul>
                 </nav>
@@ -129,8 +141,8 @@ export default {
 
     .titleArea {
         height: 9dvh;
-        line-height: 4dvh;
-        background: linear-gradient(90deg, #00c1ca, #01e1c5);
+        // line-height: 9dvh;
+        background: linear-gradient(90deg, #7b90da, #a8afc9);
         border-radius: 5px;
         color: #fff;
         padding: 0 3dvw;
@@ -138,11 +150,25 @@ export default {
         display: flex;
         justify-content: space-between;
 
+        .titleAndButArea{
+            display: flex;
+            button{
+                margin-right: 2dvw
+            }
+            p{
+                line-height: 5dvh;
+            }
+        }
+        .butArea {
+            line-height: 9dvh;
+        }
+
         input {
             z-index: -1;
         }
 
         button {
+            font-size: 2dvh;
             background: none;
             border: none;
             color: #fff;
@@ -167,7 +193,7 @@ export default {
                 font-family: "Chocolate Classical Sans", sans-serif;
                 height: 100%;
                 background: white;
-                border-right: 5px solid #00c1ca;
+                border-right: 5px solid #748cdd;
                 transition: 0.3s ease;
                 opacity: 90%;
 
